@@ -14,4 +14,4 @@
 ## Architectural Diagram
 
 
-![Architectural Diagram](images/architecturalDiagram.png)
+![Architectural Diagram](https://user-images.githubusercontent.com/5746804/219857536-6d1114fb-5a56-456b-8bf6-bbc9ef29b2a3.PNG)
