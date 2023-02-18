@@ -14,3 +14,5 @@
 ## Architectural Diagram
 
 ![Architectural Diagram](https://user-images.githubusercontent.com/5746804/219857536-6d1114fb-5a56-456b-8bf6-bbc9ef29b2a3.PNG)
+
+[Link to Chart] (https://lucid.app/lucidchart/6c79e43e-c6bf-46b7-9060-e3e42e2d4956/view)
