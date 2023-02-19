@@ -19,6 +19,6 @@
 
 ## CI/CD Diagram
 
-![CI/CD Diagram] (<https://user-images.githubusercontent.com/5746804/219939236-dc68fe05-4ffb-4133-827d-c16141b34d7f.PNG>)
+![CI/CD Diagram](https://user-images.githubusercontent.com/5746804/219939236-dc68fe05-4ffb-4133-827d-c16141b34d7f.PNG)
 
 [Link to Chart] (<https://lucid.app/documents/view/af3bd6d0-5bc5-4077-a3dc-47d8686781ff>)
