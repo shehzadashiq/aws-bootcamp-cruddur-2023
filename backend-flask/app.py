@@ -23,6 +23,10 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
+# Logging to Cloudwatch
+import watchtower
+import logging
+from time import strftime
 
 # Initialize tracing and an exporter that can send data to Honeycomb
 provider = TracerProvider()
