@@ -21,7 +21,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry.sdk.trace.export import ConsoleSpanProcessor
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
 
 # Initialize tracing and an exporter that can send data to Honeycomb
