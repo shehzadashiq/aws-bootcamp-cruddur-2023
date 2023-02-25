@@ -110,7 +110,7 @@ docker logs $CONTAINER_ID -f
 ### Debugging  adjacent containers with other containers
 
 ```sh
-docker run --rm -it curlimages/curl "-X GET http://localhost:4567/api/activities/home -H \"Accept: application/json\" -H \"Content-Type: application/json\""
+docker run --rm -it curlimages/curl '-X GET \"http://localhost:4567/api/activities/home\" -H \"Accept: application/json\" -H \"Content-Type: application/json\"'
 ```
 
 busybosy is often used for debugging since it install a bunch of thing
@@ -122,8 +122,10 @@ docker run --rm -it busybosy
 ### Gain Access to a Container
 
 ```sh
-docker exec CONTAINER_ID -it /bin/bash
+docker exec -it $CONTAINER_ID /bin/bash
 ```
+
+docker exec -it mycontainer sh
 
 > You can just right click a container and see logs in VSCode with Docker extension
 
