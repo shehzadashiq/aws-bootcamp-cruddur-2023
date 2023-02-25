@@ -176,7 +176,7 @@ CMD ["npm", "start"]
 ### Build Fronted Container
 
 ```sh
-docker build -t frontend-react-js ./rontend-react-js
+docker build -t frontend-react-js ./frontend-react-js
 ```
 
 ### Run Container -01
