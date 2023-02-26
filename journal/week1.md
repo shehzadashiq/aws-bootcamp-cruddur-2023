@@ -11,12 +11,9 @@ Ruby on Rail Services: <https://www.toptal.com/ruby-on-rails/rails-service-objec
 
 Week 1 Notes: <https://github.com/spurin/aws-bootcamp-cruddur-2023/blob/week-1-spurin/journal/week1.md>
 
+Good Article for Debugging Connection Refused: <https://pythonspeed.com/articles/docker-connection-refused/>
+
 ## Notes from Andrew
-
-## References
-
-Good Article for Debugging Connection Refused
-<https://pythonspeed.com/articles/docker-connection-refused/>
 
 ## VSCode Docker Extension
 
