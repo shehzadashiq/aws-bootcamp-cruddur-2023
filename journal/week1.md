@@ -1,7 +1,13 @@
 # Week 1 — App Containerization
 
+## References
+
 URL of backend application: <http://127.0.0.1:4567/api/activities/home>
 URL of frontend: <http://localhost:3000/>
+
+OpenAPI Responses Specification: <https://spec.openapis.org/oas/v3.1.0#responses-object>
+
+Ruby on Rail Services: <https://www.toptal.com/ruby-on-rails/rails-service-objects-tutorial>
 
 Week 1 Notes: <https://github.com/spurin/aws-bootcamp-cruddur-2023/blob/week-1-spurin/journal/week1.md>
 
