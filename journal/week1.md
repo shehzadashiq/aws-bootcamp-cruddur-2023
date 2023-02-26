@@ -3,6 +3,8 @@
 URL of backend application: <http://127.0.0.1:4567/api/activities/home>
 URL of frontend: <http://localhost:3000/>
 
+Week 1 Notes: <https://github.com/spurin/aws-bootcamp-cruddur-2023/blob/week-1-spurin/journal/week1.md>
+
 ## Notes from Andrew
 
 ## References
