@@ -13,6 +13,8 @@ Week 1 Notes: <https://github.com/spurin/aws-bootcamp-cruddur-2023/blob/week-1-s
 
 Good Article for Debugging Connection Refused: <https://pythonspeed.com/articles/docker-connection-refused/>
 
+DynamoDb: <https://github.com/100DaysOfCloud/challenge-dynamodb-local>
+
 ## Notes from Andrew
 
 ## VSCode Docker Extension
