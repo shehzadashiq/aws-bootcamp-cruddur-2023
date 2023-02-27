@@ -11,4 +11,14 @@ COPY . .
 ENV FLASK_ENV=development
 
 EXPOSE ${PORT}
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
+
+
+# Add Script file to docker file
+COPY run.sh /backend-flask/run.sh
+
+# Change to executable as root user
+USER root
+RUN chmod +x /backend-flask/run.sh
+
+ENTRYPOINT ["sh","/backend-flask/run.sh"]
+# CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
