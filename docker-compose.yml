@@ -10,6 +10,12 @@ services:
     build: ./backend-flask
     ports:
       - "4567:4567"
+    healthcheck:
+      test: curl --fail https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}/api/activities/home || exit 1
+      interval: 20s
+      retries: 5
+      start_period: 10s
+      timeout: 5s   
     volumes:
       - ./backend-flask:/backend-flask
   frontend-react-js:
@@ -20,6 +26,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend-react-js:/frontend-react-js
+   
    
   db:
     image: postgres:13-alpine
