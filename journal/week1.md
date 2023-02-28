@@ -15,6 +15,47 @@ Good Article for Debugging Connection Refused: <https://pythonspeed.com/articles
 
 DynamoDb: <https://github.com/100DaysOfCloud/challenge-dynamodb-local>
 
+## Challenges
+
+- [x] Run the dockerfile CMD as an external script
+- [x] Push and tag a image to DockerHub
+- [x] Push and tag a image to DockerHub
+
+### Tag/Push image to dockerhub
+
+Reference: <https://docs.docker.com/engine/reference/commandline/push/>
+
+Login to Docker and Create a Repository e.g. shehzadashiq/bootcamp
+
+Find docker image ID
+```sh
+docker container ls
+```
+
+Save image
+```sh
+docker container commit container-id repositoryName:tag
+```
+
+e.g.
+
+```sh
+docker container commit c16378f943fe shehzadashiq/bootcamp:latest
+```
+
+Push Image to the Repository using tag
+
+```sh
+docker image push <hub-user>/<repo-name>:<tag>
+```
+
+e.g.
+
+```sh
+docker image push shehzadashiq/bootcamp:latest
+```
+
+
 ## Notes from Andrew
 
 ## VSCode Docker Extension
