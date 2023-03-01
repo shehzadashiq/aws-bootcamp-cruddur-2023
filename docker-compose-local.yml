@@ -2,8 +2,8 @@ version: "3.8"
 services:
   backend-flask:
     environment:
-      FRONTEND_URL: "https://localhost:3000"
-      BACKEND_URL: "https://localhost:4567"
+      FRONTEND_URL: "http://localhost:3000"
+      BACKEND_URL: "http://localhost:4567"
       OTEL_SERVICE_NAME: "backend-flask"
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
       OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
@@ -11,11 +11,11 @@ services:
     ports:
       - "4567:4567"
     healthcheck:
-      test: curl --fail https://localhost:4567/api/activities/home || exit 1
+      test: curl --fail http://localhost:4567/api/activities/home || exit 1
       interval: 20s
       retries: 5
       start_period: 10s
-      timeout: 5s   
+      timeout: 5s
     volumes:
       - ./backend-flask:/backend-flask
   frontend-react-js:
@@ -26,7 +26,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend-react-js:/frontend-react-js
-   
+
   db:
     image: postgres:13-alpine
     restart: always
@@ -34,10 +34,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
-      - '5432:5432'
-    volumes: 
+      - "5432:5432"
+    volumes:
       - db:/var/lib/postgresql/data
-
 
   dynamodb-local:
     # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
@@ -54,7 +53,7 @@ services:
 
 # the name flag is a hack to change the default prepend folder
 # name when outputting the image names
-networks: 
+networks:
   internal-network:
     driver: bridge
     name: cruddur
