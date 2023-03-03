@@ -25,16 +25,21 @@ from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
 # X-Ray Setup
-
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
-
-
 
 # Logging to Cloudwatch
 import watchtower
 import logging
 from time import strftime
+
+# Boto3
+import boto3
+from botocore.config import Config
+
+my_config = Config(
+    region_name = 'eu-west-2',
+)
 
 # Initialize tracing and an exporter that can send data to Honeycomb
 provider = TracerProvider()
@@ -43,7 +48,6 @@ simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
 provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
-
 
 
 app = Flask(__name__)
@@ -58,6 +62,8 @@ xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 XRayMiddleware(app, xray_recorder)
 
 # Configuring Logger to Use CloudWatch
+# client = boto3.client('kinesis', config=my_config)
+
 # LOGGER = logging.getLogger(__name__)
 # LOGGER.setLevel(logging.DEBUG)
 # console_handler = logging.StreamHandler()
@@ -123,6 +129,7 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 def data_home():
   data = HomeActivities.run()
+  # data = HomeActivities.run(Logger=LOGGER)
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])

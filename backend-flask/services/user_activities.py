@@ -1,23 +1,44 @@
 from datetime import datetime, timedelta, timezone
+from aws_xray_sdk.core import xray_recorder
+
 class UserActivities:
   def run(user_handle):
+    # Start a segment
+    segment = xray_recorder.begin_segment('user_activities')
+
+    # with xray_recorder.in_segment('home_activities') as segment:
     model = {
-      'errors': None,
-      'data': None
+        'errors': None,
+        'data': None
     }
 
     now = datetime.now(timezone.utc).astimezone()
+
+
 
     if user_handle == None or len(user_handle) < 1:
       model['errors'] = ['blank_user_handle']
     else:
       now = datetime.now()
       results = [{
-        'uuid': '248959df-3079-4947-b847-9e0892d1bab4',
-        'handle':  'Andrew Brown',
-        'message': 'Cloud is fun!',
-        'created_at': (now - timedelta(days=1)).isoformat(),
-        'expires_at': (now + timedelta(days=31)).isoformat()
+          'uuid': '248959df-3079-4947-b847-9e0892d1bab4',
+          'handle':  'Andrew Brown',
+          'message': 'Cloud is fun!',
+          'created_at': (now - timedelta(days=1)).isoformat(),
+          'expires_at': (now + timedelta(days=31)).isoformat()
       }]
       model['data'] = results
-    return model
+
+      subsegment = xray_recorder.begin_subsegment('mock_data')
+      # Add metadata or annotation here if necessary
+      dict = {
+         "now": now.isoformat(),
+         "results": len(model['data'])
+      }
+      # X-Ray Segment
+      # Start a subsegment
+    
+      segment.put_metadata('key', dict, 'namespace')
+
+
+      return model
