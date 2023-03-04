@@ -15,7 +15,7 @@ import {
   createBrowserRouter,
   RouterProvider
 } from "react-router-dom";
-# Amplify
+// Amplify
 import { Amplify } from 'aws-amplify';
 
 Amplify.configure({
