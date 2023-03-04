@@ -7,3 +7,7 @@ Setup Guide: <https://docs.honeycomb.io/getting-data-in/opentelemetry/python/>
 export OTEL_EXPORTER_OTLP_ENDPOINT="https://api.honeycomb.io/"
 export OTEL_EXPORTER_OTLP_HEADERS="x-honeycomb-team=your-api-key"
 ```
+
+Completed the homework set.
+
+Instrumenting X-Ray

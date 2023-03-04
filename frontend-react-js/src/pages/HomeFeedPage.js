@@ -10,6 +10,8 @@ import ReplyForm from '../components/ReplyForm';
 // [TODO] Authenication
 import Cookies from 'js-cookie'
 
+import { Amplify } from 'aws-amplify';
+
 export default function HomeFeedPage() {
   const [activities, setActivities] = React.useState([]);
   const [popped, setPopped] = React.useState(false);
