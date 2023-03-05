@@ -23,7 +23,7 @@ tasks:
       sudo apt install net-tools
   - name: postgres-client
     init: |
-      sudo apt install postgresql-client-12
+      sudo apt install -y postgresql-client-12
 
 vscode:
   extensions:
