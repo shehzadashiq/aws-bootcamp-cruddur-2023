@@ -4,7 +4,7 @@ import {ReactComponent as Logo} from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
 
 // [TODO] Authenication
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import { Auth } from 'aws-amplify';
 
 export default function SigninPage() {
@@ -15,31 +15,22 @@ export default function SigninPage() {
   const [cognitoErrors, setCognitoErrors] = React.useState('');
 
   const onsubmit = async (event) => {
+    setErrors('')
     event.preventDefault();
-    setCognitoErrors('')
-    try {
-        const { user } = await Auth.signUp({
-          username: email,
-          password: password,
-          attributes: {
-              name: name,
-              email: email,
-              preferred_username: username,
-          },
-          autoSignIn: { // optional - enables auto sign in after user is confirmed
-              enabled: true,
-          }
-        });
-        console.log(user);
-        window.location.href = `/confirm?email=${email}`
-    } catch (error) {
-        console.log(error);
-        setCognitoErrors(error.message)
-    }
+    Auth.signIn(email, password)
+    .then(user => {
+      console.log('user',user)
+      localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
+      window.location.href = "/"
+    })
+    .catch(error => { 
+      if (error.code == 'UserNotConfirmedException') {
+        window.location.href = "/confirm"
+      }
+      setErrors(error.message)
+    });
     return false
   }
-
-
 
   const email_onchange = (event) => {
     setEmail(event.target.value);
