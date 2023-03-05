@@ -7,13 +7,9 @@ import ActivityFeed from '../components/ActivityFeed';
 import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
 
-// [TODO] Authenication
+// [TODO] Authentication
 import Cookies from 'js-cookie'
-
 import { Amplify } from 'aws-amplify';
-
-
-
 
 export default function HomeFeedPage() {
   const [activities, setActivities] = React.useState([]);
