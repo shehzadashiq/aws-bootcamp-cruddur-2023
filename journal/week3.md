@@ -19,7 +19,7 @@ This was because I had left the following option checked.
 | Option | Value |
 | ----------- | ----------- |
 | Provider types | Cognito user pool |
-| Cognito user pool sign-in options | - User Name, Email |
+| Cognito user pool sign-in options | - Email |
 | User name requirements | **Nothing Checked** |
 | Password policy | Cognito Defaults |
 | Multi-factor authentication | No MFA |
