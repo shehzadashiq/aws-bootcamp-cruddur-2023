@@ -36,3 +36,17 @@ Everything else can be left as default.
 | App type | Public Client|
 | App client name | cruddur |
 | Client secret | Don't generate a client secret |
+
+## Observations
+
+My local development system is a lot less forgiving than Gitpod.
+
+If the following function does not exist then React will not load locally displaying the following error.
+
+```sh
+setCognitoErrors("Email is invalid or cannot be found.")   
+```
+
+![React Error](https://user-images.githubusercontent.com/5746804/223359323-8841126f-8d08-4af0-b7bd-0158fb997efd.png)
+
+To resolve this the function needs to be renamed to setErrors. The same issue does not occur on Gitpod.
