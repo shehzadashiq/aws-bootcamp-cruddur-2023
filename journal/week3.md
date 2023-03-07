@@ -10,11 +10,13 @@ Received the following error when trying to signup.
 InvalidParameterException: Username cannot be of email format, since user pool is configured for email alias.
 ```
 
-This was because I had left the following option checked.
+This was because I had both username and email in the following option. Only email should have been checked,
 
-> Allow users to sign in with a preferred user name
+> Cognito user pool sign-in options
 
-## Cognito User Pool Options
+## Cognito User Pool Creation Options
+
+Everything else can be left as default.
 
 | Option | Value |
 | ----------- | ----------- |
