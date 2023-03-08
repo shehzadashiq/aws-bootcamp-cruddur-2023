@@ -23,7 +23,7 @@ services:
       interval: 20s
       retries: 5
       start_period: 10s
-      timeout: 5s   
+      timeout: 5s
     volumes:
       - ./backend-flask:/backend-flask
   frontend-react-js:
@@ -38,7 +38,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend-react-js:/frontend-react-js
-   
+
   db:
     image: postgres:13-alpine
     restart: always
@@ -46,8 +46,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
-      - '5432:5432'
-    volumes: 
+      - "5432:5432"
+    volumes:
       - db:/var/lib/postgresql/data
 
   dynamodb-local:
@@ -72,11 +72,11 @@ services:
     command:
       - "xray -o -b xray-daemon:2000"
     ports:
-      - 2000:2000/udp    
+      - 2000:2000/udp
 
 # the name flag is a hack to change the default prepend folder
 # name when outputting the image names
-networks: 
+networks:
   internal-network:
     driver: bridge
     name: cruddur
