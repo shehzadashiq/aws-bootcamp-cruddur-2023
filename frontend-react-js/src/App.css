@@ -7,4 +7,5 @@ main, article {
   width: 600px;
   height: 100%;
   background: #000;
+  background: var(--fg);
 }
