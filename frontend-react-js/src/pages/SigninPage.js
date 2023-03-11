@@ -12,7 +12,7 @@ export default function SigninPage() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState('');
-  const [cognitoErrors, setCognitoErrors] = React.useState('');
+  // const [cognitoErrors, setCognitoErrors] = React.useState('');
 
   const onsubmit = async (event) => {
     setErrors('')
