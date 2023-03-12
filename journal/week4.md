@@ -34,6 +34,7 @@ npm i
 
 I modified an automatically generated task from vscode to the below. This snippet will run whenever the folder is opened. Its working path is frontend-react-js and the windows will always be displayed so we can tell that the task has run.
 
+```json
 {
     "version": "2.0.0",
     "tasks": [
@@ -56,6 +57,7 @@ I modified an automatically generated task from vscode to the below. This snippe
         }
         ]
 }
+```
 
 Successful output once a task has been run.
 
