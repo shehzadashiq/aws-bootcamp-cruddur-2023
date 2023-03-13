@@ -227,7 +227,7 @@ def data_activities():
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 @xray_recorder.capture('activities_show')
 def data_show_activity(activity_uuid):
-  data = ShowActivity.run(activity_uuid=activity_uuid)
+  data = ShowActivities.run(activity_uuid=activity_uuid)
   return data, 200
 
 @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
@@ -242,10 +242,11 @@ def data_activities_reply(activity_uuid):
     return model['data'], 200
   return
 
-if __name__ == "__main__":
-  app.run(debug=True)
-
 @app.route('/rollbar/test')
 def rollbar_test():
     rollbar.report_message('Hello World!', 'warning')
     return "Hello World!"
+  
+
+if __name__ == "__main__":
+  app.run(debug=True)
