@@ -1,13 +1,16 @@
 {
   "name": "Free AWS Cloud Bootcamp Development Environment",
-  "build": { "dockerfile": "Dockerfile" },  
-
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-
-  "forwardPorts": [3000, 4567, 2000],
-
+  "forwardPorts": [
+    3000,
+    4567,
+    2000
+  ],
   "portsAttributes": {
     "3000": {
       "label": "Cruddur Frontend",
@@ -22,34 +25,32 @@
       "onAutoForward": "notify"
     }
   },
-
-  "customizations": {      
-    "vscode": {        
+  "customizations": {
+    "vscode": {
       "extensions": [
-          "42Crunch.vscode-openapi",
-          "ms-azuretools.vscode-docker",
-          "ms-python.python",                                
-          "hashicorp.terraform",
-          "redhat.ansible",
-          "redhat.vscode-yaml",
-          "amazonwebservices.aws-toolkit-vscode"
+        "42Crunch.vscode-openapi",
+        "ms-azuretools.vscode-docker",
+        "ms-python.python",
+        "hashicorp.terraform",
+        "redhat.ansible",
+        "redhat.vscode-yaml",
+        "amazonwebservices.aws-toolkit-vscode"
       ]
     }
-  },     
-  
+  },
   "settings": {
-		"terminal.integrated.profiles.linux": {
-			"bash": {
-				"path": "/usr/bin/bash",
-				"icon": "terminal-bash"
-			}
-		},
-		"terminal.integrated.defaultProfile.linux": "bash"
-	},	
-  
+    "terminal.integrated.profiles.linux": {
+      "bash": {
+        "path": "/usr/bin/bash",
+        "icon": "terminal-bash"
+      }
+    },
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
   "remoteUser": "bootcamp",
-
   "postAttachCommand": "cd ./frontend-react-js && npm install && cd ../backend-flask && pip install -r requirements.txt",
-
-  "runArgs": ["--env-file",".devcontainer/devcontainer.env"]
+  "runArgs": [
+    "--env-file",
+    ".devcontainer/devcontainer.env"
+  ]
 }
