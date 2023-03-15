@@ -7,7 +7,11 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
     // "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "forwardPorts": [3000, 4567, 2000],
+  "forwardPorts": [
+    3000,
+    4567,
+    2000
+  ],
   "portsAttributes": {
     "3000": {
       "label": "Cruddur Frontend",
@@ -57,7 +61,9 @@
   "postAttachCommand": [
     "cd ./frontend-react-js && npm install && cd ../backend-flask && pip install -r requirements.txt",
     "git config --global diff.tool ..."
+  ],
+  "runArgs": [
+    "--env-file",
+    ".devcontainer/devcontainer.env"
   ]
-  ,
-  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"]
 }
