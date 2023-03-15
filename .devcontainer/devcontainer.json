@@ -58,12 +58,9 @@
   // "terminal.integrated.defaultProfile.linux": "bash"
   // },
   "remoteUser": "bootcamp",
-  "postAttachCommand": [
-    "cd ./frontend-react-js && npm install && cd ../backend-flask && pip install -r requirements.txt",
-    "git config --global diff.tool ..."
-  ],
   "runArgs": [
-    "--env-file",
-    ".devcontainer/devcontainer.env"
-  ]
+      "--env-file",
+      ".devcontainer/.env"
+    ],
+  "postAttachCommand": "cd ./frontend-react-js && npm install && cd ../backend-flask && pip install -r requirements.txt"
 }

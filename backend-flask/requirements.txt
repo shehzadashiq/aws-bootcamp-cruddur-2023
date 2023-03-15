@@ -17,6 +17,6 @@ rollbar
 Flask-AWSCognito
 requests
 
-# PostGres Client for Python
+# PostGres Driver/Client for Python
 psycopg[binary]
 psycopg[pool]
