@@ -59,8 +59,12 @@
   // },
   "remoteUser": "bootcamp",
   "runArgs": [
-      "--env-file",
-      ".devcontainer/.env"
-    ],
+    "--env-file",
+    ".devcontainer/devcontainer.env"
+  ],
   "postAttachCommand": "cd ./frontend-react-js && npm install && cd ../backend-flask && pip install -r requirements.txt"
+  // "postAttachCommand": [
+  //   "pip install -r /backend-flask/requirements.txt",
+  //   "npm install /frontend-react-js"
+  // ]
 }
