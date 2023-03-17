@@ -19,6 +19,9 @@ tasks:
       sudo apt update
       sudo apt install -y postgresql-client-12 libpq-dev
  #    sudo apt install -y postgresql-client-12
+    command: |
+      export GITPOD_IP=$(curl ifconfig.me)
+      source "$THEIA_WORKSPACE_ROOT/backend-flask/rds-update-sg-rule"
   - name: net-tools
     init: |
       sudo apt install net-tools
