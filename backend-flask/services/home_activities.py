@@ -73,25 +73,25 @@ class HomeActivities:
         # object()
 
         sql = query_wrap_array("""
-      SELECT
-        activities.uuid,
-        users.display_name,
-        users.handle,
-        activities.message,
-        activities.replies_count,
-        activities.reposts_count,
-        activities.likes_count,
-        activities.reply_to_activity_uuid,
-        activities.expires_at,
-        activities.created_at
-      FROM public.activities
-      LEFT JOIN public.users ON users.uuid = activities.user_uuid
-      ORDER BY activities.created_at DESC
-      """)
+              SELECT
+                activities.uuid,
+                users.display_name,
+                users.handle,
+                activities.message,
+                activities.replies_count,
+                activities.reposts_count,
+                activities.likes_count,
+                activities.reply_to_activity_uuid,
+                activities.expires_at,
+                activities.created_at
+              FROM public.activities
+              LEFT JOIN public.users ON users.uuid = activities.user_uuid
+              ORDER BY activities.created_at DESC
+              """)
 
-        sql = """
-            SELECT * FRON ACTIVITIES
-            """
+        # sql = query_wrap_array("""
+        #     SELECT * FROM ACTIVITIES
+        #     """)
 
         print(sql)
         with pool.connection() as conn:
@@ -99,7 +99,13 @@ class HomeActivities:
                     cur.execute(sql)
                     # this will return a tuple
                     # the first field being the data
-                    json = cur.fetchall()
-        return json[0]
+                    json = cur.fetchone()
+                    rows = cur.fetchone()
 
+        # for record in cur:
+        #     print(record)
+
+        print(json)
+        # pool.close()
+        return json[0]
         return results

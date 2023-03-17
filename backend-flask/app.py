@@ -53,8 +53,6 @@ LOGGER.addHandler(console_handler)
 LOGGER.addHandler(cw_handler)
 LOGGER.info("Test Log")
 
-
-
 # HoneyComb ---------
 # Initialize tracing and an exporter that can send data to Honeycomb
 provider = TracerProvider()
@@ -74,8 +72,6 @@ XRayMiddleware(app, xray_recorder)
 # provider.add_span_processor(simple_processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
-
-
 
 # Cognito JWT Token
 cognito_jwt_token = CognitoJwtToken(
@@ -177,7 +173,7 @@ def data_home():
     app.logger.debug(claims['username'])
     data = HomeActivities.run(Logger=LOGGER,cognito_user_id=claims['username'])
   except TokenVerifyError as e:
-     # unauthenicatied request
+     # unauthenticated request
     app.logger.debug(e)
     app.logger.debug("unauthenticated")
     # data = HomeActivities.run()
@@ -188,7 +184,6 @@ def data_home():
 def data_notifications():
   data = NotificationsActivities.run()
   return data, 200
-
 
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
 @xray_recorder.capture('activities_users')
@@ -246,7 +241,6 @@ def data_activities_reply(activity_uuid):
 def rollbar_test():
     rollbar.report_message('Hello World!', 'warning')
     return "Hello World!"
-  
 
 if __name__ == "__main__":
   app.run(debug=True)
