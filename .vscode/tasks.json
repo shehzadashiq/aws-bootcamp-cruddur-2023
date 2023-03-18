@@ -17,24 +17,6 @@
 			"runOptions": {
                 "runOn": "folderOpen"
             }
-		},
-		{
-			"label": "Import Environment Variables",
-			"detail": "Prepare ENV variables for the deployment",
-			"type": "shell",
-			"command": "./readEnv.ps1",
-			"presentation": {
-				"echo": true,
-				"group": "develop",
-				"reveal": "always",
-				// "focus": false,
-				"panel": "shared",
-				"showReuseMessage": true,
-				"clear": false
-			},
-			"runOptions": {
-				"runOn": "folderOpen"
-			}
 		}
 	]
 }
