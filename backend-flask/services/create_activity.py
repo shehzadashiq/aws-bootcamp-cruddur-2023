@@ -1,11 +1,17 @@
 import uuid
 from datetime import datetime, timedelta, timezone
+import psycopg
+
+from lib.db import db
+
 class CreateActivity:
   def run(message, user_handle, ttl):
     model = {
       'errors': None,
       'data': None
     }
+
+    user_uuid = ''
 
     now = datetime.now(timezone.utc).astimezone()
 
@@ -49,3 +55,41 @@ class CreateActivity:
         'expires_at': (now + ttl_offset).isoformat()
       }
     return model
+
+  def create_activity(handle, message, expires_at):
+    sql = db.template('activities','create')
+    uuid = db.query_commit(sql,{
+      'handle': handle,
+      'message': message,
+      'expires_at': expires_at
+    })
+    return uuid
+  def query_object_activity(uuid):
+    sql = db.template('activities','object')
+    return db.query_object_json(sql,{
+      'uuid': uuid
+    })
+
+  # def create_activity(user_uuid,message,expires_at):
+  #   sql = f"""
+  #     INSERT INTO (
+  #       user_uuid
+  #     )
+  #     VALUES (
+  #       '{user_uuid}',
+  #       '{message}',
+  #       '{expires_at}'
+  #     )
+  #     """
+
+    # query.commit(sql)
+    # try:
+    #   conn = pool.connection()      
+    #   cur = conn.cursor()            
+    #   cur.execute(sql)
+    #   conn.commit()
+    # except Exception as err:
+    #     print_sql_err(err)
+    #     conn.rollback()
+    # finally:
+    #   conn.close()
