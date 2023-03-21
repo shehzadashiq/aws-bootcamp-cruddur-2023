@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 // [TODO] Authenication
 import { Auth } from 'aws-amplify';
-// import Cookies from 'js-cookie'
 
 export default function SignupPage() {
 
@@ -15,7 +14,6 @@ export default function SignupPage() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState('');
-  // const [cognitoErrors, setCognitoErrors] = React.useState('');
 
   const onsubmit = async (event) => {
     event.preventDefault();

@@ -4,6 +4,8 @@ Andrew Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-4
 
 CDE Troubleshooting: <https://www.linuxtek.ca/2023/03/10/aws-cloud-project-bootcamp-solving-the-cde-problem/>
 
+Pyscop2 Connections: <https://kb.objectrocket.com/postgresql/python-error-handling-with-the-psycopg2-postgresql-adapter-645>
+
 Manage master credentials in AWS Secrets Manager is convenient to use.
 
 Had a problem with the db-schema-load script. I had the following

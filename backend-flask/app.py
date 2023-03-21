@@ -91,8 +91,6 @@ origins = [frontend, backend]
 cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
-  # expose_headers="location,link",
-  # allow_headers="content-type,if-modified-since",
   headers=['Content-Type', 'Authorization'], 
   expose_headers='Authorization',
   methods="OPTIONS,GET,HEAD,POST"
@@ -116,6 +114,11 @@ def init_rollbar():
 
     # send exceptions from `app` to rollbar, using flask's signal system.
     got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+
+@app.route('/rollbar/test')
+def rollbar_test():
+    rollbar.report_message('Hello World!', 'warning')
+    return "Hello World!"
 
 
 # @app.after_request
@@ -188,9 +191,8 @@ def data_notifications():
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
 # @xray_recorder.capture('activities_users')
 def data_handle(handle):
-  # user_activities = UserActivities(request)
   model = UserActivities.run(handle)
-  
+    
   if model['errors'] is not None:
     return model['errors'], 422
   else:
@@ -220,7 +222,7 @@ def data_activities():
   return
 
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
-# @xray_recorder.capture('activities_show')
+@xray_recorder.capture('activities_show')
 def data_show_activity(activity_uuid):
   data = ShowActivities.run(activity_uuid=activity_uuid)
   return data, 200
@@ -236,11 +238,6 @@ def data_activities_reply(activity_uuid):
   else:
     return model['data'], 200
   return
-
-@app.route('/rollbar/test')
-def rollbar_test():
-    rollbar.report_message('Hello World!', 'warning')
-    return "Hello World!"
-
+  
 if __name__ == "__main__":
   app.run(debug=True)

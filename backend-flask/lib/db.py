@@ -6,8 +6,6 @@ from flask import current_app as app
 
 class Db:
   def __init__(self):
-    # connection_url = os.getenv("CONNECTION_URL")
-    # pool = ConnectionPool(connection_url)
     self.init_pool()
 
   def template(self,*args):
@@ -36,7 +34,7 @@ class Db:
     no_color = '\033[0m'
     print(f'{blue} SQL Params:{no_color}')
     for key, value in params.items():
-      print(key, ":", value)    
+      print(key, ":", value)
 
   def print_sql(self,title,sql):
     cyan = '\033[96m'
@@ -60,7 +58,7 @@ class Db:
         if is_returning_id:
           return returning_id
     except Exception as err:
-      self.print_sql_err(err)    
+      self.print_sql_err(err)
 
   # when we want to return a json object
   def query_array_json(self,sql,params={}):
@@ -71,7 +69,7 @@ class Db:
       with conn.cursor() as cur:
         cur.execute(wrapped_sql,params)
         json = cur.fetchone()
-        return json[0]    
+        return json[0]
 
   # When we want to return an array of json objects
   def query_object_json(self,sql,params={}):
@@ -88,15 +86,14 @@ class Db:
         else:
           return json[0]
 
-  def query_wrap_object(self, template):
+  def query_wrap_object(self,template):
     sql = f"""
     (SELECT COALESCE(row_to_json(object_row),'{{}}'::json) FROM (
     {template}
     ) object_row);
     """
     return sql
-
-  def query_wrap_array(self, template):
+  def query_wrap_array(self,template):
     sql = f"""
     (SELECT COALESCE(array_to_json(array_agg(row_to_json(array_row))),'[]'::json) FROM (
     {template}
@@ -104,35 +101,19 @@ class Db:
     """
     return sql
 
-  # define a function that handles and parses psycopg2 exceptions
-  def print_sql_err(self, err):
-      # get details about the exception
-      err_type, err_obj, traceback = sys.exc_info()
+  def print_sql_err(self,err):
+    # get details about the exception
+    err_type, err_obj, traceback = sys.exc_info()
 
-      # get the line number when exception occured
-      line_num = traceback.tb_lineno
+    # get the line number when exception occured
+    line_num = traceback.tb_lineno
 
-      # print the connect() error
-      print ("\npsycopg ERROR:", err, "on line number:", line_num)
-      print ("psycopg traceback:", traceback, "-- type:", err_type)
+    # print the connect() error
+    print ("\npsycopg ERROR:", err, "on line number:", line_num)
+    print ("psycopg traceback:", traceback, "-- type:", err_type)
 
-      # psycopg2 extensions.Diagnostics object attribute
-      print ("\nextensions.Diagnostics:", err.diag)
-
-      # print the pgcode and pgerror exceptions
-      print ("pgerror:", err.pgerror)
-      print ("pgcode:", err.pgcode, "\n")
-
-  def query_commit():  
-    try:
-      conn = pool.connection()      
-      cur = conn.cursor()            
-      cur.execute(sql)
-      conn.commit()
-    except Exception as err:
-      print_sql_err(err)
-      # conn.rollback()
-    # finally:
-    #   conn.close()
+    # print the pgcode and pgerror exceptions
+    print ("pgerror:", err.pgerror)
+    print ("pgcode:", err.pgcode, "\n")
 
 db = Db()

@@ -25,6 +25,4 @@ CREATE TABLE public.activities (
   created_at TIMESTAMP default current_timestamp NOT NULL
 );
 
--- DROP TABLE IF EXISTS public.users;
--- DROP TABLE IF EXISTS public.activities;
 
