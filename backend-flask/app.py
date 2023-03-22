@@ -211,15 +211,13 @@ def data_search():
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_activities():
-  user_handle = request.json['user_handle']
-  
-  
   # print("user_handle ", user_handle)
+  print("request.json", request.json)
   # request.json {'user_handle': 'shehzad', 'message': 'Test5', 'ttl': '7-days'}
-  # print("request.json", request.json)
-  print("user_handle ", request.json['user_handle'])
-  # user_handle  = 'andrewbrown' 
-  user_handle = request.json['user_handle']
+  # print("user_handle ", request.json['user_handle'])
+  # user_handle  = 'andrewbrown'
+  # user_handle = request.json['user_handle']
+  user_handle  = 'shehzad'
   message = request.json['message'] 
   ttl = request.json['ttl']
   model = CreateActivity.run(message, user_handle, ttl)
