@@ -64,3 +64,7 @@ I modified an automatically generated task from vscode to the below. This snippe
 Successful output once a task has been run.
 
 ![Task Run Successfully](https://user-images.githubusercontent.com/5746804/224539915-76efbebe-b8bf-4451-8cec-c3b151ae0e51.png)
+
+## How to remove hard user handle in application
+
+<https://discord.com/channels/1055552619441049660/1086233246691495968/1086233246691495968>

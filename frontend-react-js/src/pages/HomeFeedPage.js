@@ -7,7 +7,7 @@ import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
 
 // [TODO] Authentication
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import { Auth } from 'aws-amplify';
 
 export default function HomeFeedPage() {
@@ -72,7 +72,8 @@ export default function HomeFeedPage() {
     <article>
       <DesktopNavigation user={user} active={'home'} setPopped={setPopped} />
       <div className='content'>
-        <ActivityForm  
+        <ActivityForm
+          user_handle={user}  
           popped={popped}
           setPopped={setPopped} 
           setActivities={setActivities} 

@@ -46,7 +46,7 @@ class CreateActivity:
       uuid = CreateActivity.create_activity(user_handle,message,expires_at)
 
       object_json = CreateActivity.query_object_activity(uuid)
-      model['data'] = object_json
+      model['data'] = object_json      
     return model
 
   def create_activity(handle, message, expires_at):
