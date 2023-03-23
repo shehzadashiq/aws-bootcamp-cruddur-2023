@@ -217,40 +217,10 @@ def data_search():
 
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
-def data_activities():
-  
-  access_token = extract_access_token(request.headers)
-  
-  # print("user_handle ", user_handle)
-  # print("request.json", request.json)
-  # request.json {'user_handle': 'shehzad', 'message': 'Test5', 'ttl': '7-days'}
-  # print("user_handle ", request.json['user_handle'])
-  # user_handle  = 'andrewbrown'
-  # user_handle = request.json['user_handle']
-  # user_handle  = 'shehzad'
-  
-  user_handle = ''
-  
-  try:
-    claims = cognito_jwt_token.verify(access_token)
-    # authenticated request
-    app.logger.debug("authenticated")
-    app.logger.debug(claims)
-    app.logger.debug(claims['username'])
-    user_handle = claims['username']
-    # data = HomeActivities.run(
-    #     Logger=LOGGER, cognito_user_id=claims['username'])
-  except TokenVerifyError as e:
-     # unauthenticated request
-    app.logger.debug(e)
-    app.logger.debug("unauthenticated user")
-    user_handle = 'andrewbrown'
-    # data = HomeActivities.run()
-    # data = HomeActivities.run(Logger=LOGGER)
-    
-  # return data, 200
+def data_activities():  
 
-  
+  # user_handle = 'andrewbrown' 
+  user_handle = request.json['user_handle']
   message = request.json['message']
   ttl = request.json['ttl']
   model = CreateActivity.run(message, user_handle, ttl)

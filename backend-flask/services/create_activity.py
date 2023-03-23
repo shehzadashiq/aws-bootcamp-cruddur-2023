@@ -9,6 +9,8 @@ class CreateActivity:
       'data': None
     }
 
+    # print("user_handle in createActivity", user_handle)
+
     now = datetime.now(timezone.utc).astimezone()
 
     if (ttl == '30-days'):
