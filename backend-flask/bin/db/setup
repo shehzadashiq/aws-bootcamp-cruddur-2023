@@ -8,10 +8,10 @@ printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 bin_path="$(realpath .)/bin"
 
-source "$bin_path/db-drop"
-source "$bin_path/db-create"
-source "$bin_path/db-schema-load"
-source "$bin_path/db-seed"
+source "$bin_path/db/drop"
+source "$bin_path/db/create"
+source "$bin_path/db/schema-load"
+source "$bin_path/db/seed"
 
 
 # NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//g' <<<"$CONNECTION_URL")
