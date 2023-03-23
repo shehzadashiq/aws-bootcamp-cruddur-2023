@@ -22,3 +22,4 @@ psycopg[binary]
 psycopg[pool]
 
 jwt
+boto3
