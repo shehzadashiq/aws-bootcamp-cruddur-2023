@@ -8,6 +8,9 @@ tasks:
       unzip -qo awscliv2.zip
       sudo ./aws/install
       cd $THEIA_WORKSPACE_ROOT
+    command: |
+      export GITPOD_IP=$(curl ifconfig.me)
+      source "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule"      
   - name: react-js
     command: |
       cd frontend-react-js
@@ -19,9 +22,7 @@ tasks:
       sudo apt update
       sudo apt install -y postgresql-client-12 libpq-dev
  #    sudo apt install -y postgresql-client-12
-    command: |
-      export GITPOD_IP=$(curl ifconfig.me)
-      source "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule"
+
   - name: net-tools
     before: |
       sudo apt update
