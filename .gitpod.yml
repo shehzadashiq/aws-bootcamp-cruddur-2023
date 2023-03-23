@@ -23,7 +23,8 @@ tasks:
       export GITPOD_IP=$(curl ifconfig.me)
       source "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule"
   - name: net-tools
-    init: |
+    before: |
+      sudo apt update
       sudo apt install net-tools
   # - name: postgres-client
   #   init: |

@@ -3,6 +3,8 @@ from flask import request
 from flask_cors import CORS, cross_origin
 import os
 import sys, requests
+import jwt
+import requests
 
 from services.home_activities import *
 from services.user_activities import *
@@ -79,6 +81,11 @@ cognito_jwt_token = CognitoJwtToken(
   user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
   region=os.getenv("AWS_DEFAULT_REGION")
 )
+
+# # Decode and verify the JWT token
+# decoded_token = jwt.decode(cognito_jwt_token, public_key, algorithms=[
+#                            "RS256"], audience="myapp", issuer=f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}")
+# username = decoded
 
 # HoneyComb ---------
 # Initialize automatic instrumentation with Flask
@@ -211,16 +218,43 @@ def data_search():
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_activities():
+  
+  access_token = extract_access_token(request.headers)
+  
   # print("user_handle ", user_handle)
-  print("request.json", request.json)
+  # print("request.json", request.json)
   # request.json {'user_handle': 'shehzad', 'message': 'Test5', 'ttl': '7-days'}
   # print("user_handle ", request.json['user_handle'])
   # user_handle  = 'andrewbrown'
   # user_handle = request.json['user_handle']
-  user_handle  = 'shehzad'
-  message = request.json['message'] 
+  # user_handle  = 'shehzad'
+  
+  user_handle = ''
+  
+  try:
+    claims = cognito_jwt_token.verify(access_token)
+    # authenticated request
+    app.logger.debug("authenticated")
+    app.logger.debug(claims)
+    app.logger.debug(claims['username'])
+    user_handle = claims['username']
+    # data = HomeActivities.run(
+    #     Logger=LOGGER, cognito_user_id=claims['username'])
+  except TokenVerifyError as e:
+     # unauthenticated request
+    app.logger.debug(e)
+    app.logger.debug("unauthenticated user")
+    user_handle = 'andrewbrown'
+    # data = HomeActivities.run()
+    # data = HomeActivities.run(Logger=LOGGER)
+    
+  # return data, 200
+
+  
+  message = request.json['message']
   ttl = request.json['ttl']
   model = CreateActivity.run(message, user_handle, ttl)
+  
   if model['errors'] is not None:
     return model['errors'], 422
   else:
