@@ -1,3 +1,4 @@
 docker/dynamodb/shared-local-instance.db
 *.env
 *.bak
+venv
