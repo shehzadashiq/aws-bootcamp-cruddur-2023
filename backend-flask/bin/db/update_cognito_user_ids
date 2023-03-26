@@ -43,7 +43,6 @@ def get_cognito_user_ids():
     dict_users[handle['Value']] = sub['Value']
   return dict_users
 
-
 users = get_cognito_user_ids()
 
 for handle, sub in users.items():

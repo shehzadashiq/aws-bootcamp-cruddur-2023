@@ -29,7 +29,7 @@ query_params = {
     ':pk': {'S': f"MSG#{message_group_uuid}"},
     # ':start_date': {'S': '2023-03-01T00:00:00.000000+00:00' },
     # ':end_date': {'S': '2023-03-31T23:59:59.999999+00:00' }
-    # ':year': {'S': '2023' }
+    ':year': {'S': '2023' }
   },
   'ReturnConsumedCapacity': 'TOTAL'
 }
