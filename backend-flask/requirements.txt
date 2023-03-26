@@ -20,6 +20,7 @@ requests
 # PostGres Driver/Client for Python
 psycopg[binary]
 psycopg[pool]
+psycopg-pool
 
 jwt
 boto3
