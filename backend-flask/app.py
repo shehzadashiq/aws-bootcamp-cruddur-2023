@@ -142,12 +142,12 @@ def data_message_groups():
   try:
     claims = cognito_jwt_token.verify(access_token)
     
+    print(f"cognito_user_id -> {claims['sub']}")
     # authenticated request
     app.logger.debug("authenticated in message groups")
     app.logger.debug(claims)
   
     cognito_user_id = claims['sub']
-    print(f"cognito_user_id -> {cognito_user_id}")
     
     model = MessageGroups.run(cognito_user_id=cognito_user_id)
     if model['errors'] is not None:
