@@ -1,5 +1,6 @@
 import './MessageGroupsPage.css';
 import React from "react";
+
 import DesktopNavigation  from '../components/DesktopNavigation';
 import MessageGroupFeed from '../components/MessageGroupFeed';
 import checkAuth from '../lib/CheckAuth';
@@ -11,7 +12,9 @@ export default function MessageGroupsPage() {
   const dataFetchedRef = React.useRef(false);
 
   const loadData = async () => {
+    console.log("Reached MessageGroupsPage->loadData()")
     try {
+      console.log("Reached MessageGroupsPage->loadData() try statement")
       const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/message_groups`
       const res = await fetch(backend_url, {
         headers: {
@@ -22,7 +25,11 @@ export default function MessageGroupsPage() {
       let resJson = await res.json();
       if (res.status === 200) {
         setMessageGroups(resJson)
+        console.log("Received 200 in loadData")
+        console.log("resJson")
+        console.log(resJson)        
       } else {
+        console.log("Received Error in loadData")
         console.log(res)
       }
     } catch (err) {
