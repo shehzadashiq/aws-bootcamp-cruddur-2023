@@ -40,7 +40,6 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend-react-js:/frontend-react-js
-
   db:
     image: postgres:13-alpine
     restart: always

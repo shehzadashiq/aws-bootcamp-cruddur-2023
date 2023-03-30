@@ -30,14 +30,14 @@ tasks:
     before: |
       sudo apt update
       sudo apt install net-tools
-  # - name: postgres-client
-  #   init: |
-  #     sudo apt update
-  #     sudo apt install -y postgresql-client-12
   - name: momento
     before: |
       brew tap momentohq/tap
       brew install momento-cli
+  # - name: postgres-client
+  #   init: |
+  #     sudo apt update
+  #     sudo apt install -y postgresql-client-12      
    
 
 vscode:
