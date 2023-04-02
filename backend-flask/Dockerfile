@@ -1,5 +1,6 @@
 # https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-1/journal/week1.md
-FROM python:3.10-slim-buster
+# FROM python:3.10-slim-buster
+FROM 797130574998.dkr.ecr.eu-west-2.amazonaws.com/cruddur-python:3.10-slim-buster
 
 # Inside Container
 # make a new folder inside container
@@ -21,7 +22,8 @@ COPY . .
 
 # Set Enviroment Variables (Env Vars)
 # Inside Container and wil remain set when the container is running
-ENV FLASK_ENV=development
+# ENV FLASK_ENV=development
+ENV FLASK_DEBUG=1
 
 EXPOSE ${PORT}
 
