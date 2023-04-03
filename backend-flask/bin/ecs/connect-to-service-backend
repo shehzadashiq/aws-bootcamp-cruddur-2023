@@ -1,10 +1,3 @@
-# Week 6 — Deploying Containers
-
-Andrews Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-6/journal/week6.md>
-
-## Script to Connect to Task ID
-
-```sh
 #!/usr/bin/bash
 
 export TASK_ID=$(aws ecs list-tasks --cluster cruddur --service-name backend-flask --query 'taskArns[*]' --output json | jq -r 'join(",")')
@@ -16,4 +9,3 @@ aws ecs execute-command  \
 --container backend-flask \
 --command "/bin/bash" \
 --interactive
-```
