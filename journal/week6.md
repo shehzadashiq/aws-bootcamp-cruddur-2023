@@ -22,3 +22,9 @@ aws ecs execute-command  \
 
 My existing domain is with ionos.co.uk, I have pointed the name servers to Route 53 however the change takes 48 hours.
 
+Migration worked within ionos but domain was no longer pingable. Creating the aliases to the ALB's resolved this issue.
+
+The application is now accessible via the domain name and the migration has been successful.
+
+
+
