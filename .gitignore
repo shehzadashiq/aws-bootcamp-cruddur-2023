@@ -3,3 +3,4 @@ docker/dynamodb/shared-local-instance.db
 *.bak
 venv
 *.deb
+frontend-react-js/build/*
