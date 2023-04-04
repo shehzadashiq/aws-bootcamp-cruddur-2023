@@ -6,7 +6,7 @@
     "enableExecuteCommand": true,
     "loadBalancers": [
       {
-        "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-2:797130574998:targetgroup/cruddur-backend-task-tg/f3942905cda006bc",
+        "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-2:797130574998:targetgroup/cruddur-frontend-react-js/9e8ab4088723219f",
         "containerName": "frontend-react-js",
         "containerPort": 3000
       }
