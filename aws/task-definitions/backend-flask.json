@@ -14,7 +14,7 @@
         "command": [
           "CMD-SHELL",
           "python /backend-flask/bin/flask/health-check"
-        ],
+        ],  
         "interval": 30,
         "timeout": 5,
         "retries": 3,
@@ -39,8 +39,8 @@
       "environment": [
         {"name": "OTEL_SERVICE_NAME", "value": "backend-flask"},
         {"name": "OTEL_EXPORTER_OTLP_ENDPOINT", "value": "https://api.honeycomb.io"},
-        {"name": "FRONTEND_URL", "value": "*"},
-        {"name": "BACKEND_URL", "value": "*"},
+        {"name": "FRONTEND_URL", "value": "https://tajarba.com"},
+        {"name": "BACKEND_URL", "value": "https://eapi.tajarba.com"},
         {"name": "AWS_DEFAULT_REGION", "value": "eu-west-2"}
       ],
       "secrets": [
