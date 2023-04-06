@@ -9,7 +9,7 @@ opentelemetry-instrumentation-requests
 
 watchtower
 
-aws-xray-sdk
+# aws-xray-sdk
 
 blinker
 rollbar
