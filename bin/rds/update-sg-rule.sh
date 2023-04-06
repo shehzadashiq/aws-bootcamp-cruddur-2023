@@ -1,0 +1,27 @@
+#! /usr/bin/bash
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="rds-update-sg-rule"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+GITPOD_IP=$(curl ifconfig.me)
+DB_SG_ID=$(aws ec2 describe-security-groups --group-names "default" --query 'SecurityGroups[*].GroupId' --output text)
+echo $DB_SG_ID
+
+# For now this is hard coded but figure a way to automate this
+DB_SG_RULE_ID="sgr-0718cbc2d3b872318"
+
+# # aws ec2 describe-security-groups --group-names "default" --query 'SecurityGroups[].IpPermissions[?contains(Description, `GitPOD`)]'
+# aws ec2 describe-security-groups --group-names default --query 'SecurityGroups[].IpPermissions[?Description==`GitPOD`]'
+# aws ec2 describe-security-groups --group-names default --query 'SecurityGroups[].IpPermissions[?Description==`GitPOD`]'
+# aws ec2 describe-security-groups --group-ids sg-0123456789abcdef --query 'SecurityGroups[].IpPermissions[]'
+# aws ec2 describe-security-groups --group-ids sg-0b56b1dd1a8da52b7 --query 'SecurityGroups[].IpPermissions[?Description==`GitPOD`]'
+# aws ec2 describe-security-groups --group-ids sg-0b56b1dd1a8da52b7 --query 'SecurityGroups[].IpPermissions[?contains(Description,`GitPOD`)]'
+
+
+
+
+aws ec2 modify-security-group-rules \
+    --group-id $DB_SG_ID \
+	--security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GitPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
