@@ -2,11 +2,12 @@ import './MessageGroupPage.css';
 import React from "react";
 import { useParams } from 'react-router-dom';
 
+import {checkAuth, getAccessToken} from '../lib/CheckAuth';
 import DesktopNavigation  from '../components/DesktopNavigation';
 import MessageGroupFeed from '../components/MessageGroupFeed';
 import MessagesFeed from '../components/MessageFeed';
 import MessagesForm from '../components/MessageForm';
-import checkAuth from '../lib/CheckAuth';
+
 
 export default function MessageGroupPage() {
   const [messageGroups, setMessageGroups] = React.useState([]);
@@ -22,9 +23,11 @@ export default function MessageGroupPage() {
     try {
       console.log("Reached loadMessageGroupsData() Try Statement")    
       const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/message_groups`
+      await getAccessToken()
+      const access_token = localStorage.getItem("access_token")
       const res = await fetch(backend_url, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          Authorization: `Bearer ${access_token}`
         },
         method: "GET"
       });
@@ -45,9 +48,11 @@ export default function MessageGroupPage() {
     try {
       console.log("Reached loadMessageGroupData() Try Statement")  
       const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/messages/${params.message_group_uuid}`
+      await getAccessToken()
+      const access_token = localStorage.getItem("access_token")
       const res = await fetch(backend_url, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          Authorization: `Bearer ${access_token}`
         },
         method: "GET"
       });
