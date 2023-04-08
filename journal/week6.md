@@ -63,3 +63,7 @@ The application is now accessible via the domain name and the migration has been
 ## Issue with Backend container continually starting
 
 When refactoring the scripts I accidentally moved the healthcheck accidentally out of the directory. This caused the container to fail the health checks and continually restart it. It would run locally so I was confused. I resolved this issue by connecting to the container and verifying that the healthcheck script was missing. Once restored the issue was resolved.
+
+## Scaling cruddur service
+
+To save costs I created scripts to scale the cruddur services up and down as required. The script looks for all services in the cruddur cluster and automatically scales the services up and down.
