@@ -67,3 +67,14 @@ When refactoring the scripts I accidentally moved the healthcheck accidentally o
 ## Scaling cruddur service
 
 To save costs I created scripts to scale the cruddur services up and down as required. The script looks for all services in the cruddur cluster and automatically scales the services up and down.
+
+## Implementing TimeZone fixes
+
+After implementing the timezone fixes to verify it had worked the local dynamodb was initialised with seed data again and matched to cognito using the following steps
+
+I renamed all my scripts where possible to the appropriate type e.g. .sh,.py just for my own clarity. However this caused issues when I renamed the backend-flask/lib/
+
+- bin/db/setup.sh
+- bin/db/update_cognito_user_ids.py
+- bin/ddb/schema-load.py
+- bin/ddb/seed.py
