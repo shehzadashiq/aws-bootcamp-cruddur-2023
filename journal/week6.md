@@ -2,7 +2,11 @@
 
 Andrews Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-6/journal/week6.md>
 
-## Script to Connect to Task ID for Backend
+## Scripts to Connect to Latest Task ID for Backend/Frontend
+
+I modified Andrews script so that when connecting to the backend or frontend you do not need to specify a task ID. The script automatically selects the latest Task ID and connects to it.
+
+### Backend Task
 
 ```sh
 #!/usr/bin/bash
@@ -15,6 +19,22 @@ aws ecs execute-command  \
 --task $TASK_ID \
 --container backend-flask \
 --command "/bin/bash" \
+--interactive
+```
+
+### Frontend Task
+
+```sh
+#!/usr/bin/bash
+
+export TASK_ID=$(aws ecs list-tasks --cluster cruddur --service-name frontend-react-js --query 'taskArns[*]' --output json | jq -r 'join(",")')
+
+aws ecs execute-command  \
+--region $AWS_DEFAULT_REGION \
+--cluster cruddur \
+--task $TASK_ID \
+--container frontend-react-js \
+--command "/bin/sh" \
 --interactive
 ```
 
@@ -68,11 +88,34 @@ When refactoring the scripts I accidentally moved the healthcheck accidentally o
 
 To save costs I created scripts to scale the cruddur services up and down as required. The script looks for all services in the cruddur cluster and automatically scales the services up and down.
 
+### Scale Down Script
+
+```sh
+#!/usr/bin/bash
+
+CLUSTER_NAME="cruddur"
+
+# Scale up all services in the cluster
+for service in $(aws ecs list-services --cluster $CLUSTER_NAME --output text | awk '{print $2}'); do aws ecs update-service --cluster $CLUSTER_NAME --service $service --desired-count 0; done
+```
+
+### Scale Up Script
+
+```sh
+#!/usr/bin/bash
+
+CLUSTER_NAME="cruddur"
+
+# Scale up all services in the cluster
+for service in $(aws ecs list-services --cluster $CLUSTER_NAME --output text | awk '{print $2}'); do aws ecs update-service --cluster $CLUSTER_NAME --service $service --desired-count 1; done
+
+```
+
 ## Implementing TimeZone fixes
 
 After implementing the timezone fixes to verify it had worked the local dynamodb was initialised with seed data again and matched to cognito using the following steps
 
-I renamed all my scripts where possible to the appropriate type e.g. .sh,.py just for my own clarity. However this caused issues when I renamed the backend-flask/lib/
+I renamed all my scripts where possible to the appropriate type e.g. {.sh , .py} just for my own clarity. However this caused issues when I renamed the python files in  backend-flask/lib/
 
 - bin/db/setup.sh
 - bin/db/update_cognito_user_ids.py
