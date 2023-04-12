@@ -42,10 +42,12 @@ tasks:
       brew install momento-cli
   - name: cdk
     before: |
-      cd thumbing-serverless-cdk
-      npm i
       npm install aws-cdk -g
-      npm install aws-cdk-lib -g      
+      npm install aws-cdk-lib -g
+      cd thumbing-serverless-cdk
+      npm i      
+      cp env.example .env
+
 
 vscode:
   extensions:
