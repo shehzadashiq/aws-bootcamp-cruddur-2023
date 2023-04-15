@@ -12,7 +12,7 @@ async function main(){
   const originalImage = await getOriginalImage(client,srcBucket,srcKey)
   console.log(originalImage)
   const processedImage = await processImage(originalImage,width,height)
-  await uploadProcessedImage(dstBucket,dstKey,processedImage)
+  await uploadProcessedImage(client,dstBucket,dstKey,processedImage)
 }
 
 main()

@@ -32,7 +32,7 @@ async function processImage(image,width,height){
   return processedImage;
 }
 
-async function uploadProcessedImage(dstBucket,dstKey,image){
+async function uploadProcessedImage(client,dstBucket,dstKey,image){
   console.log('upload==')
   const params = {
     Bucket: dstBucket,
@@ -47,6 +47,7 @@ async function uploadProcessedImage(dstBucket,dstKey,image){
   return response;
 }
 
+// exports.getClient = Object
 module.exports = {
   getClient: getClient,
   getOriginalImage: getOriginalImage,
