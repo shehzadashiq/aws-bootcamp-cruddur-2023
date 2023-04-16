@@ -5,4 +5,4 @@ venv
 *.deb
 frontend-react-js/build/*
 node_modules
-env.sh
+vars.sh
