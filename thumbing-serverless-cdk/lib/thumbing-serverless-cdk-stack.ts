@@ -47,9 +47,11 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
 
     // create policies
     const s3ReadWritePolicy = this.createPolicyBucketAccess(bucket.bucketArn)
+    // const snsPublishPolicy = this.createPolicySnSPublish(snsTopic.topicArn)
 
     // Attach policies for permissions
     lambda.addToRolePolicy(s3ReadWritePolicy);
+    // lambda.addToRolePolicy(snsPublishPolicy);
     
   }
 
@@ -128,5 +130,17 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
       destination,
       {prefix: prefix}
     );
+  }
+
+  createPolicySnSPublish(topicArn: string){
+    const snsPublishPolicy = new iam.PolicyStatement({
+      actions: [
+        'sns:Publish',
+      ],
+      resources: [
+        topicArn
+      ]
+    });
+    return snsPublishPolicy;
   }
 }
