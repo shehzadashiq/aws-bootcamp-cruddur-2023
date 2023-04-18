@@ -27,6 +27,7 @@ ENV FLASK_DEBUG=1
 
 EXPOSE ${PORT}
 
+ENV PYTHONUNBUFFERED=1
 
 # Add Script file to docker file
 COPY run.sh /backend-flask/run.sh
