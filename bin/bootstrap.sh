@@ -9,6 +9,6 @@ printf "${CYAN}====== ${LABEL}${NO_COLOR}\n"
 ABS_PATH=$(readlink -f "$0")
 BIN_DIR=$(dirname $ABS_PATH)
 
-source "$BIN_DIR/db/setup"
-source "$BIN_DIR/ddb/schema-load"
-source "$BIN_DIR/ddb/seed"
+source "$BIN_DIR/ecr/login.sh"
+ruby "$BIN_DIR/backend/generate-env.rb"
+ruby "$BIN_DIR/frontend/generate-env.rb"
