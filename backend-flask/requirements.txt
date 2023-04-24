@@ -24,3 +24,5 @@ psycopg-pool
 
 jwt
 boto3
+
+cfn-lint
