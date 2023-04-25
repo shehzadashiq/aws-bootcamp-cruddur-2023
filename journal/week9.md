@@ -37,3 +37,7 @@ This has had me scratching my head for days but I could not resolve it. I create
 ![image](https://user-images.githubusercontent.com/5746804/234274388-9cc2672f-6758-47d6-9ea1-5d5001804439.png)
 
 I opened a ticket and one of the other bootcampers mentioned that this might be a problem with Ad-Blockers. It turns out that Kaspersky was treating the image as a banner and hiding it. To counteract this I have created a new folder called images and placed the banner in it.
+
+Setting in Kaspersky that caused the issue.
+
+![image](https://user-images.githubusercontent.com/5746804/234359114-132d52c9-bbdc-4457-9a33-3f005a953f35.png
