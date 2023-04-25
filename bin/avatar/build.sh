@@ -7,7 +7,7 @@ BIN_PATH=$(dirname $SERVERLESS_PATH)
 PROJECT_PATH=$(dirname $BIN_PATH)
 SERVERLESS_PROJECT_PATH="$PROJECT_PATH/thumbing-serverless-cdk"
 
-cd $SERVERLESS_PROJECT_PATHc
+cd $SERVERLESS_PROJECT_PATH
 
 npm install
 rm -rf node_modules/sharp
