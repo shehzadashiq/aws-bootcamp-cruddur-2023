@@ -6,6 +6,7 @@ DATA_FILE_PATH="$SERVERLESS_PATH/files/data.jpg"
 
 aws s3 rm "s3://$DOMAIN-uploaded-avatars/data.jpg"
 aws s3 rm "s3://assets.$DOMAIN_NAME/avatars/data.jpg"
+aws s3 rm "s3://assets2.$DOMAIN_NAME/avatars/data.jpg"
 
 # aws s3 rm "s3://cruddur-uploaded-avatars/avatars/original/data.jpg"
 # aws s3 rm "s3://assets.$DOMAIN_NAME/avatars/processed/data.jpg"
