@@ -2,8 +2,8 @@ import './ProfileHeading.css';
 import EditProfileButton from '../components/EditProfileButton';
 
 export default function ProfileHeading(props) {
-  // const backgroundImage = 'url("https://assets.tajarba.com/banners/banner.jpg")';
-  const backgroundImage = 'url("https://assets.tajarba.com/avatars/banner.jpg")';
+  // const backgroundImage = 'url("https://assets.tajarba.com/banners/banner.jpg")'; Removing as Kaspersky blocks this
+  const backgroundImage = 'url("https://assets.tajarba.com/images/banner.jpg")';
   const styles = {
     backgroundImage: backgroundImage,
     backgroundSize: 'cover',
@@ -25,6 +25,7 @@ export default function ProfileHeading(props) {
       </div>
       <EditProfileButton setPopped={props.setPopped} />
     </div>
+    <div class="bio">{props.profile.bio}</div>
   </div>
   );
 }

@@ -12,6 +12,7 @@ BIN_PATH=$(dirname $DB_PATH)
 PROJECT_PATH=$(dirname $BIN_PATH)
 BACKEND_FLASK_PATH="$PROJECT_PATH/backend-flask"
 schema_path="$BACKEND_FLASK_PATH/db/schema.sql"
+
 echo $schema_path
 
 if [ "$1" = "prod" ]; then
