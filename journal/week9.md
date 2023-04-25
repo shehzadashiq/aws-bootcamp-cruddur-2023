@@ -40,4 +40,4 @@ I opened a ticket and one of the other bootcampers mentioned that this might be 
 
 Setting in Kaspersky that caused the issue.
 
-![image](https://user-images.githubusercontent.com/5746804/234359114-132d52c9-bbdc-4457-9a33-3f005a953f35.png
+![image](https://user-images.githubusercontent.com/5746804/234359114-132d52c9-bbdc-4457-9a33-3f005a953f35.png)
