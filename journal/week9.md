@@ -77,7 +77,7 @@ with app.app_context():
           allow_logging_basic_config=False)
 
       # send exceptions from `app` to rollbar, using flask's signal system.
-      got_request_exception.connect(rollbar.contrib.flask.report_exception, app)\
+      got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
 ```
 
 The container now builds successfully.
