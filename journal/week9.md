@@ -41,3 +41,43 @@ I opened a ticket and one of the other bootcampers mentioned that this might be 
 Setting in Kaspersky that caused the issue.
 
 ![image](https://user-images.githubusercontent.com/5746804/234359114-132d52c9-bbdc-4457-9a33-3f005a953f35.png)
+
+## Issue when trying to compose backend container in new Workspace
+
+After migrating to a new workspace I encountered the following issue when building.
+
+![image](https://user-images.githubusercontent.com/5746804/234458289-3396b9ba-9371-4e13-a4a9-628a7a2f68e0.png)
+
+```sh
+aws-bootcamp-cruddur-2023-backend-flask-1      |     __import__(module_name)
+aws-bootcamp-cruddur-2023-backend-flask-1      |   File "/backend-flask/app.py", line 112, in <module>
+aws-bootcamp-cruddur-2023-backend-flask-1      |     @app.before_first_request
+aws-bootcamp-cruddur-2023-backend-flask-1      | AttributeError: 'Flask' object has no attribute 'before_first_request'. Did you mean: '_got_first_request'
+```
+
+According to this article: <https://stackoverflow.com/questions/73570041/flask-deprecated-before-first-request-how-to-update/74629704#74629704>
+
+`before_first_request is deprecated and will be removed from Flask 2.3`
+
+To resolve this I had to do the following
+
+```py
+# @app.before_first_request
+with app.app_context():
+  def init_rollbar():
+      """init rollbar module"""
+      rollbar.init(
+          # access token
+          rollbar_access_token,
+          # environment name
+          'production',
+          # server root directory, makes tracebacks prettier
+          root=os.path.dirname(os.path.realpath(__file__)),
+          # flask already sets up logging
+          allow_logging_basic_config=False)
+
+      # send exceptions from `app` to rollbar, using flask's signal system.
+      got_request_exception.connect(rollbar.contrib.flask.report_exception, app)\
+```
+
+The container now builds successfully.
