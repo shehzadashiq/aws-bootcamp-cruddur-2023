@@ -17,7 +17,6 @@ export default function DesktopSidebar(props) {
     {"display_name": "Shehzad Ali", "handle": "shehzad"}
   ]
 
-
   let trending;
   let suggested;
   let join;
@@ -27,21 +26,6 @@ export default function DesktopSidebar(props) {
     } else {
     join = <JoinSection />
   }
-
-  // let trending;
-  // if (props.user) {
-  //   trending = <TrendingSection trendings={trendings} />
-  // }
-
-  // let suggested;
-  // if (props.user) {
-  //   suggested = <SuggestedUsersSection users={users} />
-  // }
-  // let join;
-  // if (props.user) {
-  // } else {
-  //   join = <JoinSection />
-  // }
 
   return (
     <section>

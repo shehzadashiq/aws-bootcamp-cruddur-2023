@@ -25,7 +25,7 @@ export default function ActivityContent(props) {
           </Link>{/* activity_identity */}
           <div className='activity_times'>
             <div className="created_at" title={format_datetime(props.activity.created_at)}>
-              <span className='ago'>{time_ago(props.activity.created_at)}</span>  
+              <span className='ago'>{time_ago(props.activity.created_at)}</span> 
             </div>
             {expires_at}
           </div>{/* activity_times */}

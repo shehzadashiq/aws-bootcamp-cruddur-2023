@@ -61,14 +61,11 @@ export default function ProfileForm(props) {
   if (props.popped === true) {
     return (
       <div className="popup_form_wrap profile_popup" onClick={close}>
-        <form 
-          className='profile_form popup_form'
-          onSubmit={onsubmit}
-        >
-          <div class="popup_heading">
-            <div class="popup_title">Edit Profile</div>
-            <div className='submit'>
-              <button type='submit'>Save</button>
+        <form className="profile_form popup_form" onSubmit={onsubmit}>
+          <div className="popup_heading">
+            <div className="popup_title">Edit Profile</div>
+            <div className="submit">
+              <button type="submit">Save</button>
             </div>
           </div>
           <div className="popup_content">
@@ -78,16 +75,12 @@ export default function ProfileForm(props) {
                 type="text"
                 placeholder="Display Name"
                 value={displayName}
-                onChange={display_name_onchange} 
+                onChange={display_name_onchange}
               />
             </div>
             <div className="field bio">
               <label>Bio</label>
-              <textarea
-                placeholder="Bio"
-                value={bio}
-                onChange={bio_onchange} 
-              />
+              <textarea placeholder="Bio" value={bio} onChange={bio_onchange} />
             </div>
           </div>
         </form>
