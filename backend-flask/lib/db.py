@@ -8,6 +8,10 @@ class Db:
   def __init__(self):
     self.init_pool()
 
+  def init_pool(self):
+    connection_url = os.getenv("CONNECTION_URL")
+    self.pool = ConnectionPool(connection_url)
+
   def template(self,*args):
     pathing = list((app.root_path,'db','sql',) + args)
     pathing[-1] = pathing[-1] + ".sql"
@@ -22,10 +26,6 @@ class Db:
     with open(template_path, 'r') as f:
       template_content = f.read()
     return template_content
-
-  def init_pool(self):
-    connection_url = os.getenv("CONNECTION_URL")
-    self.pool = ConnectionPool(connection_url)
 
   # we want to commit data such as an insert
   # be sure to check for RETURNING in all uppercases

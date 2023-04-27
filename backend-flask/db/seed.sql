@@ -1,9 +1,9 @@
 -- this file was manually created
-INSERT INTO public.users (display_name, handle, email,cognito_user_id,bio)
+INSERT INTO public.users (display_name, handle, email,bio,cognito_user_id)
 VALUES
-  ('Shehzad Ali', 'shehzad','shehzad@exampro.co' ,'MOCK',"NothingSoFar"),
-  ('Andrew Bayko', 'bayko','bayko@exampro.co' ,'MOCK',"NothingSoFar"),
-  ('Andrew Brown', 'andrewbrown','andrew@exampro.co','MOCK',"NothingSoFar");
+  ('Shehzad Ali', 'shehzad','shehzad@exampro.co','NothingSoFar','MOCK'),
+  ('Andrew Bayko', 'bayko','bayko@exampro.co','NothingSoFar','MOCK'),
+  ('Andrew Brown', 'andrewbrown','andrew@exampro.co','NothingSoFar','MOCK');
 
 
 INSERT INTO public.activities (user_uuid, message, expires_at)

@@ -1,5 +1,6 @@
 from lib.db import db
-from aws_xray_sdk.core import xray_recorder
+# from aws_xray_sdk.core import xray_recorder
+
 class UserActivities:
   def run(user_handle):
     # try:
@@ -16,6 +17,7 @@ class UserActivities:
       results = db.query_object_json(sql,{'handle': user_handle})
       model['data'] = results
 
+    return model
       # subsegment = xray_recorder.begin_subsegment('mock-data')
       # xray ---
       # dict = {
@@ -28,4 +30,3 @@ class UserActivities:
     #  # Close the segment
       # xray_recorder.end_subsegment()
       # print("Reached Finally statement. I should not have reached here.")
-    return model

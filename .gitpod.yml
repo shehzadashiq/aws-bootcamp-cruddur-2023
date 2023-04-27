@@ -15,6 +15,7 @@ tasks:
     command: |
       export GITPOD_IP=$(curl ifconfig.me)
       source "$THEIA_WORKSPACE_ROOT/bin/rds/update-sg-rule.sh"
+      source "$THEIA_WORKSPACE_ROOT/bin/ecr/login.sh"
   - name: flask
     command: |
       cd backend-flask
