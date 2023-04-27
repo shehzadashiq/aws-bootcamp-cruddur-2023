@@ -19,6 +19,6 @@ export default function MessageItem(props) {
           <span className='ago'>{message_time_ago(props.message.created_at)}</span> 
         </div>{/* created_at */}
       </div>{/* message_content */}
-    </Link>
+    </div>
   );
 }
