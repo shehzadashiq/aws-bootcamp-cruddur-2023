@@ -56,5 +56,10 @@ profileLink = <DesktopNavigationLink
       active={props.active} />
 ```
 
+This shows the @bayko profile when logged in as Bayko
+
+![image](https://user-images.githubusercontent.com/5746804/234735739-03bb7353-79a5-4474-a7cf-4a5346a3b753.png)
+
+
 Currently double clicking on this causes an error but I will see if I can resolve this.
 
