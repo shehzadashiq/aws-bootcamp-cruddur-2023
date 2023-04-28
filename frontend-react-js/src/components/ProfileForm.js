@@ -9,9 +9,9 @@ export default function ProfileForm(props) {
 
   React.useEffect(()=>{
     console.log('useEffects',props)
-    setBio(props.profile.bio);
+    setBio(props.profile.bio || "");
     setDisplayName(props.profile.display_name);
-  }, [props.profile])
+  }, [props.profile]);
 
   const onsubmit = async (event) => {
     event.preventDefault();
@@ -28,7 +28,7 @@ export default function ProfileForm(props) {
         },
         body: JSON.stringify({
           bio: bio,
-          display_name: displayName
+          display_name: displayName,
         }),
       });
       let data = await res.json();
