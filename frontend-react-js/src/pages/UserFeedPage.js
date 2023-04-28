@@ -27,12 +27,13 @@ export default function UserFeedPage() {
       const access_token = localStorage.getItem("access_token")
       const res = await fetch(backend_url, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          Authorization: `Bearer ${access_token}`
         },
         method: "GET"
       });
       let resJson = await res.json();
       if (res.status === 200) {
+        console.log('setprofile',resJson.profile)
         setActivities(resJson.profile)
         setActivities(resJson.activities)
       } else {

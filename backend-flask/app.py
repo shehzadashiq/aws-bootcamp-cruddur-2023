@@ -333,7 +333,7 @@ def data_update_profile():
     else:
       return model['data'], 200
   except TokenVerifyError as e:
-    # unauthenicatied request
+    # unauthenticated request
     app.logger.debug(e)
     return {}, 401
 
