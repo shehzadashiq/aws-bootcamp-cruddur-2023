@@ -50,7 +50,7 @@ During my video grading Andrew mentioned that since the user had been already pa
 
 ```
 profileLink = <DesktopNavigationLink 
-      url={"@" + props.user.handle}
+      url={"/@" + props.user.handle}
       name="Profile"
       handle="profile"
       active={props.active} />
@@ -63,3 +63,9 @@ This shows the @bayko profile when logged in as Bayko
 
 Currently double clicking on this causes an error but I will see if I can resolve this.
 
+
+## Creating S3 Upload
+
+npm i @aws-sdk/client-s3 --save
+
+https://github.com/aws/aws-sdk-js-v3#getting-started
