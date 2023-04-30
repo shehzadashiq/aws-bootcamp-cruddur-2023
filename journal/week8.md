@@ -18,13 +18,13 @@ Once this issue had been resolve the lambda would still not trigger. I checked t
 
 ![image](https://user-images.githubusercontent.com/5746804/232346131-f3a24fda-9819-48e7-92f2-e0760d7b9d19.png)
 
-This however was a red herring and wasted time. The reason for the code not working was that there were typos in the .env file. The lambda was looking at 
+This however was a red herring and wasted time. The reason for the code not working was that there were typos in the .env file. The lambda was looking at
 
 ```sh
 avatar/original
 ```
 
-while the image was being uploaded to 
+while the image was being uploaded to
 
 ```sh
 avatars/original
@@ -34,11 +34,11 @@ Once this was resolved the lambda processed images successfully.
 
 ## Dynamically passing user handle to profile
 
-This makes the Profile Icon handle dynamic by removing @andrewbrown as a hardcoded URL. 
+This makes the Profile Icon handle dynamic by removing @andrewbrown as a hardcoded URL.
 
 In DesktopNavigation.js the following is hardcoded
 
-```
+```sh
 profileLink = <DesktopNavigationLink 
       url="/@andrewbrown" 
       name="Profile"
@@ -48,7 +48,7 @@ profileLink = <DesktopNavigationLink
 
 During my video grading Andrew mentioned that since the user had been already passed we should be able to access the property of it. A bit of trial and error later the following code works.
 
-```
+```sh
 profileLink = <DesktopNavigationLink 
       url={"/@" + props.user.handle}
       name="Profile"
@@ -60,12 +60,14 @@ This shows the @bayko profile when logged in as Bayko
 
 ![image](https://user-images.githubusercontent.com/5746804/234735739-03bb7353-79a5-4474-a7cf-4a5346a3b753.png)
 
+Initially double clicking on this caused an error but I managed to resolve this by appending / at the beginning of the URL which I had missed out.
 
-Currently double clicking on this causes an error but I will see if I can resolve this.
+I also wrote this up in a Blog post to provide more detail.
 
+<https://shehzadashiq.hashnode.dev/aws-cloud-project-bootcamp-dynamic-user-handles>
 
 ## Creating S3 Upload
 
 npm i @aws-sdk/client-s3 --save
 
-https://github.com/aws/aws-sdk-js-v3#getting-started
+<https://github.com/aws/aws-sdk-js-v3#getting-started>
