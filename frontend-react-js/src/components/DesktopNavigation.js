@@ -25,11 +25,10 @@ export default function DesktopNavigation(props) {
       handle="messages" 
       active={props.active} />
     profileLink = <DesktopNavigationLink 
-      url="/@shehzad"
-      // url={"/@" + props.user.handle}
+      // url="/@shehzad"
+      url={"/@" + props.user.handle}
       name="Profile"
       handle="profile"
-      // handle={props.user.handle}
       active={props.active} />
   }
 
