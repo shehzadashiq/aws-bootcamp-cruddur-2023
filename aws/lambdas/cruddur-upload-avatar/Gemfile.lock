@@ -22,6 +22,7 @@ GEM
     ox (2.14.16)
 
 PLATFORMS
+  x64-mingw-ucrt
   x86_64-linux
 
 DEPENDENCIES
