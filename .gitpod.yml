@@ -14,11 +14,11 @@ tasks:
       cd $THEIA_WORKSPACE_ROOT
     command: |
       export GITPOD_IP=$(curl ifconfig.me)
-      source "$THEIA_WORKSPACE_ROOT/bin/rds/update-sg-rule.sh"
-      source "$THEIA_WORKSPACE_ROOT/bin/ecr/login.sh"
+      source "$THEIA_WORKSPACE_ROOT/bin/rds/update-sg-rule"
+      source "$THEIA_WORKSPACE_ROOT/bin/ecr/login"
   - name: flask
     command: |
-      ruby "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env.rb"
+      ruby "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"
       cd backend-flask
       pip install -r requirements.txt            
   # - name: fargate
@@ -31,7 +31,7 @@ tasks:
       # cd backend-flask
   - name: react-js
     command: |
-      ruby "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env.rb"
+      ruby "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env"
       cd frontend-react-js
       npm i
   - name: postgres
