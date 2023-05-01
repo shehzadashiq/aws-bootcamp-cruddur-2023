@@ -109,3 +109,8 @@ workspace_url = "https://#{workspace_id}.#{workspace_cluster_host}"
 
 puts "Workspace URL: #{workspace_url}"
 ```
+
+## Repo for JWT Token
+https://github.com/awslabs/aws-jwt-verify
+
+npm install aws-jwt-verify --save
