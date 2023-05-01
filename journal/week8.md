@@ -60,7 +60,7 @@ This shows the @bayko profile when logged in as Bayko
 
 ![image](https://user-images.githubusercontent.com/5746804/234735739-03bb7353-79a5-4474-a7cf-4a5346a3b753.png)
 
-Initially double clicking on this caused an error but I managed to resolve this by appending / at the beginning of the URL which I had missed out.
+Initially double clicking on this caused an error as it kept appending the username to the end of the URL repeatedly. I managed to resolve this by appending / at the beginning of the URL which I had missed out initially.
 
 I also wrote this up in a Blog post to provide more detail.
 
@@ -71,3 +71,6 @@ I also wrote this up in a Blog post to provide more detail.
 npm i @aws-sdk/client-s3 --save
 
 <https://github.com/aws/aws-sdk-js-v3#getting-started>
+
+
+## Ruby
