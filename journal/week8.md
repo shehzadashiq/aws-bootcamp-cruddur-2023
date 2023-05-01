@@ -74,3 +74,27 @@ npm i @aws-sdk/client-s3 --save
 
 
 ## Ruby
+
+To initialise ruby in a directory run the following command
+
+```sh
+bundle init
+```
+
+To install the packages in a ruby bundle run the following command
+
+```sh
+bundle install
+```
+
+UPLOADS_BUCKET_NAME needs to be configured as a GitPOD environment variable
+
+```sh
+gp env UPLOADS_BUCKET_NAME="tajarba-uploaded-avatars"
+```
+
+Test Ruby function by running
+
+```sh
+bundle exec ruby function.rb
+```
