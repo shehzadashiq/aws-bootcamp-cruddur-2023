@@ -1,6 +1,13 @@
 require 'aws-sdk-s3'
 require 'json'
 
+workspace_id = ENV['GITPOD_WORKSPACE_ID']
+workspace_cluster_host = ENV['GITPOD_WORKSPACE_CLUSTER_HOST']
+
+workspace_url = "https://#{workspace_id}.#{workspace_cluster_host}"
+
+puts "Workspace URL: #{workspace_url}"
+
 def handler(event:, context:)
   puts event
   s3 = Aws::S3::Resource.new

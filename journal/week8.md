@@ -98,3 +98,14 @@ Test Ruby function by running
 ```sh
 bundle exec ruby function.rb
 ```
+
+## Code to dynamically get the GitPod name in Ruby
+
+```rb
+workspace_id = ENV['GITPOD_WORKSPACE_ID']
+workspace_cluster_host = ENV['GITPOD_WORKSPACE_CLUSTER_HOST']
+
+workspace_url = "https://#{workspace_id}.#{workspace_cluster_host}"
+
+puts "Workspace URL: #{workspace_url}"
+```
