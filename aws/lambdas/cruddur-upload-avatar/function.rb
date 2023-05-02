@@ -1,5 +1,6 @@
 require 'aws-sdk-s3'
 require 'json'
+require 'jwt'
 
 workspace_id = ENV['GITPOD_WORKSPACE_ID']
 workspace_cluster_host = ENV['GITPOD_WORKSPACE_CLUSTER_HOST']
@@ -18,10 +19,14 @@ def handler(event:, context:)
   url = obj.presigned_url(:put, expires_in: 60 * 5)
   url # this is the data that will be returned
   body = {url: url}.to_json
-  { statusCode: 200, body: body }
+  { 
+    headers: {
+      "Access-Control-Allow-Headers": "*, Authorization",
+      "Access-Control-Allow-Origin": "https://3000-shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96.gitpod.io",
+      "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
+    },
+    statusCode: 200, 
+    body: body 
+    
+  }
 end
-
-puts handler(
-  event: {},
-  context: {}
-)
