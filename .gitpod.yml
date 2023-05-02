@@ -41,6 +41,12 @@ tasks:
       sudo apt update
       sudo apt install -y postgresql-client-12 libpq-dev
       source "$THEIA_WORKSPACE_ROOT/bin/postGresSetup.sh"
+  - name: sharp
+    command: |
+      cd $THEIA_WORKSPACE_ROOT/aws/lambdas/process-images
+      npm i
+      rm -rf node_modules/sharp
+      SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install --arch=x64 --platform=linux --libc=glibc sharp
   - name: net-tools
     before: |
       sudo apt update
