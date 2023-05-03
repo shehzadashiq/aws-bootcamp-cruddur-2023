@@ -1,13 +1,13 @@
 require 'aws-sdk-s3'
 require 'json'
-require 'jwt'
+# require 'jwt'
 
-workspace_id = ENV['GITPOD_WORKSPACE_ID']
-workspace_cluster_host = ENV['GITPOD_WORKSPACE_CLUSTER_HOST']
+# workspace_id = ENV['GITPOD_WORKSPACE_ID']
+# workspace_cluster_host = ENV['GITPOD_WORKSPACE_CLUSTER_HOST']
 
-workspace_url = "https://#{workspace_id}.#{workspace_cluster_host}"
+# workspace_url = "https://#{workspace_id}.#{workspace_cluster_host}"
 
-puts "Workspace URL: #{workspace_url}"
+# puts "Workspace URL: #{workspace_url}"
 
 def handler(event:, context:)
   puts event
@@ -17,8 +17,8 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        # "Access-Control-Allow-Origin": "https://shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
-        "Access-Control-Allow-Origin": workspace_url,
+        "Access-Control-Allow-Origin": "https://shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
+        # "Access-Control-Allow-Origin": workspace_url,
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
       },
       statusCode: 200
@@ -46,8 +46,8 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        # "Access-Control-Allow-Origin": "https://shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
-        "Access-Control-Allow-Origin": workspace_url,
+        "Access-Control-Allow-Origin": "https://shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
+        # "Access-Control-Allow-Origin": workspace_url,
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
       },
       statusCode: 200, 
