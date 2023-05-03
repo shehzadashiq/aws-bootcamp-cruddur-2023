@@ -114,3 +114,9 @@ puts "Workspace URL: #{workspace_url}"
 https://github.com/awslabs/aws-jwt-verify
 
 npm install aws-jwt-verify --save
+
+## CORS Not Working
+
+Following the videos and looking through the discord, I cannot get CORS working.
+
+Currently I have had to disable the CruddurApiGatewayLambdaAuthoriser completely :(

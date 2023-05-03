@@ -1,6 +1,6 @@
 require 'aws-sdk-s3'
 require 'json'
-# require 'jwt'
+require 'jwt'
 
 # workspace_id = ENV['GITPOD_WORKSPACE_ID']
 # workspace_cluster_host = ENV['GITPOD_WORKSPACE_CLUSTER_HOST']
@@ -31,7 +31,8 @@ def handler(event:, context:)
     extension = body_hash["extension"]
 
     decoded_token = JWT.decode token, nil, false
-    cognito_user_uuid = decoded_token[0]['sub']
+    # cognito_user_uuid = decoded_token[0]['sub']
+    cognito_user_id = event["requestContext"]["authorizer"]["lambda"]["sub"]
 
     s3 = Aws::S3::Resource.new
     bucket_name = ENV["UPLOADS_BUCKET_NAME"]
