@@ -4,9 +4,29 @@ Andrews Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-
 
 ## Overview
 
-The aim of this week was to automate the build pipeline using CodeBuild. Codebuild would be configured to detect any changes made in the prod branch of our repository.
+### Videos for week 9
 
-## Builds failing when unable to download source
+- Week 9 Livestream <https://www.youtube.com/watch?v=DLYfI0ehMZE>
+- Fix CodeBuild Issues <https://www.youtube.com/watch?v=py2E1f0IZg0>
+- CodePipeline <https://www.youtube.com/watch?v=EAudiRT9Alw&ab_channel=ExamPro>
+
+The aim of this week was to automate the build pipeline using CodeBuild and CodePipeline. This would provide us with a complete CI/CD pipeline [Further Reading](https://aws.amazon.com/blogs/devops/complete-ci-cd-with-aws-codecommit-aws-codebuild-aws-codedeploy-and-aws-codepipeline/)
+
+**Integration**
+Codebuild would be configured to detect any changes made in the prod branch of our repository.
+
+**Deployment**
+CodePipeline would then deploy the changes automatically.
+
+## Pre-Requisites
+
+- Buildspec.yml - This needs to be created in backend-flask i.e `backend-flask/buildspec.yml` [buildspec.yml](<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/blob/main/backend-flask/buildspec.yml>)
+- Policy for permissions required for codebuild to run successfully [policy-file](<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/blob/main/aws/policies/ecr-codebuild-backend-role.json>)
+- Prod branch in repository. Any Pull requests will be detected by CodeBuild
+
+## Troubleshooting
+
+### Builds failing when unable to download source
 
 ### Builds would timeout and not proceed. An earlier build which I deleted kept running for 45 minutes without progressing
 
@@ -73,6 +93,8 @@ The codebuild role needed to be amended
 ![image](https://user-images.githubusercontent.com/5746804/236072896-83db2bd8-7680-4a33-9c0c-a2c2c8d9afea.png)
 
 ### JSON Policy to Add
+
+The following permissions need to be applied to the role [policy-file](<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/blob/main/aws/policies/ecr-codebuild-backend-role.json>)
 
 ```json
 {
