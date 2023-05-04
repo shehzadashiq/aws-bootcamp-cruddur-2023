@@ -32,9 +32,9 @@ Investigation showed that the environment had been misconfigured.
 
 ### Builds failing with permissions errors
 
-![image](https://user-images.githubusercontent.com/5746804/236071079-06f98421-d832-4dcd-b63d-fa64f2e715fd.png)
+Despite resolving this issue builds still failed. Logs showed the codebuild role was not authorised to perform various tasks required to build successfully.
 
-Builds still kept failing, the logs showed the codebuild role was not authorised to perform various roles.
+![image](https://user-images.githubusercontent.com/5746804/236071079-06f98421-d832-4dcd-b63d-fa64f2e715fd.png)
 
 ### Text from log files
 
