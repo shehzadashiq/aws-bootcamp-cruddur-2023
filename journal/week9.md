@@ -8,19 +8,35 @@ The aim of this week was to automate the build pipeline using CodeBuild. Codebui
 
 ## Builds failing when unable to download source
 
+### Builds would timeout and not proceed. An earlier build which I deleted kept running for 45 minutes without progressing
+
 ![image](https://user-images.githubusercontent.com/5746804/236071180-0da14f07-fedd-4399-93d2-2b18904e5301.png)
 
-No logs were visible when source was failing
+### No logs were visible when source was failing
 
 ![image](https://user-images.githubusercontent.com/5746804/236071251-861d1137-01e9-44aa-8344-ed6b475eaa6c.png)
 
-Troubleshooting showed what the issue was
+### Troubleshooting showed builds were hanging at downloading source
 
 ![image](https://user-images.githubusercontent.com/5746804/236071319-2abd8992-af82-48ab-b78b-aa1d5a27190e.png)
 
-Build failing with permissions errors
+### Misconfigured Environment
+
+![image](https://user-images.githubusercontent.com/5746804/236330170-da0cecfd-de54-4888-9c6b-6617a6a2c50a.png)
+
+Investigation showed that the environment had been misconfigured.
+
+- VPC had been configured, this was not needed
+- Security Groups had been configured
+- Environment variables had been configured in the CodeBuild project. Andrew had configured this in his buildspec.yml however configuring it in the project had the same issue and was the main reason for why the builds had been failing without logs.
+
+### Builds failing with permissions errors
 
 ![image](https://user-images.githubusercontent.com/5746804/236071079-06f98421-d832-4dcd-b63d-fa64f2e715fd.png)
+
+Builds still kept failing, the logs showed the codebuild role was not authorised to perform various roles.
+
+### Text from log files
 
 ```sh
 20 | [Container] 2023/05/03 23:07:48 Phase complete: DOWNLOAD_SOURCE State: SUCCEEDED
@@ -42,16 +58,21 @@ Build failing with permissions errors
 35 | [Container] 2023/05/03 23:08:01 Phase context status code: COMMAND_EXECUTION_ERROR Message: Error while executing command: aws ecr get-login-password --region $AWS_DEFAULT_REGION \| docker login --username AWS --password-stdin $IMAGE_URL. Reason: exit status 1
 ```
 
-IAM Role required changing
+### IAM Role required changing
+
+The codebuild role needed to be amended
+
 ![image](https://user-images.githubusercontent.com/5746804/236071699-b62e8877-0a6d-4d3b-b927-63aa1bcbce76.png)
 
-Locate Role in IAM
+### Locate Role in IAM
+
 ![image](https://user-images.githubusercontent.com/5746804/236072805-f117310f-308c-4450-b62a-ee4708a37b1b.png)
 
-Create Inline Policy
+### Create Inline Policy
+
 ![image](https://user-images.githubusercontent.com/5746804/236072896-83db2bd8-7680-4a33-9c0c-a2c2c8d9afea.png)
 
-JSON Policy to Add
+### JSON Policy to Add
 
 ```json
 {
@@ -76,11 +97,11 @@ JSON Policy to Add
 }
 ```
 
-Call Policy -> ECRPermissions
+### Name Policy to ECRPermissions
 
 ![image](https://user-images.githubusercontent.com/5746804/236073102-11fa5c24-f2ca-489e-af9e-e7122e804066.png)
 
-Successful Run once permissions have been granted.
+### Builds run successfully once permissions have been granted
 
 ![image](https://user-images.githubusercontent.com/5746804/236074562-e6aee963-b88e-4c83-8cc7-31573ec7968b.png)
 
