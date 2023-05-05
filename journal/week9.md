@@ -1,5 +1,12 @@
 # Week 9 — CI/CD with CodePipeline, CodeBuild and CodeDeploy
 
+- [Overview](#overview)
+- [Pre-Requisites](#pre-requisites)
+- [Configuring CodeBuild](#configuring-codebuild)
+- [Configuring CodePipeline](#configuring-codepipeline)
+- [Troubleshooting](#troubleshooting)
+- [Flask-Update](#flask-update)
+
 Andrews Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-9-again/journal/week9.md>
 
 ## Overview
@@ -10,7 +17,16 @@ Andrews Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-
 - Fix CodeBuild Issues <https://www.youtube.com/watch?v=py2E1f0IZg0>
 - CodePipeline <https://www.youtube.com/watch?v=EAudiRT9Alw&ab_channel=ExamPro>
 
-The aim of this week was to automate the build pipeline using CodeBuild and CodePipeline. This would provide us with a complete CI/CD pipeline [Further Reading](https://aws.amazon.com/blogs/devops/complete-ci-cd-with-aws-codecommit-aws-codebuild-aws-codedeploy-and-aws-codepipeline/)
+The aim of this week was to automate building the backend-flask image with a build pipeline using CodeBuild and CodePipeline. This would provide us with a complete CI/CD pipeline [Further Reading](https://aws.amazon.com/blogs/devops/complete-ci-cd-with-aws-codecommit-aws-codebuild-aws-codedeploy-and-aws-codepipeline/)
+
+Prior to implementing the CI/CD pipeline, manual scripts had to be run in the following order
+
+1. Login to remote registry and generate environment variable using `bin/bootstrap` [bootstrap](<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/blob/main/bin/bootstrap>)
+2. Build the image using `bin/backend/build` [build](<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/blob/main/bin/backend/build>)
+3. Push the image to the ECR repository using `bin/backend/push` [push](<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/blob/main/bin/backend/push>)
+4. Deploy a new task definition for the backend task and force it to deploy using `bin/backend/deploy` [deploy](<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/blob/main/bin/backend/deploy>)
+
+While running 4 scripts is not hard or difficult, missing one of the scripts would mean the latest image would not deploy. Also even a shell script could be written to simplify this, it does not allow us to fully utilise the benefits of CI/CD.
 
 **Integration**
 Codebuild would be configured to detect any changes made in the prod branch of our repository.
@@ -24,11 +40,149 @@ CodePipeline would then deploy the changes automatically.
 - Policy for permissions required for codebuild to run successfully [policy-file](<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/blob/main/aws/policies/ecr-codebuild-backend-role.json>)
 - Prod branch in repository. Any Pull requests will be detected by CodeBuild
 
+The deployment will work whether or not the cruddur application is running which means whenever the cluster is run next it will automatically use the latest image.
+
+## Configuring CodeBuild
+
+Create a new CodeBuild Project with the following options. **Everything else can be left as default**
+
+### Project Configuration
+
+| Option | Value |
+| ----------- | ----------- |
+| Project Name | cruddur-backend-flask-image |
+| Build Badge | Enabled |
+
+![image](https://user-images.githubusercontent.com/5746804/236360551-08baacf5-3919-44cf-b7d3-2b1418219dbb.png)
+
+### Source
+
+| Option | Value |
+| ----------- | ----------- |
+| Source Provider | Github |
+| Repository | Repository in my GitHub account |
+| GitHub repository | <https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023.git> |
+| Connection status | Connect to GitHub using OAuth|
+|Source version | prod |
+|Webhook| Rebuild every time a code change is pushed to this repository|
+|Build type|Single build|
+|Required attributes|name,preferred_username|
+|Event type |PULL_REQUEST_MERGED|
+
+![image](https://user-images.githubusercontent.com/5746804/236360650-368f907e-0623-4ecc-80b4-80628dcc66c9.png)
+
+### Environment
+
+| Option | Value |
+| ----------- | ----------- |
+|Environment image|Managed image|
+| Operating system | Amazon Linux 2 |
+| Runtime(s) | Standard |
+| Image | Latest **Currrently 4.0** |
+| Image version | Always use the latest image for this runtime version |
+| Environment type | Linux |
+| Privileged | Check **Enable this flag if you want to build Docker images or want your builds to get elevated privileges** |
+| Role name | codebuild-cruddur-backend-flask-bake-image-service-role |
+
+![image](https://user-images.githubusercontent.com/5746804/236361201-f546ccba-fa74-45c7-827d-b0cecb1f4cdb.png)
+
+### Buildspec
+
+| Option | Value |
+| ----------- | ----------- |
+| Build specifications | Use a buildspec file |
+| Client secret | backend-flask/buildspec.yml |
+
+![image](https://user-images.githubusercontent.com/5746804/236361477-58dc9f46-41c4-4621-a121-c6e84ae942ca.png)
+
+### Artifacts
+
+| Option | Value |
+| ----------- | ----------- |
+| Type | No artifacts |
+| Client secret | backend-flask/buildspec.yml |
+
+![image](https://user-images.githubusercontent.com/5746804/236361669-ab65a5a6-1880-4729-9747-8c3840e26c3d.png)
+
+### Logs
+
+| Option | Value |
+| ----------- | ----------- |
+| CloudWatch logs - optional | **Checked** |
+| Stream name| backend-flask |
+
+Once these options have been selected, click **Create Build Project**
+
+![image](https://user-images.githubusercontent.com/5746804/236361912-9686ef99-ac28-4919-924f-33168dc87127.png)
+
+## Configuring CodePipeline
+
+Create a new CodePipeline Project with the following options. **Everything else can be left as default**
+
+### Pipeline settings
+
+| Option | Value |
+| ----------- | ----------- |
+| Pipeline name | cruddur-backend-fargate |
+| Service role | **Check** New Service role |
+| Role name | AWSCodePipelineServiceRole-eu-west-2-cruddur-backend-fargate |
+| Allow AWS CodePipeline to create a service role so it can be used with this new pipeline | **Checked**|
+|Advanced Settings |  |
+|Artifact store| Default Location|
+|Encryption key|Default AWS Managed Key|
+
+![image](https://user-images.githubusercontent.com/5746804/236362484-6a3fd2d0-b6b5-45de-8243-aa0dc4588915.png)
+
+### Add Source Stage
+
+| Option | Value |
+| ----------- | ----------- |
+|Source provider| GitHub (Version 2) |
+|Connection | Connect to GitHub |
+|Source provider| GitHub (Version 2) **Click Connect To Github**|
+|Connection name | cruddur |
+|Repository name | shehzadashiq/aws-bootcamp-cruddur-2023 |
+|Branch name | prod |
+|Connection name | cruddur |
+|Change detection options | **Check** Start the pipeline on source code change |
+|Output artifact format | CodePipeline default |
+
+![image](https://user-images.githubusercontent.com/5746804/236363579-2a2bc0b9-b0ac-4b1b-abae-90e13a4c3ec9.png)
+
+![image](https://user-images.githubusercontent.com/5746804/236363579-2a2bc0b9-b0ac-4b1b-abae-90e13a4c3ec9.png)
+
+### Build
+
+| Option | Value |
+| ----------- | ----------- |
+|Build provider| AWS CodeBuild |
+|Region | Select Your Region |
+|Project name| **Select existing project** cruddur-backend-flask-image|
+|Build type | Single |
+
+![image](https://user-images.githubusercontent.com/5746804/236364068-0fec4348-7389-4007-a4f9-86aab649dae9.png)
+
+### Deploy
+
+| Option | Value |
+| ----------- | ----------- |
+|Deploy provider | Amazon ECS |
+|Region | Select Your Region |
+|Cluster name | cruddur |
+|Service name | backend-flask |
+|Output artifact format | CodePipeline default |
+
+![image](https://user-images.githubusercontent.com/5746804/236364463-33d5b792-9e70-45a5-842e-f3db8c0acbe3.png)
+
+Click Next and **Create Pipeline**
+
+This should create a pipeline which will automatically start running. If successful then nothing further needs to be done. If not then further troubleshooting needs to be carried out.
+
 ## Troubleshooting
 
 ### Builds failing when unable to download source
 
-### Builds would timeout and not proceed. An earlier build which I deleted kept running for 45 minutes without progressing
+Builds would timeout and not proceed. An earlier build which I deleted kept running for 45 minutes without progressing
 
 ![image](https://user-images.githubusercontent.com/5746804/236071180-0da14f07-fedd-4399-93d2-2b18904e5301.png)
 
@@ -127,7 +281,9 @@ The following permissions need to be applied to the role [policy-file](<https://
 
 ![image](https://user-images.githubusercontent.com/5746804/236074562-e6aee963-b88e-4c83-8cc7-31573ec7968b.png)
 
-## Issue when trying to compose backend container in new Workspace
+## Flask-Update
+
+### Issue when trying to compose backend container in new Workspace
 
 This is unrelated to the work required this week but what I noticed when I tried to run my application in GitPod.
 
@@ -147,6 +303,12 @@ According to this article: <https://stackoverflow.com/questions/73570041/flask-d
 `before_first_request is deprecated and will be removed from Flask 2.3`
 
 To resolve this I had to do the following
+
+- Comment out `@app.before_first_request`
+- Replace it with `with app.app_context():`
+- Indent the `def_init_rollbar():` function
+
+Which results in the following code.
 
 ```py
 # @app.before_first_request
