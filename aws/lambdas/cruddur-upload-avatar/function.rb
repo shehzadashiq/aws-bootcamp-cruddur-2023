@@ -17,7 +17,7 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "https://shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
+        "Access-Control-Allow-Origin": "https://3000-shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
         # "Access-Control-Allow-Origin": workspace_url,
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
       },
@@ -31,8 +31,7 @@ def handler(event:, context:)
     extension = body_hash["extension"]
 
     decoded_token = JWT.decode token, nil, false
-    # cognito_user_uuid = decoded_token[0]['sub']
-    cognito_user_id = event["requestContext"]["authorizer"]["lambda"]["sub"]
+    cognito_user_uuid = decoded_token[0]['sub']
 
     s3 = Aws::S3::Resource.new
     bucket_name = ENV["UPLOADS_BUCKET_NAME"]
@@ -47,13 +46,12 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "https://shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
+        "Access-Control-Allow-Origin": "https://3000-shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
         # "Access-Control-Allow-Origin": workspace_url,
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
       },
       statusCode: 200, 
       body: body 
     }
-    puts body
   end # if 
 end # def handler
