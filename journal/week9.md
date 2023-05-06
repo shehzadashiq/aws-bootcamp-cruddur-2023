@@ -1,5 +1,6 @@
 # Week 9 — CI/CD with CodePipeline, CodeBuild and CodeDeploy
 
+- [Journal Summary](#journal-summary)
 - [Overview](#overview)
 - [Pre-Requisites](#pre-requisites)
 - [Configuring CodeBuild](#configuring-codebuild)
@@ -8,6 +9,26 @@
 - [Flask-Update](#flask-update)
 
 Andrews Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-9-again/journal/week9.md>
+
+## Journal Summary
+
+Homework was completed successfully.
+
+### Issues
+
+Flask 2.3 deprecated ```@app.before_first_request``` which caused the backend container to fail when building.
+This was being called when initialising the application for rollbar.
+To resolve this it had to be replaced with ```with app.app_context():``` and the ```def_init_rollbar():``` had to be indentend in one level
+
+Builds would timeout and not proceed. An earlier build which I deleted kept running for 45 minutes without progressing. Investigation showed that the environment had been misconfigured.
+
+- VPC had been configured, this was not needed
+- Security Groups had been configured, again this was not needed.
+- Environment variables had been configured in the CodeBuild project. Andrew had configured this in his buildspec.yml however configuring it in the project had the same issue and was the main reason why the builds had been failing without logs.
+
+Once the above had been configured, builds would fail with permission errors.
+
+Logs showed the CodeBuild role was not authorised to perform various tasks required to build successfully. The CodeBuild role had to be granted permission to perform build-related roles.
 
 ## Overview
 

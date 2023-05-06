@@ -4,6 +4,37 @@ Andrew's Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week
 
 Sharp Documentation: <https://sharp.pixelplumbing.com/install>
 
+## Journal Summary
+
+Completed all the homework.
+
+Challenges.
+I managed to remove the hard-coded user profile of andrewbrown and instead use dynamic profiles by changing the profileLink url to
+
+```typescript
+"url={"/@" + props.user.handle}"
+```
+
+### Issues
+
+1. Working from my local environment despite following the instructions to install the sharp and without no errors the lambda would complain that sharp had not been installed. The same issue happened despite using WSL2 and a Linux VM. To resolve this I had to resort to using GitPod.
+
+2. Lambda would not trigger complaining "Entity does not exist. One of the entities that you specified for the operation does not exist. The role with the name ThumbingServerlessCDKStack-ThumbLambdaServiceRole cannot be found".
+This however was not the issue. The fault was that I had misconfigured the source path. The lambda was looking at ```sh avatar/original``` while the image was being uploaded to ```sh avatars/original```.
+
+3. The initial issue was Kaspersky blocking all banners on the website. One of the boot campers pointed this out to me. To overcome this I had to place the banner in another folder in my s3 bucket and ensure the file was not named banner.jpg
+
+4. CORS issues which were due to misconfiguration of the following
+
+- I had kept copy pasting the URL of the workspace and missed out the port number of the frontend for "Access-Control-Allow-Origin" in
+cruddur-upload-avatar/function.rb
+- I had attached an authorisation to the OPTIONS route in the API gateway. This resulted in a 401 error
+- In cruddur-upload-avatar/function.rb I had a put at the end of the function for debugging. Andrew explained that this would result in the pre-signed URL not being returned
+
+Once these issues were fixed I was able to successfully upload the image based on the currently logged in users id.
+
+### Sharp Installation script
+
 ```sh
 npm install
 rm -rf node_modules/sharp
