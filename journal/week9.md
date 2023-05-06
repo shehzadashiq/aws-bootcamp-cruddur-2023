@@ -16,9 +16,9 @@ Homework was completed successfully.
 
 ### Issues
 
-Flask 2.3 deprecated ```@app.before_first_request``` which caused the backend container to fail when building.
-This was being called when initialising the application for rollbar.
-To resolve this it had to be replaced with ```with app.app_context():``` and the ```def_init_rollbar():``` had to be indentend in one level
+Flask 2.3 deprecated ```@app.before_first_request``` which caused the backend container to fail when building. This was being called when initialising the application for rollbar.
+
+To resolve this it had to be replaced with ```with app.app_context():``` and the ```def_init_rollbar():``` had to be indented in one level
 
 Builds would timeout and not proceed. An earlier build which I deleted kept running for 45 minutes without progressing. Investigation showed that the environment had been misconfigured.
 
