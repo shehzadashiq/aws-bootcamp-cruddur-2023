@@ -1,39 +1,72 @@
 # Week 8 — Serverless Image Processing
 
-Andrew's Notes: <https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-8-serverless-cdk/journal/week8.md>
+- [Overview](#overview)
+- [Pre-Requisites](#pre-requisites)
+- [Journal Summary](#journal-summary)
 
-Sharp Documentation: <https://sharp.pixelplumbing.com/install>
+## Overview
 
-## Journal Summary
+### Videos for week 8
 
-Completed all the homework.
+- [Week 8 Livestream](https://www.youtube.com/watch?v=YiSNlK4bk90)
+- [Serverless Image Process CDK](https://www.youtube.com/watch?v=jyUpZP2knBI)
+- [Serving Avatars via CloudFront](https://www.youtube.com/watch?v=Hl5XVb7dL6I)
+- [Implement Users Profile Page](https://www.youtube.com/watch?v=WdVPx-LLjQ8)
+- [Implement Migrations Backend Endpoint and Profile Form](https://www.youtube.com/watch?v=PTafksks528)
+- [Implement Avatar Uploading (Part 1)](https://www.youtube.com/watch?v=Bk2tq4pliy8)
+- [Fix CORS for API Gateway](https://www.youtube.com/watch?v=eO7bw6_nOIc)
+- [Fix CORS Final AWS Lambda Layers](https://www.youtube.com/watch?v=uWhdz5unipA)
+- [Render Avatar from CloudFront](https://www.youtube.com/watch?v=xrFo3QLoBp8)
 
-Challenges.
-I managed to remove the hard-coded user profile of andrewbrown and instead use dynamic profiles by changing the profileLink url to
+[Andrew's Notes](https://github.com/omenking/aws-bootcamp-cruddur-2023/blob/week-8-serverless-cdk/journal/week8.md)
 
-```typescript
-"url={"/@" + props.user.handle}"
+The aim of this week is to allow users to upload their own profile images via Serverless Image Process. To do so we use the [CDK - Cloud Development Kit](https://aws.amazon.com/cdk/) to create a [CDK Pipeline](https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html).
+
+CDK Pipelines can automatically build, test, and deploy new versions of our pipeline. CDK Pipelines are self-updating. Once we add application stages or stacks, the pipeline automatically reconfigures itself to deploy them.
+
+We will use the CDK pipeline implemented in JavaScript that will perform the following tasks for us.
+
+- Use the sharp package to process an uploaded image and resize it to create a thumbnail
+- Write an AWS Lambda function
+- Deploy our Lambda function
+- Import an existing S3 bucket that contains the source image
+- Create an S3 bucket that will be used to process the uploaded image
+- Create a SNS (Simple Notification Service) to process on the PUT function and invoke our Lambda function
+
+To invoke the lambda the following changes need to be made to the application
+
+- Implement a file upload function in the frontend
+- Our PostGres database needs to be updated to include a biography field
+- Update SQL scripts to retrieve this information when matched to the users cognito ID
+
+---
+
+## Pre-Requisites
+
+- The following npm packages installed globally ([aws-cdk](https://www.npmjs.com/package/aws-cdk), [aws-cdk-lib](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html))
+- The following npm packages installed for our lambda ([sharp](https://www.npmjs.com/package/sharp), [@aws-sdk/client-s3](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/))
+- S3 Bucket which we will upload our images to assets
+
+---
+
+## CDK Pipeline Creation
+
+### Folder for Pipeline
+
+We will store our Pipeline in a folder called `thumbing-serverless-cdk` in the root of our repository.
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir thumbing-serverless-cdk
 ```
 
-### Issues
+### S3 Bucket for images
 
-1. Working from my local environment despite following the instructions to install the sharp and without no errors the lambda would complain that sharp had not been installed. The same issue happened despite using WSL2 and a Linux VM. To resolve this I had to resort to using GitPod.
-
-2. Lambda would not trigger complaining "Entity does not exist. One of the entities that you specified for the operation does not exist. The role with the name ThumbingServerlessCDKStack-ThumbLambdaServiceRole cannot be found".
-This however was not the issue. The fault was that I had misconfigured the source path. The lambda was looking at ```sh avatar/original``` while the image was being uploaded to ```sh avatars/original```.
-
-3. The initial issue was Kaspersky blocking all banners on the website. One of the boot campers pointed this out to me. To overcome this I had to place the banner in another folder in my s3 bucket and ensure the file was not named banner.jpg
-
-4. CORS issues which were due to misconfiguration of the following
-
-- I had kept copy pasting the URL of the workspace and missed out the port number of the frontend for "Access-Control-Allow-Origin" in
-cruddur-upload-avatar/function.rb
-- I had attached an authorisation to the OPTIONS route in the API gateway. This resulted in a 401 error
-- In cruddur-upload-avatar/function.rb I had a put at the end of the function for debugging. Andrew explained that this would result in the pre-signed URL not being returned
-
-Once these issues were fixed I was able to successfully upload the image based on the currently logged in users id.
+`assets.<domain_name>`
 
 ### Sharp Installation script
+
+Sharp Documentation: <https://sharp.pixelplumbing.com/install>
 
 ```sh
 npm install
@@ -193,3 +226,34 @@ Following the videos and looking through the discord, I cannot get CORS working.
 Currently I have had to disable the CruddurApiGatewayLambdaAuthoriser completely :(
 
 I aim to continue with week 9 and then come back to troubleshoot this issue as currently it has put everything I am doing on hold.
+
+---
+
+## Journal Summary
+
+Completed all the homework.
+
+Challenges.
+I managed to remove the hard-coded user profile of andrewbrown and instead use dynamic profiles by changing the profileLink url to
+
+```typescript
+"url={"/@" + props.user.handle}"
+```
+
+### Issues
+
+1. Working from my local environment despite following the instructions to install the sharp and without no errors the lambda would complain that sharp had not been installed. The same issue happened despite using WSL2 and a Linux VM. To resolve this I had to resort to using GitPod.
+
+2. Lambda would not trigger complaining "Entity does not exist. One of the entities that you specified for the operation does not exist. The role with the name ThumbingServerlessCDKStack-ThumbLambdaServiceRole cannot be found".
+This however was not the issue. The fault was that I had misconfigured the source path. The lambda was looking at ```sh avatar/original``` while the image was being uploaded to ```sh avatars/original```.
+
+3. The initial issue was Kaspersky blocking all banners on the website. One of the boot campers pointed this out to me. To overcome this I had to place the banner in another folder in my s3 bucket and ensure the file was not named banner.jpg
+
+4. CORS issues which were due to misconfiguration of the following
+
+- I had kept copy pasting the URL of the workspace and missed out the port number of the frontend for "Access-Control-Allow-Origin" in
+cruddur-upload-avatar/function.rb
+- I had attached an authorisation to the OPTIONS route in the API gateway. This resulted in a 401 error
+- In cruddur-upload-avatar/function.rb I had a put at the end of the function for debugging. Andrew explained that this would result in the pre-signed URL not being returned
+
+Once these issues were fixed I was able to successfully upload the image based on the currently logged in users id.
