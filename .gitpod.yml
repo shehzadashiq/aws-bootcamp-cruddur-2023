@@ -61,7 +61,7 @@ tasks:
       npm install aws-cdk-lib -g
       cd thumbing-serverless-cdk
       npm i      
-      cp env.example .env
+      cp .env.example .env
 
 
 vscode:
