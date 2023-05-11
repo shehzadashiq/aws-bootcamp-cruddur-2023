@@ -19,7 +19,7 @@ Resources:
       EnableDnsHostnames: true
       EnableDnsSupport: true
       InstanceTenancy: default
-      # Tags:
-        # - Key: Name
-        #   Value: !Sub "${AWS::StackName}VPC"
+      Tags:
+        - Key: Name
+          Value: CruddurVPC
 
