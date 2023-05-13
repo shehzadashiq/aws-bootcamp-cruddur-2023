@@ -37,6 +37,8 @@
 - [CFN CICD Part 1](https://www.youtube.com/watch?v=8EY4UwON7y8)
 - [CFN CICD Part 2](https://www.youtube.com/watch?v=P_QbQV0JyJc)
 - [CFN Diagramming CICD](https://www.youtube.com/watch?v=bmS-z2J7oTs)
+- [CFN Static Website Hosting Frontend](https://www.youtube.com/watch?v=Qc96g_blibA)
+- [CFN Diagramming Static Frontend](https://www.youtube.com/watch?v=IEBHegBqne0)
 
 ### References
 
