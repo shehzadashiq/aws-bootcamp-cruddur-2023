@@ -34,6 +34,9 @@
 - [SAM CFN for Dynamodb DynamoDB Streams Lambda](https://www.youtube.com/watch?v=8UGa4q-zRJ8)
 - [SAM CFN Fix SAM Lambda Code Artifact](https://www.youtube.com/watch?v=XUUpoBGgNQI)
 - [Diagramming DynamoDB](https://www.youtube.com/watch?v=ZK5PdSbxpH0)
+- [CFN CICD Part 1](https://www.youtube.com/watch?v=8EY4UwON7y8)
+- [CFN CICD Part 2](https://www.youtube.com/watch?v=P_QbQV0JyJc)
+- [CFN Diagramming CICD](https://www.youtube.com/watch?v=bmS-z2J7oTs)
 
 ### References
 
@@ -92,10 +95,19 @@ aws s3api create-bucket \
 cd /workspace/aws-bootcamp-cruddur-2023
 mkdir -p  aws/cfn/networking
 cd aws/cfn/networking
-touch template.yaml config.toml.example
+touch template.yaml config.toml.example config.toml
 ```
 
-### Create Networking Deploy
+Update config.toml with the following settings that specify the bucket, region and name of the CFN stack.
+
+```toml
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'Cruddur'
+```
+
+### Create Networking Deploy Script
 
 ```sh
 cd /workspace/aws-bootcamp-cruddur-2023
@@ -104,5 +116,86 @@ cd bin/cfn
 touch networking-deploy
 chmod u+x networking-deploy
 ```
+
+I modified the script to not have hardcoded values as I am using my local machine and GitPod for development.
+
+```sh
+#! /usr/bin/env bash
+set -e # stop the execution of the script if it fails
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="CFN_NETWORK_DEPLOY"
+printf "${CYAN}====== ${LABEL}${NO_COLOR}\n"
+
+# Get the absolute path of this script
+ABS_PATH=$(readlink -f "$0")
+CFN_BIN_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $CFN_BIN_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+CFN_PATH="$PROJECT_PATH/aws/cfn/networking/template.yaml"
+CONFIG_PATH="$PROJECT_PATH/aws/cfn/networking/config.toml"
+
+cfn-lint $CFN_PATH
+
+BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)
+REGION=$(cfn-toml key deploy.region -t $CONFIG_PATH)
+STACK_NAME=$(cfn-toml key deploy.stack_name -t $CONFIG_PATH)
+
+aws cloudformation deploy \
+  --stack-name $STACK_NAME \
+  --s3-bucket $BUCKET \
+  --s3-prefix networking \
+  --region $REGION \
+  --template-file "$CFN_PATH" \
+  --no-execute-changeset \
+  --tags group=cruddur-networking \
+  --capabilities CAPABILITY_NAMED_IAM
+```
+
+Running `./bin/cfn/networking-deploy` now initiates a changeset for the CFN stack.
+
+CLI Output of running `./bin/cfn/networking-deploy`
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3f7eabd7-7d1f-44d4-ac4e-ceb0b4659033)
+
+#### Proof of Stack Creation
+
+Stack Ready to be reviewed
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/b57ec7e8-6476-4cfa-bd20-7a19714bdfad)
+
+Change Set Created
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/e0290e88-0913-47c5-ab56-887ca3f3de68)
+
+Change Set ready to be executed
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/adc53128-4dd0-44ca-8022-f1b3dbf33353)
+
+Execute Change Set
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/eb0b4b6b-3b44-47f3-aecb-144802c4b6ae)
+
+Creation in Progress
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/d30b36b0-3cb0-4af4-afeb-6a6b093411b7)
+
+Stack Creation Events
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/954f9831-0d84-4721-8e09-a6015fef249b)
+
+Stack Overview Once completed
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/35e15cb7-9126-4538-b17f-7b4d94575206)
+
+Stack Parameters used during Creation
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/a31d7e7a-a74f-439d-8443-ccf91f2d138f)
+
+Stack Resources
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/a8778a82-e75c-4c34-a28b-aae5de2eda77)
+
+Stack Outputs
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/799e02b8-670b-41ce-ab49-63c969ef5f94)
+
+Stack Change Set
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/bd9fa40c-2cfe-441d-afc3-f2a070eaea58)
+
+Stack Created Successfully
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3a2d192d-a9f5-42e3-a67c-d24be4a1759e)
+
+---
 
 ## Journal Summary
