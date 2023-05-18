@@ -37,6 +37,11 @@
 - [CFN CICD Part 1](https://www.youtube.com/watch?v=8EY4UwON7y8)
 - [CFN CICD Part 2](https://www.youtube.com/watch?v=P_QbQV0JyJc)
 - [CFN Diagramming CICD](https://www.youtube.com/watch?v=bmS-z2J7oTs)
+- [Week X Sync tool for static website hosting](https://www.youtube.com/watch?v=0nDBqZGu4rI)
+- [Week X Reconnect Database and Post Confirmation Lambda](https://www.youtube.com/watch?v=gukwarWjc4o)
+- [Week X Use CORS for Service](https://www.youtube.com/watch?v=f0aLm0EpzaE)
+- [Week-X CICD Pipeline and Create Activity](https://www.youtube.com/watch?v=H9-9gR604L4)
+- [Week-X Refactor JWT to use a decorator](https://www.youtube.com/watch?v=4lHRwJ0yzpo)
 
 ### References
 
