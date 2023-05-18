@@ -198,4 +198,28 @@ Stack Created Successfully
 
 ---
 
+## CFN Cluster Stack
+
+### Create Cluster Template
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/cluster
+cd aws/cfn/cluster
+touch template.yaml config.toml config.toml.example
+```
+
+### Create Cluster Deploy Script
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  bin/cfn
+cd bin/cfn
+touch cluster-deploy
+chmod u+x cluster-deploy
+```
+As I did with the networking-deploy script I modified the script to not have hardcoded values.
+
+---
+
 ## Journal Summary
