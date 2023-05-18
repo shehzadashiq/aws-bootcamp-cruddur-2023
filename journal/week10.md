@@ -39,6 +39,11 @@
 - [CFN Diagramming CICD](https://www.youtube.com/watch?v=bmS-z2J7oTs)
 - [CFN Static Website Hosting Frontend](https://www.youtube.com/watch?v=Qc96g_blibA)
 - [CFN Diagramming Static Frontend](https://www.youtube.com/watch?v=IEBHegBqne0)
+- [Week X Sync tool for static website hosting](https://www.youtube.com/watch?v=0nDBqZGu4rI)
+- [Week X Reconnect Database and Post Confirmation Lambda](https://www.youtube.com/watch?v=gukwarWjc4o)
+- [Week X Use CORS for Service](https://www.youtube.com/watch?v=f0aLm0EpzaE)
+- [Week-X CICD Pipeline and Create Activity](https://www.youtube.com/watch?v=H9-9gR604L4)
+- [Week-X Refactor JWT to use a decorator](https://www.youtube.com/watch?v=4lHRwJ0yzpo)
 
 ### References
 
@@ -197,6 +202,30 @@ Stack Change Set
 
 Stack Created Successfully
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3a2d192d-a9f5-42e3-a67c-d24be4a1759e)
+
+---
+
+## CFN Cluster Stack
+
+### Create Cluster Template
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/cluster
+cd aws/cfn/cluster
+touch template.yaml config.toml config.toml.example
+```
+
+### Create Cluster Deploy Script
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  bin/cfn
+cd bin/cfn
+touch cluster-deploy
+chmod u+x cluster-deploy
+```
+As I did with the networking-deploy script I modified the script to not have hardcoded values.
 
 ---
 
