@@ -44,6 +44,11 @@
 - [Week X Use CORS for Service](https://www.youtube.com/watch?v=f0aLm0EpzaE)
 - [Week-X CICD Pipeline and Create Activity](https://www.youtube.com/watch?v=H9-9gR604L4)
 - [Week-X Refactor JWT to use a decorator](https://www.youtube.com/watch?v=4lHRwJ0yzpo)
+- [Week-X Refactor AppPy](https://www.youtube.com/watch?v=VSVb_-6zYaY)
+- [Week-X Refactor Flask Routes](https://www.youtube.com/watch?v=INkTj-Ark7k)
+- [Week-X Replies Work In Progress](https://www.youtube.com/watch?v=qXxYF4y0gJ8&)
+- [Week-X Refactor Error Handling and Fetch Requests](https://www.youtube.com/watch?v=rFcPG6e_kGs)
+- [Week-X Activity Show Page](https://www.youtube.com/watch?v=FBpQtN497QA)
 
 ### References
 
@@ -225,6 +230,7 @@ cd bin/cfn
 touch cluster-deploy
 chmod u+x cluster-deploy
 ```
+
 As I did with the networking-deploy script I modified the script to not have hardcoded values.
 
 ---
