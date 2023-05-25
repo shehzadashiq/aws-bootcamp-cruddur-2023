@@ -1,4 +1,8 @@
 [deploy]
 bucket = 'cfn-tajarba-artifacts'
 region = 'eu-west-2'
-stack_name = 'CruddurCluster'
+stack_name = 'CrdCluster'
+
+[parameters]
+CertificateArn = 'arn:aws:acm:eu-west-2:797130574998:certificate/db094fbc-2f3d-43d9-8b76-2be5f8097c77'
+NetworkingStack = 'CrdNet'

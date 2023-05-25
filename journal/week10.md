@@ -49,6 +49,8 @@
 - [Week-X Replies Work In Progress](https://www.youtube.com/watch?v=qXxYF4y0gJ8&)
 - [Week-X Refactor Error Handling and Fetch Requests](https://www.youtube.com/watch?v=rFcPG6e_kGs)
 - [Week-X Activity Show Page](https://www.youtube.com/watch?v=FBpQtN497QA)
+- [Week-X Cleanup](https://www.youtube.com/watch?v=E89RBvZ_BaY)
+- [Week X Cleanup Part 2](https://www.youtube.com/watch?v=53_3TmZ1hrs)
 
 ### References
 
@@ -66,6 +68,7 @@
 
 - AWS CloudFormation Guard Installation
 - S3 Bucket to contain artifacts
+- CFN-TOML installation
 
 ### AWS CloudFormation Guard Installation
 
@@ -97,6 +100,45 @@ aws s3api create-bucket \
     --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION
 ```
 
+### CFN-Toml installation
+
+[CFN-TOML](https://github.com/teacherseat/cfn-toml) will read a toml file that is designed to be used with CloudFormation CLI commands within a bash script.
+
+Installation is performed by
+
+`gem install cfn-toml`
+
+### Modify Bootstrap.sh to install CFN packages (Optional)
+
+Gitpod was not initialising the CFN section of the gitpod.yml all the time. To automate this I created a script `bin/cfn/initialise.sh`
+
+```sh
+touch bin/cfn/initialise.sh
+chmod u+x bin/cfn/initialise.sh
+```
+
+This script installs all the required Python and Ruby packages. It's contents are shown below
+
+```sh
+#! /usr/bin/bash
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="CFN Initialise"
+printf "${CYAN}====== ${LABEL}${NO_COLOR}\n"
+
+pip install cfn-lint
+cargo install cfn-guard
+gem install cfn-toml
+```
+
+This was then referenced in `bin/bootstrap` thus.
+
+```sh
+# Install CFN section
+source "$BIN_DIR/cfn/initialise.sh"
+```
+
 ---
 
 ## CFN Networking Stack
@@ -116,7 +158,7 @@ Update config.toml with the following settings that specify the bucket, region a
 [deploy]
 bucket = 'cfn-tajarba-artifacts'
 region = 'eu-west-2'
-stack_name = 'Cruddur'
+stack_name = 'CrdNet'
 ```
 
 ### Create Networking Deploy Script
@@ -172,45 +214,49 @@ CLI Output of running `./bin/cfn/networking-deploy`
 
 #### Proof of Stack Creation
 
-Stack Ready to be reviewed
+##### Stack Ready to be reviewed
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/b57ec7e8-6476-4cfa-bd20-7a19714bdfad)
 
-Change Set Created
+##### Change Set Created
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/e0290e88-0913-47c5-ab56-887ca3f3de68)
 
-Change Set ready to be executed
+##### Change Set ready to be executed
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/adc53128-4dd0-44ca-8022-f1b3dbf33353)
 
-Execute Change Set
+##### Execute Change Set
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/eb0b4b6b-3b44-47f3-aecb-144802c4b6ae)
 
-Creation in Progress
+##### Creation in Progress
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/d30b36b0-3cb0-4af4-afeb-6a6b093411b7)
 
-Stack Creation Events
+##### Stack Creation Events
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/954f9831-0d84-4721-8e09-a6015fef249b)
 
-Stack Overview Once completed
+##### Stack Overview Once completed
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/35e15cb7-9126-4538-b17f-7b4d94575206)
 
-Stack Parameters used during Creation
+##### Stack Parameters used during Creation
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/a31d7e7a-a74f-439d-8443-ccf91f2d138f)
 
-Stack Resources
+##### Stack Resources
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/a8778a82-e75c-4c34-a28b-aae5de2eda77)
 
-Stack Outputs
+##### Stack Outputs
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/799e02b8-670b-41ce-ab49-63c969ef5f94)
 
-Stack Change Set
+##### Stack Change Set
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/bd9fa40c-2cfe-441d-afc3-f2a070eaea58)
 
-Stack Created Successfully
+##### Stack Created Successfully
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3a2d192d-a9f5-42e3-a67c-d24be4a1759e)
 
 ---
 
 ## CFN Cluster Stack
+
+This stack builds upon our networking stack and takes the output from it to build our cluster. It specifically requires the ARN of our domain certificate to create a HTTPS listener and the name of our networking stack to be able to reference its outputs (Public Subnets etc.).
 
 ### Create Cluster Template
 

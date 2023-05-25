@@ -12,3 +12,6 @@ BIN_DIR=$(dirname $ABS_PATH)
 source "$BIN_DIR/ecr/login"
 ruby "$BIN_DIR/backend/generate-env"
 ruby "$BIN_DIR/frontend/generate-env"
+
+# Install CFN section
+source "$BIN_DIR/cfn/initialise.sh"

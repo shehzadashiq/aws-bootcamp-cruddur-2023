@@ -32,12 +32,12 @@ Parameters:
     Description: "Comma-delimited list of CIDR blocks for our private public subnets"
     Type: CommaDelimitedList
     Default: >
-      "10.0.0.0/24", 
-      "10.0.4.0/24", 
-      "10.0.8.0/24", 
-      "10.0.12.0/24",
-      "10.0.16.0/24",
-      "10.0.20.0/24"
+      10.0.0.0/24, 
+      10.0.4.0/24, 
+      10.0.8.0/24, 
+      10.0.12.0/24,
+      10.0.16.0/24,
+      10.0.20.0/24
   Az2:
     Type: AWS::EC2::AvailabilityZone::Name
     Default: eu-west-2b
@@ -199,12 +199,18 @@ Outputs:
     Value: !Join [",", !Ref SubnetCidrBlocks]
     Export:
       Name: !Sub "${AWS::StackName}SubnetCidrBlocks"
-  SubnetIds:
+  PublicSubnetIds:
     Value: !Join 
       - ","
       - - !Ref SubnetPub1
         - !Ref SubnetPub2
         - !Ref SubnetPub3
+    Export:
+      Name: !Sub "${AWS::StackName}PublicSubnetIds"
+  PrivateSubnetIds:
+    Value: !Join 
+      - ","
+      - - !Ref SubnetPriv1        
         - !Ref SubnetPriv1
         - !Ref SubnetPriv2
         - !Ref SubnetPriv3
