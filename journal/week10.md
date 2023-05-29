@@ -277,8 +277,140 @@ touch cluster-deploy
 chmod u+x cluster-deploy
 ```
 
+## CFN Service Stack
+
+### Create Service Template
+
 As I did with the networking-deploy script I modified the script to not have hardcoded values.
 
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/networking
+cd aws/cfn/networking
+touch template.yaml config.toml.example config.toml
+```
+
+Update config.toml with the following settings that specify the bucket, region and name of the CFN stack.
+
+```toml
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdNet'
+```
+
+### Create Networking Deploy Script
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  bin/cfn
+cd bin/cfn
+touch networking-deploy
+chmod u+x networking-deploy
+```
+
+I modified the script to not have hardcoded values as I am using my local machine and GitPod for development.
+
+```sh
+#! /usr/bin/env bash
+set -e # stop the execution of the script if it fails
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="CFN_NETWORK_DEPLOY"
+printf "${CYAN}====== ${LABEL}${NO_COLOR}\n"
+
+# Get the absolute path of this script
+ABS_PATH=$(readlink -f "$0")
+CFN_BIN_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $CFN_BIN_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+CFN_PATH="$PROJECT_PATH/aws/cfn/networking/template.yaml"
+CONFIG_PATH="$PROJECT_PATH/aws/cfn/networking/config.toml"
+
+cfn-lint $CFN_PATH
+
+BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)
+REGION=$(cfn-toml key deploy.region -t $CONFIG_PATH)
+STACK_NAME=$(cfn-toml key deploy.stack_name -t $CONFIG_PATH)
+
+aws cloudformation deploy \
+  --stack-name $STACK_NAME \
+  --s3-bucket $BUCKET \
+  --s3-prefix networking \
+  --region $REGION \
+  --template-file "$CFN_PATH" \
+  --no-execute-changeset \
+  --tags group=cruddur-networking \
+  --capabilities CAPABILITY_NAMED_IAM
+```
+
+Running `./bin/cfn/networking-deploy` now initiates a changeset for the CFN stack.
+
 ---
+
+## Spend Issue
+
+I received an alert that my ELB spend will exceed the free tier elements.
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/42ce4741-182b-4a41-aeef-bf8f1338f229)
+
+It turned out that the Cruddur cluster created using the ECS tasks had been running since September. As it was not needed I removed it using a script. 
+
+'/workspace/aws-bootcamp-cruddur-2023/bin/ecs/cluster-delete.sh'
+
+The script cycles through both the frontend/backend tasks and then deletes all services before deleting them.
+
+```sh
+#! /usr/bin/bash
+
+CLUSTER_NAME="cruddur"
+
+# Deregister frontend first
+SERVICE_NAME="frontend-react-js"
+TASK_DEFINTION_FAMILY="frontend-react-js"
+
+LATEST_TASK_DEFINITION_ARN=$(aws ecs describe-task-definition \
+--task-definition $TASK_DEFINTION_FAMILY \
+--query 'taskDefinition.taskDefinitionArn' \
+--output text)
+
+echo "TASK DEF ARN:"
+echo $LATEST_TASK_DEFINITION_ARN
+
+# Deregister task first
+aws ecs deregister-task-definition --task-definition $LATEST_TASK_DEFINITION_ARN
+
+# Deregister backend next
+SERVICE_NAME="backend-flask"
+TASK_DEFINTION_FAMILY="backend-flask"
+
+LATEST_TASK_DEFINITION_ARN=$(aws ecs describe-task-definition \
+--task-definition $TASK_DEFINTION_FAMILY \
+--query 'taskDefinition.taskDefinitionArn' \
+--output text)
+
+echo "TASK DEF ARN:"
+echo $LATEST_TASK_DEFINITION_ARN
+
+# Deregister task
+aws ecs deregister-task-definition --task-definition $LATEST_TASK_DEFINITION_ARN
+
+# Scale down all services in the cluster now that tasks have been deregistered
+for service in $(aws ecs list-services --cluster $CLUSTER_NAME --output text | awk '{print $2}'); do aws ecs update-service --cluster $CLUSTER_NAME --service $service --desired-count 0; done
+
+# List all services in the cluster
+aws ecs list-services --cluster $CLUSTER_NAME --output text
+
+# Describe the services
+for service in $(aws ecs list-services --cluster $CLUSTER_NAME --output text | awk '{print $2}'); do aws ecs describe-services --cluster $CLUSTER_NAME --service $service; done
+
+# Delete services
+for service in $(aws ecs list-services --cluster $CLUSTER_NAME --output text | awk '{print $2}'); do aws ecs delete-service --cluster $CLUSTER_NAME --service $service; done
+
+# Delete cluster
+aws ecs delete-cluster --cluster $CLUSTER_NAME
+```
 
 ## Journal Summary
