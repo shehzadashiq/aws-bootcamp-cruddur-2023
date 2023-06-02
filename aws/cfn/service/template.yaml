@@ -274,3 +274,7 @@ Outputs:
     Value: !GetAtt ServiceSG.GroupId
     Export:
       Name: !Sub "${AWS::StackName}ServiceSecurityGroupId"
+  ServiceName:
+    Value: !GetAtt FargateService.Name
+    Export:
+      Name: !Sub "${AWS::StackName}ServiceName"
