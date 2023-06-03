@@ -6,14 +6,16 @@ fi
 TASK_ID=$1
 
 CONTAINER_NAME=backend-flask
+CLUSTER=CrdClusterFargateCluster
 
 echo "TASK ID : $TASK_ID"
 echo "Container Name: $CONTAINER_NAME"
 
 aws ecs execute-command  \
 --region $AWS_DEFAULT_REGION \
---cluster cruddur \
+--cluster $CLUSTER \
 --task $TASK_ID \
 --container $CONTAINER_NAME \
 --command "/bin/bash" \
 --interactive
+# --cluster cruddur 
