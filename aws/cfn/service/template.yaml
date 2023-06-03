@@ -98,7 +98,7 @@ Resources:
       DesiredCount: 1
       EnableECSManagedTags: true
       EnableExecuteCommand: true
-      HealthCheckGracePeriodSeconds: 100
+      HealthCheckGracePeriodSeconds: 0
       LaunchType: FARGATE
       LoadBalancers:
         - TargetGroupArn:
@@ -110,7 +110,6 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            # - !GetAtt ServiceSG.GroupId
             - Fn::ImportValue:
                 !Sub "${ClusterStack}ServiceSecurityGroupId"
           Subnets:
@@ -129,7 +128,7 @@ Resources:
           - DiscoveryName: backend-flask
             PortName: backend-flask
             ClientAliases:
-              - Port: !Ref ContainerPort      
+              - Port: !Ref ContainerPort
       # ServiceRegistries:
       #   - RegistryArn: !Sub 'arn:aws:servicediscovery:${AWS::Region}:${AWS::AccountId}:service/srv-cruddur-backend-flask'
       #     Port: !Ref ContainerPort
@@ -272,10 +271,6 @@ Resources:
         - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
 
 Outputs:
-  # ServiceSecurityGroupId:
-  #   Value: !GetAtt ServiceSG.GroupId
-  #   Export:
-  #     Name: !Sub "${AWS::StackName}ServiceSecurityGroupId"
   ServiceName:
     Value: !GetAtt FargateService.Name
     Export:
