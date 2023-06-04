@@ -60,7 +60,7 @@ Parameters:
   BackendHealthCheckPort:
     Type: String
     Default: 4567
-    # Changed from Default: 80 to fix health check error for ELB
+    # Needs to be overrode in GUI to 4567 to fix health check error for ELB
   BackendHealthCheckProtocol:
     Type: String
     Default: HTTP
@@ -180,8 +180,8 @@ Resources:
           CidrIp: '0.0.0.0/0'
           Description: INTERNET HTTPS
         - IpProtocol: tcp
-          FromPort: !Ref BackendPort
-          ToPort: !Ref BackendPort
+          FromPort: 80
+          ToPort: 80
           CidrIp: '0.0.0.0/0'
           Description: INTERNET HTTP
   # We have to create this SG before the service so we can pass it to database SG

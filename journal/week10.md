@@ -355,6 +355,78 @@ Running `./bin/cfn/networking-deploy` now initiates a changeset for the CFN stac
 This instance is needed before the service can be created.
 
 
+## CFN Service Stack
+
+### CFN Service Stack Issue.
+
+The application failed to start which meant the Service stack could not be deployed
+
+#### Summary
+
+. The pool-connect error was because in my db-connect URL I had forgotten to update the username from root to cruddurroot
+. The 'KeyError: 'keys' | backend-flask' error was because I had made a mistake in my cognito variables correcting this fixed the issue
+. The TaskFailedElb-Check error was because in the cluster template the healthcheck port needs to be changed from port 80 to 4567
+
+#### Troubleshooting
+
+Application failing to start
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/56c2fa89-819f-4928-8525-8821e6e33245)
+
+```sh
+6/3/2023, 7:01:54 AM GMT+1 | cognito_jwt_token = CognitoJwtToken( | backend-flask
+6/3/2023, 7:01:54 AM GMT+1 | File "/backend-flask/lib/cognito_jwt_token.py", line 32, in __init__ | backend-flask
+6/3/2023, 7:01:54 AM GMT+1 | self._load_jwk_keys() | backend-flask
+6/3/2023, 7:01:54 AM GMT+1 | File "/backend-flask/lib/cognito_jwt_token.py", line 39, in _load_jwk_keys | backend-flask
+6/3/2023, 7:01:54 AM GMT+1 | self.jwk_keys = response.json()["keys"] | backend-flask
+6/3/2023, 7:01:54 AM GMT+1 | KeyError: 'keys' | backend-flask
+```
+
+This was caused by a mistake in the cognito variables. I had the incorrect value for `EnvAWSCognitoUserPoolId`.
+
+Changing this resolved the issue.
+
+ELB Health Check Failures
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/78174143-f152-4777-b38a-6f288c82a5c1)
+
+Logs showed the following error
+
+```sh
+ConnectionRefusedError: [Errno 111] Connection refused
+urllib3.exceptions.NewConnectionError: <botocore.awsrequest.AWSHTTPConnection object at 0x7f5a310e4970>: Failed to establish a new connection: [Errno 111] Connection refused
+botocore.exceptions.EndpointConnectionError: Could not connect to the endpoint URL: "http://127.0.0.1:2000/SamplingTargets"
+```
+
+To resolve this I overrode it first manually in the Console here by changing it to 4567 as mentioned by other bootcampers
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/2b6023c8-5a7c-49d1-b4a6-8661b8bcc395)
+
+This allowed the service stack to be created successfully.
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/8fba5601-ed79-44df-80b0-ed8eb455a16f)
+
+To automate this I changed the backend health check port from 80 to 4567 in `/workspace/aws-bootcamp-cruddur-2023/aws/cfn/cluster/template.yaml` from
+
+```yaml
+  BackendHealthCheckPort:
+    Type: String
+    Default: 80
+```
+to
+
+```yaml
+  BackendHealthCheckPort:
+    Type: String
+    Default: 4567
+```
+
+This took the deployment time from hours down to 7 minutes
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/0757cdc9-d106-459a-9236-b50a5da73945)
+
+
+
+
 
 ---
 
