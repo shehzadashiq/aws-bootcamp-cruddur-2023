@@ -184,6 +184,11 @@ Resources:
           ToPort: 80
           CidrIp: '0.0.0.0/0'
           Description: INTERNET HTTP
+        - IpProtocol: icmp
+          FromPort: -1
+          ToPort: -1
+          CidrIp: '0.0.0.0/0'
+          Description: ICMPv4 Ping
   # We have to create this SG before the service so we can pass it to database SG
   ServiceSG:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
