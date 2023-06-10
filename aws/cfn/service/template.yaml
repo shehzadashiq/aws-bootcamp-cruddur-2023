@@ -48,10 +48,10 @@ Parameters:
     Default: 5ii99q5tndg030gjiq870orqgf
   EnvFrontendUrl:
     Type: String
-    Default: "*"
+    Default: "https://tajarba.com"
   EnvBackendUrl:
     Type: String
-    Default: "*"
+    Default: "https://api.tajarba.com"
   SecretsAWSAccessKeyId:
     Type: String
     Default: 'arn:aws:ssm:eu-west-2:797130574998:parameter/cruddur/backend-flask/AWS_ACCESS_KEY_ID'

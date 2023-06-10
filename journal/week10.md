@@ -357,6 +357,33 @@ This instance is needed before the service can be created.
 
 ## CFN Service Stack
 
+#### 503 Error being shown once stack has been deployed
+
+Accessing 
+https://api.tajarba.com/api/health-check
+
+would show that the stack was successfully deployed however trying to access https://api.tajarba.com/api/activities/home would display a 503 error
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/73ee9d33-b2fb-4b39-9938-a0fcbd04ecd5)
+
+This was because in the cluster stack ` HTTP Host Header` had been set incorrectly
+
+```yaml
+          HostHeaderConfig: 
+            Values: 
+              - api.cruddur.com
+```
+
+to
+
+```yaml
+          HostHeaderConfig: 
+            Values: 
+              - api.tajarba.com
+```
+
+## CFN DDB Stack
+
 ### CFN Service Stack Issue.
 
 The application failed to start which meant the Service stack could not be deployed
