@@ -106,6 +106,7 @@ Resources:
           - ","
           - Fn::ImportValue:
               !Sub "${NetworkingStack}PublicSubnetIds"
+      # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html              
       LoadBalancerAttributes:
         - Key: routing.http2.enabled
           Value: true
@@ -116,12 +117,11 @@ Resources:
         - Key: load_balancing.cross_zone.enabled
           Value: true
         - Key: access_logs.s3.enabled
-          Value: false
-        # In-case we want to turn on logs
-        # - Name: access_logs.s3.bucket
-        #   Value: bucket-name
-        # - Name: access_logs.s3.prefix
-        #   Value: ""
+          Value: true
+        - Key: access_logs.s3.bucket
+          Value: "s3-cruddur-alb-access-logs"
+        - Key: access_logs.s3.prefix
+          Value: "CrdCluster"
   HTTPSListener:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -158,7 +158,7 @@ Resources:
         - Field: host-header
           HostHeaderConfig: 
             Values: 
-              - api.cruddur.com
+              - api.tajarba.com
       Actions: 
         - Type: forward
           TargetGroupArn:  !Ref BackendTG

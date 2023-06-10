@@ -1,5 +1,6 @@
 #!/usr/bin/bash
-export TASK_ID=$(aws ecs list-tasks --cluster cruddur --service-name backend-flask --query 'taskArns[*]' --output json | jq -r 'join(",")')
+CLUSTER_NAME=cruddur
+export TASK_ID=$(aws ecs list-tasks --cluster $CLUSTER_NAME --service-name backend-flask --query 'taskArns[*]' --output json | jq -r 'join(",")')
 
 aws ecs execute-command  \
 --region $AWS_DEFAULT_REGION \
