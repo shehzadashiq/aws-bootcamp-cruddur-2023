@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
-CLUSTER_NAME="cruddur"
+# CLUSTER_NAME="cruddur"
+CLUSTER_NAME="CrdClusterFargateCluster"
 # SERVICE="backend-flask"
 
 # Scale down backend
