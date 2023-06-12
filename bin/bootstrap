@@ -15,3 +15,6 @@ ruby "$BIN_DIR/frontend/generate-env"
 
 # Install CFN section
 source "$BIN_DIR/cfn/initialise.sh"
+
+# Install SAM section
+source "$BIN_DIR/sam/initialise.sh"

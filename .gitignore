@@ -9,3 +9,4 @@ vars.sh
 env
 .aws-sam
 build.toml
+tmp/*
