@@ -6,3 +6,7 @@ venv
 frontend-react-js/build/*
 node_modules
 vars.sh
+env
+.aws-sam
+build.toml
+tmp/*

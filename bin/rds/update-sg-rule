@@ -6,6 +6,7 @@ LABEL="rds-update-sg-rule"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 GITPOD_IP=$(curl ifconfig.me)
+echo $GITPOD_IP
 DB_SG_ID=$(aws ec2 describe-security-groups --group-names "default" --query 'SecurityGroups[*].GroupId' --output text)
 echo $DB_SG_ID
 

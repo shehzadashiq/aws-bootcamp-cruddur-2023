@@ -1,8 +1,16 @@
 tasks:
-  # - name: cfn-lint
-  #   before:
-  #     pip install cfn-lint
-  #     cargo install cfn-guard
+  - name: aws-sam
+    init: |
+      cd /workspace
+      wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+      unzip -qo aws-sam-cli-linux-x86_64.zip -d sam-installation
+      sudo ./sam-installation/install
+      cd $THEIA_WORKSPACE_ROOT
+  - name: cfn
+    before:
+      pip install cfn-lint
+      cargo install cfn-guard
+      gem install cfn-toml
   - name: aws-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
@@ -61,8 +69,7 @@ tasks:
       npm install aws-cdk-lib -g
       cd thumbing-serverless-cdk
       npm i      
-      cp env.example .env
-
+      cp .env.example .env
 
 vscode:
   extensions:
