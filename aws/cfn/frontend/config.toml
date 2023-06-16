@@ -1,0 +1,10 @@
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdFrontend'
+
+[parameters]
+CertificateArn = 'arn:aws:acm:us-east-1:797130574998:certificate/577439ec-3880-44dc-b94c-ba4d5305b51e'
+WwwBucketName = 'www.tajarba.com'
+RootBucketName = 'tajarba.com'
+HostedZoneId = 'Z08803681DMUOOMUA61TQ'
