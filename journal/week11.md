@@ -1,4 +1,4 @@
-# Week 11 — CloudFormation Part 2
+# Week 11/X — CloudFormation Part 2 - Cleanup
 
 ## Overview
 
@@ -21,7 +21,7 @@ Due to scope creep, this week will focus on cleaning up the code and ensuring it
 
 ## Week X Sync tool for static website hosting
 
-Create the following scripts `static-build` and `sync` in bin frontend and set them as executable
+Create the following scripts `static-build` and `sync` in `bin/frontend` and set them as executable
 
 ```sh
 touch bin/frontend/static-build
@@ -29,3 +29,72 @@ touch bin/frontend/sync
 chmod u+x bin/frontend/static-build
 chmod u+x bin/frontend/sync
 ```
+
+Create a new file `erb/sync.env.erb` that holds the environment variables for the `bin/frontend/sync` script
+
+```sh
+touch erb/sync.env.erb
+```
+
+Add the following, replace `SYNC_S3_BUCKET` and `SYNC_CLOUDFRONT_DISTRIBUTION_ID` with your own.
+
+```erb
+SYNC_S3_BUCKET=tajarba.com
+SYNC_CLOUDFRONT_DISTRIBUTION_ID=ELTQ0Y5RKUKSF
+SYNC_BUILD_DIR=<%= ENV['THEIA_WORKSPACE_ROOT'] %>/frontend-react-js/build
+SYNC_OUTPUT_CHANGESET_PATH=<%=  ENV['THEIA_WORKSPACE_ROOT'] %>/tmp/changeset.json
+SYNC_AUTO_APPROVE=false
+```
+
+Create the following files in the root of the repository
+
+- Gemfile
+- Rakefile
+
+```sh
+touch Gemfile
+touch Rakefile
+```
+
+The code for these files is located respectively here [Gemfile](../Gemfile) and here [Rakefile](../Rakefile).
+
+Create the following file `./tmp/.keep` as a placeholder
+
+```sh
+touch tmp/.keep
+```
+
+Create a `sync` script in `bin/cfn`
+
+```sh
+touch bin/cfn/sync
+chmod u+x bin/cfn/sync
+```
+
+Update `bin/cfn/sync` with the following [code](../bin/cfn/sync)
+
+### Create Sync Template
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/sync
+touch aws/cfn/sync/template.yaml aws/cfn/sync/config.toml aws/cfn/sync/config.toml.example
+```
+
+Update config.toml with the following settings that specify the bucket, region and name of the CFN stack. Replace `bucket` and `region` with your own.
+
+We also need to specify the GitHubOrg which in our case will correspond to our GitHub username and the GitHub Repository name
+
+```toml
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdSyncRole'
+
+[parameters]
+GitHubOrg = 'shehzadashiq'
+RepositoryName = 'aws-bootcamp-cruddur-2023'
+OIDCProviderArn = ''
+```
+
+Update `aws/cfn/sync/template.yaml` with the following [code](../aws/cfn/sync/template.yaml)
