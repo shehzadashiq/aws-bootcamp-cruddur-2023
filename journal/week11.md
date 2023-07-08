@@ -119,9 +119,17 @@ The following error was shown
 
 `Could not connect to the endpoint URL: "http://dynamodb-local:8000/"`
 
-I looked further into the error and saw that the value was configured as an environment variable `AWS_ENDPOINT_URL` when we were using DynamoDB in week 5 locally. This had not caused any issues previously so I was surprised that this had happened.
+I looked further into the error and saw that the value was configured as an environment variable `AWS_ENDPOINT_URL` when we were using DynamoDB in week 5 locally. 
 
-To resolve this issue I unset the variable locally and removed it from Gitpod
+This was configured thus, `AWS_ENDPOINT_URL="http://dynamodb-local:8000"`
+
+This had not caused any issues previously so I was surprised that this had happened.
+
+
+I tried to change the URL to point to my region following the recommendations here <https://docs.aws.amazon.com/general/latest/gr/rande.html#ddb_region> e.g. `AWS_ENDPOINT_URL="https://dynamodb.eu-west-2.amazonaws.com"`
+
+
+This still caused the same issue. To resolve this issue I unset the variable locally and removed it from Gitpod
 
 ```sh
 gp env -u AWS_ENDPOINT_URL
