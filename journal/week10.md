@@ -31,15 +31,19 @@
     - [Create Cluster Deploy Script](#create-cluster-deploy-script)
   - [CFN Service Stack](#cfn-service-stack)
     - [Create Service Template](#create-service-template)
-    - [Create Networking Deploy Script](#create-networking-deploy-script-1)
+    - [Create Service Deploy Script](#create-service-deploy-script)
   - [CFN DB Stack](#cfn-db-stack)
-  - [CFN Service Stack](#cfn-service-stack-1)
-      - [503 Error being shown once stack has been deployed](#503-error-being-shown-once-stack-has-been-deployed)
+    - [Create DB Template](#create-db-template)
+    - [Create DB Deploy Script](#create-db-deploy-script)
   - [CFN DDB Stack](#cfn-ddb-stack)
-    - [CFN Service Stack Issue.](#cfn-service-stack-issue)
+  - [Troubleshooting](#troubleshooting)
+    - [Changes need to DB SG once the stack has been created.](#changes-need-to-db-sg-once-the-stack-has-been-created)
+    - [Domain not resolving](#domain-not-resolving)
+    - [503 Error being shown once stack has been deployed](#503-error-being-shown-once-stack-has-been-deployed)
+    - [CFN Service Stack Issue](#cfn-service-stack-issue)
       - [Summary](#summary)
-      - [Troubleshooting](#troubleshooting)
-  - [Spend Issue](#spend-issue)
+      - [Troubleshooting Stack Issue](#troubleshooting-stack-issue)
+    - [Spend Issue](#spend-issue)
   - [Journal Summary](#journal-summary)
 
 ---
@@ -308,7 +312,6 @@ chmod u+x cluster-deploy
 
 As I did with the networking-deploy script I modified the script to not have hardcoded values.
 
-
 ```sh
 cd /workspace/aws-bootcamp-cruddur-2023
 mkdir -p  aws/cfn/networking
@@ -325,14 +328,14 @@ region = 'eu-west-2'
 stack_name = 'CrdNet'
 ```
 
-### Create Networking Deploy Script
+### Create Service Deploy Script
 
 ```sh
 cd /workspace/aws-bootcamp-cruddur-2023
 mkdir -p  bin/cfn
 cd bin/cfn
-touch networking-deploy
-chmod u+x networking-deploy
+touch service-deploy
+chmod u+x service-deploy
 ```
 
 I modified the script to not have hardcoded values as I am using my local machine and GitPod for development.
@@ -371,27 +374,68 @@ aws cloudformation deploy \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
-Running `./bin/cfn/networking-deploy` now initiates a changeset for the CFN stack.
+Running `./bin/cfn/service-deploy` now initiates a changeset for the CFN stack.
 
----
+-----------------------------------------------
 
 ## CFN DB Stack
 
-This instance is needed before the service can be created.
+### Create DB Template
 
+As I did with the networking-deploy script I modified the script to not have hardcoded values.
 
-## CFN Service Stack
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/db
+cd aws/cfn/db
+touch template.yaml config.toml.example config.toml
+```
 
-#### 503 Error being shown once stack has been deployed
+Update config.toml with the following settings that specify the bucket, region and name of the CFN stack.
 
-Accessing 
-https://api.tajarba.com/api/health-check
+```toml
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdDb'
 
-would show that the stack was successfully deployed however trying to access https://api.tajarba.com/api/activities/home would display a 503 error
+[parameters]
+NetworkingStack = 'CrdNet'
+ClusterStack = 'CrdCluster'
+MasterUsername = 'cruddurroot'
+```
+
+### Create DB Deploy Script
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  bin/cfn
+cd bin/cfn
+touch db-deploy
+chmod u+x db-deploy
+```
+
+Update the script with the following [code](../bin/cfn/db-deploy)
+
+## CFN DDB Stack
+
+## Troubleshooting
+
+### Changes need to DB SG once the stack has been created.
+
+To allow connectivity from Gitpod and my desktop extra rules to allow traffic on port 5432 needed to be created.
+
+### Domain not resolving
+
+Once the service had been created successfully. Trying to access <https://api.tajarba.com/api/health-check> would result in a  The A record
+
+### 503 Error being shown once stack has been deployed
+
+Accessing  <https://api.tajarba.com/api/health-check> would show that the stack was successfully deployed however trying to access <https://api.tajarba.com/api/activities/home> would display a 503 error
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/73ee9d33-b2fb-4b39-9938-a0fcbd04ecd5)
 
-This was because in the cluster stack ` HTTP Host Header` had been set incorrectly
+This was because in the cluster stack `HTTP Host Header` had been set incorrectly in `aws/cfn/cluster/template.yaml`. This was changed from
 
 ```yaml
           HostHeaderConfig: 
@@ -407,9 +451,7 @@ to
               - api.tajarba.com
 ```
 
-## CFN DDB Stack
-
-### CFN Service Stack Issue.
+### CFN Service Stack Issue
 
 The application failed to start which meant the Service stack could not be deployed
 
@@ -419,7 +461,7 @@ The application failed to start which meant the Service stack could not be deplo
 . The 'KeyError: 'keys' | backend-flask' error was because I had made a mistake in my cognito variables correcting this fixed the issue
 . The TaskFailedElb-Check error was because in the cluster template the healthcheck port needs to be changed from port 80 to 4567
 
-#### Troubleshooting
+#### Troubleshooting Stack Issue
 
 Application failing to start
 
@@ -464,6 +506,7 @@ To automate this I changed the backend health check port from 80 to 4567 in `/wo
     Type: String
     Default: 80
 ```
+
 to
 
 ```yaml
@@ -476,19 +519,13 @@ This took the deployment time from hours down to 7 minutes
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/0757cdc9-d106-459a-9236-b50a5da73945)
 
-
-
-
-
----
-
-## Spend Issue
+### Spend Issue
 
 I received an alert that my ELB spend will exceed the free tier elements.
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/42ce4741-182b-4a41-aeef-bf8f1338f229)
 
-It turned out that the Cruddur cluster created using the ECS tasks had been running since September. As it was not needed I removed it using a script. 
+It turned out that the Cruddur cluster created using the ECS tasks had been running since September. As it was not needed I removed it using a script.
 
 '/workspace/aws-bootcamp-cruddur-2023/bin/ecs/cluster-delete.sh'
 

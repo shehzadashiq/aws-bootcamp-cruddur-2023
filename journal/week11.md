@@ -21,6 +21,10 @@ Due to scope creep, this week will focus on cleaning up the code and ensuring it
 
 ## Week X Sync tool for static website hosting
 
+Create a bucket to host the frontend
+
+`aws s3 mb s3://tajarba.com`
+
 Create the following scripts `static-build` and `sync` in `bin/frontend` and set them as executable
 
 ```sh
