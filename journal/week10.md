@@ -427,7 +427,25 @@ To allow connectivity from Gitpod and my desktop extra rules to allow traffic on
 
 ### Domain not resolving
 
-Once the service had been created successfully. Trying to access <https://api.tajarba.com/api/health-check> would result in a  The A record
+Once the service stack was deployed successfully it shows 200 in its logs
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/0f93e6da-65f2-473f-8d93-a529bba3854c)
+
+However, trying to access <https://api.tajarba.com/api/health-check> would result in the following error `ERR_NAME_NOT_RESOLVED`
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/c7d45cf7-4174-4fe5-ae23-1455b97e11ab)
+
+This is because in Route53, the A record for `api.tajarba.com` needed to be changed. Here we can see it is pointing to the old ALB which no longer exists
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/64585dd7-7173-4ee3-82ac-e98b2cf96fdd)
+
+To verify which ALB was created by the cluster this can be seen in the resources created by the Cluster stack `CrdCluster`
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/4e678784-024e-4ae9-95d1-8fbf3df57c79)
+
+This can be checked easily from the CLI too using the following AWS command
+
+`aws elbv2 describe-load-balancers --names  CrdClusterALB  --query "LoadBalancers[0].DNSName" --output text`
 
 ### 503 Error being shown once stack has been deployed
 
