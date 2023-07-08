@@ -98,3 +98,30 @@ OIDCProviderArn = ''
 ```
 
 Update `aws/cfn/sync/template.yaml` with the following [code](../aws/cfn/sync/template.yaml)
+
+## Troubleshooting
+
+### AWS CLI Issues
+
+In GitPod, docker compose started to fail with the following message
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3b13d8e5-fceb-4d14-b21e-05830ddba6a2)
+
+I noticed that tasks within Gitpod.yml were not working either. The same issue happened in a new environment
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/6a86a4c6-45c7-4d94-9243-d0f5c804b522)
+
+The following error was shown
+
+`Could not connect to the endpoint URL: "http://dynamodb-local:8000/"`
+
+I looked further into the error and saw that the value was configured as an environment variable `AWS_ENDPOINT_URL` when we were using DynamoDB in week 5 locally. This had not caused any issues previously so I was surprised that this had happened.
+
+To resolve this issue I unset the variable locally and removed it from Gitpod
+
+```sh
+gp env -u AWS_ENDPOINT_URL
+unset AWS_ENDPOINT_URL
+```
+
+Once this had been unset I was able to run all aws_cli commands and run docker-compose
