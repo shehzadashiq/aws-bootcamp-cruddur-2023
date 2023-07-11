@@ -37,7 +37,7 @@
     - [Create DB Deploy Script](#create-db-deploy-script)
   - [CFN DDB Stack](#cfn-ddb-stack)
   - [Troubleshooting](#troubleshooting)
-    - [Changes need to DB SG once the stack has been created.](#changes-need-to-db-sg-once-the-stack-has-been-created)
+    - [Changes need to DB SG once the stack has been created](#changes-need-to-db-sg-once-the-stack-has-been-created)
     - [Domain not resolving](#domain-not-resolving)
     - [503 Error being shown once stack has been deployed](#503-error-being-shown-once-stack-has-been-deployed)
     - [CFN Service Stack Issue](#cfn-service-stack-issue)
@@ -252,33 +252,43 @@ CLI Output of running `./bin/cfn/networking-deploy`
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/e0290e88-0913-47c5-ab56-887ca3f3de68)
 
 ##### Change Set ready to be executed
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/adc53128-4dd0-44ca-8022-f1b3dbf33353)
 
 ##### Execute Change Set
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/eb0b4b6b-3b44-47f3-aecb-144802c4b6ae)
 
 ##### Creation in Progress
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/d30b36b0-3cb0-4af4-afeb-6a6b093411b7)
 
 ##### Stack Creation Events
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/954f9831-0d84-4721-8e09-a6015fef249b)
 
 ##### Stack Overview Once completed
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/35e15cb7-9126-4538-b17f-7b4d94575206)
 
 ##### Stack Parameters used during Creation
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/a31d7e7a-a74f-439d-8443-ccf91f2d138f)
 
 ##### Stack Resources
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/a8778a82-e75c-4c34-a28b-aae5de2eda77)
 
 ##### Stack Outputs
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/799e02b8-670b-41ce-ab49-63c969ef5f94)
 
 ##### Stack Change Set
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/bd9fa40c-2cfe-441d-afc3-f2a070eaea58)
 
 ##### Stack Created Successfully
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3a2d192d-a9f5-42e3-a67c-d24be4a1759e)
 
 ---
@@ -376,8 +386,6 @@ aws cloudformation deploy \
 
 Running `./bin/cfn/service-deploy` now initiates a changeset for the CFN stack.
 
------------------------------------------------
-
 ## CFN DB Stack
 
 ### Create DB Template
@@ -421,7 +429,7 @@ Update the script with the following [code](../bin/cfn/db-deploy)
 
 ## Troubleshooting
 
-### Changes need to DB SG once the stack has been created.
+### Changes need to DB SG once the stack has been created
 
 To allow connectivity from Gitpod and my desktop extra rules to allow traffic on port 5432 needed to be created.
 
