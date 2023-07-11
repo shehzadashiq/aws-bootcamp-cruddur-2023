@@ -31,11 +31,11 @@
     - [Create Cluster Deploy Script](#create-cluster-deploy-script)
   - [CFN Service Stack](#cfn-service-stack)
     - [Create Service Template](#create-service-template)
-    - [Create Service Deploy Script](#create-service-deploy-script)
   - [CFN DB Stack](#cfn-db-stack)
     - [Create DB Template](#create-db-template)
     - [Create DB Deploy Script](#create-db-deploy-script)
-  - [CFN DDB Stack](#cfn-ddb-stack)
+    - [Seed DB](#seed-db)
+    - [Create Service Deploy Script](#create-service-deploy-script)
   - [Troubleshooting](#troubleshooting)
     - [Changes need to DB SG once the stack has been created](#changes-need-to-db-sg-once-the-stack-has-been-created)
     - [Domain not resolving](#domain-not-resolving)
@@ -45,6 +45,12 @@
       - [Troubleshooting Stack Issue](#troubleshooting-stack-issue)
     - [Spend Issue](#spend-issue)
   - [Journal Summary](#journal-summary)
+  - [Diagram for Week 10](#diagram-for-week-10)
+    - [CFN Networking Layer Diagram](#cfn-networking-layer-diagram)
+    - [CI/CD Layer Diagram Detail](#cicd-layer-diagram-detail)
+    - [Route53/Cloudfront Layer Diagram Detail](#route53cloudfront-layer-diagram-detail)
+    - [Architectural Diagram Overview](#architectural-diagram-overview)
+    - [Architectural Diagram](#architectural-diagram)
 
 ---
 
@@ -338,7 +344,58 @@ region = 'eu-west-2'
 stack_name = 'CrdNet'
 ```
 
+## CFN DB Stack
+
+### Create DB Template
+
+As I did with the networking-deploy script I modified the script to not have hardcoded values.
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/db
+cd aws/cfn/db
+touch template.yaml config.toml.example config.toml
+```
+
+Update config.toml with the following settings that specify the bucket, region and name of the CFN stack.
+
+```toml
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdDb'
+
+[parameters]
+NetworkingStack = 'CrdNet'
+ClusterStack = 'CrdCluster'
+MasterUsername = 'cruddurroot'
+```
+
+### Create DB Deploy Script
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  bin/cfn
+cd bin/cfn
+touch db-deploy
+chmod u+x db-deploy
+```
+
+Update the script with the following [code](../bin/cfn/db-deploy)
+
+### Seed DB
+
+Before seeding we need to update the value for `PROD_CONNECTION_URL` to our new database. I updated it in both Parameter Store and GitPod.
+
+We need to update it both locations because a connection will be made by the application `/cruddur/backend-flask/CONNECTION_URL` in parameter store. The GitPod `PROD_CONNECTION_URL` needs to be updated to allow seeding.
+
+Once `PROD_CONNECTION_URL` has been set correctly, seed the database with data by running the following.
+
+`./bin/db/setup prod`
+
 ### Create Service Deploy Script
+
+With all the pre-requisites in place the service stack can now be created.
 
 ```sh
 cd /workspace/aws-bootcamp-cruddur-2023
@@ -386,52 +443,11 @@ aws cloudformation deploy \
 
 Running `./bin/cfn/service-deploy` now initiates a changeset for the CFN stack.
 
-## CFN DB Stack
-
-### Create DB Template
-
-As I did with the networking-deploy script I modified the script to not have hardcoded values.
-
-```sh
-cd /workspace/aws-bootcamp-cruddur-2023
-mkdir -p  aws/cfn/db
-cd aws/cfn/db
-touch template.yaml config.toml.example config.toml
-```
-
-Update config.toml with the following settings that specify the bucket, region and name of the CFN stack.
-
-```toml
-[deploy]
-bucket = 'cfn-tajarba-artifacts'
-region = 'eu-west-2'
-stack_name = 'CrdDb'
-
-[parameters]
-NetworkingStack = 'CrdNet'
-ClusterStack = 'CrdCluster'
-MasterUsername = 'cruddurroot'
-```
-
-### Create DB Deploy Script
-
-```sh
-cd /workspace/aws-bootcamp-cruddur-2023
-mkdir -p  bin/cfn
-cd bin/cfn
-touch db-deploy
-chmod u+x db-deploy
-```
-
-Update the script with the following [code](../bin/cfn/db-deploy)
-
-## CFN DDB Stack
-
 ## Troubleshooting
 
 ### Changes need to DB SG once the stack has been created
 
-To allow connectivity from Gitpod and my desktop extra rules to allow traffic on port 5432 needed to be created.
+To allow connectivity from Gitpod and my desktop extra rules to allow traffic on port 5432 needed to be created in `CrdDbRDSSG`. Without this rule connections would fail.
 
 ### Domain not resolving
 
@@ -609,3 +625,31 @@ aws ecs delete-cluster --cluster $CLUSTER_NAME
 ```
 
 ## Journal Summary
+
+Homework was completed successfully.
+
+## Diagram for Week 10
+
+I created the diagram using Lucid. I had to upgrade to the paid plan to continue using its features. To view the full diagram the following link can be used however I have tried to provide snippets of the diagram here too as it might be difficult to see on screen due to its size.
+
+<https://lucid.app/lucidchart/84e6711d-fb07-47d6-b274-06fd577fc550/edit?viewport_loc=-1533%2C979%2C2994%2C1677%2C0_0&invitationId=inv_f1c5ef59-17fa-426c-8007-6fb6aff8e8f4>
+
+### CFN Networking Layer Diagram
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/c5963753-8f8e-4f46-ba9a-7426257633dc)
+
+### CI/CD Layer Diagram Detail
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/955a7908-8b8b-4c67-9b7b-f6d6db4b7239)
+
+### Route53/Cloudfront Layer Diagram Detail
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/cb853303-fca4-4032-b70c-5d6b34dd3e4f)
+
+### Architectural Diagram Overview
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/89506a5c-149f-4a23-b711-03405cfb058d)
+
+### Architectural Diagram
+
+![CFN Network Layer](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/7958cdd2-c1a8-4677-b9f0-7d5aeb59de22)
