@@ -21,9 +21,27 @@ Due to scope creep, this week will focus on cleaning up the code and ensuring it
 
 ## Week X Sync tool for static website hosting
 
-Create a bucket to host the frontend
+### Create Bucket
 
-`aws s3 mb s3://tajarba.com`
+1 - Create a public bucket through the GUI
+
+2 - Create a public bucket to host the frontend using the aws cli and via a policy that grants public access.
+
+#### Create Public Bucket via GUI
+
+Create a public bucket to host the frontend using the aws cli and the [following policy](../aws/policies/bucket-policy.json) that grants public access.
+
+`aws s3api create-bucket --bucket tajarba.com --region $AWS_DEFAULT_REGION`
+
+e.g. in my instance it is
+
+```console
+aws s3api create-bucket --bucket tajarba.com --region $AWS_DEFAULT_REGION --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION
+aws s3api put-bucket-ownership-controls --bucket tajarba.com --ownership-controls="Rules=[{ObjectOwnership=BucketOwnerPreferred}]"
+aws s3api put-bucket-policy --bucket tajarba.com --policy file://bucket-policy.json
+```
+
+### Create Build scripts
 
 Create the following scripts `static-build` and `sync` in `bin/frontend` and set them as executable
 
@@ -103,7 +121,47 @@ OIDCProviderArn = ''
 
 Update `aws/cfn/sync/template.yaml` with the following [code](../aws/cfn/sync/template.yaml)
 
+## Initialise Static Hosting
+
+### Run Build script
+
+Run build script `./bin/frontend/build` , you should see output similar to the following when successful.
+
+```console
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+```
+
+Change to the frontend directory and zip the build folder
+
+```sh
+cd frontend-react-js
+zip -r build.zip build/
+```
+
+The steps within the video recommended downloading the zip file locally and then uploading it to the s3 bucket. I instead chose to use the [s3 cp](https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html) command to copy from the `frontend-react-js` folder directly to the s3 bucket `s3://tajarba.com`
+
+`aws s3 cp build  s3://tajarba.com/ --recursive`
+
+I verified everything had been copied successfully using the `s3 ls` command
+
+`aws s3 ls s3://tajarba.com`
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/cd6957a3-934d-47e7-bdbf-104d9978ac6c)
+
+
 ## Troubleshooting
+
+### Issues
+
+- Tasks in GitPod and AWS CLI stopped running because `AWS_ENDPOINT_URL` had been set and was causing issues
 
 ### AWS CLI Issues
 
@@ -125,9 +183,7 @@ This was configured thus, `AWS_ENDPOINT_URL="http://dynamodb-local:8000"`
 
 This had not caused any issues previously so I was surprised that this had happened.
 
-
 I tried to change the URL to point to my region following the recommendations here <https://docs.aws.amazon.com/general/latest/gr/rande.html#ddb_region> e.g. `AWS_ENDPOINT_URL="https://dynamodb.eu-west-2.amazonaws.com"`
-
 
 This still caused the same issue. To resolve this issue I unset the variable locally and removed it from Gitpod
 
