@@ -221,6 +221,10 @@ jobs:
         run: bundle exec rake sync
 ```
 
+Failure on GitHub Actions
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/5a5ce4db-9517-4c48-8f4a-4c146b95fe37)
+
 ## Troubleshooting
 
 ### Issues

@@ -35,6 +35,9 @@
     - [Create DB Template](#create-db-template)
     - [Create DB Deploy Script](#create-db-deploy-script)
     - [Seed DB](#seed-db)
+  - [CFN DDB Stack](#cfn-ddb-stack)
+    - [Create DDB Template](#create-ddb-template)
+    - [Create DDB Deploy Script](#create-ddb-deploy-script)
     - [Create Service Deploy Script](#create-service-deploy-script)
   - [CFN MachineUser Stack](#cfn-machineuser-stack)
     - [Create MachineUser Template](#create-machineuser-template)
@@ -401,6 +404,49 @@ Once `PROD_CONNECTION_URL` has been set correctly, seed the database with data b
 
 `./bin/db/setup prod`
 
+## CFN DDB Stack
+
+### Create DDB Template
+
+### Create DDB Deploy Script
+
+- Create `.aws-sam` with `./bin/cfn/ddb-build`
+- Package with `./bin/cfn/ddb-package`
+- Create CFN stack with inally `./bin/cfn/ddb-deploy`, in order to create CrdDdb stack.
+
+The DDB table created now needs to be added to the following location `/aws/cfn/service/config.toml` and should look as below. Update the parameters for your domain and DDBMessageTable is obtained from the resources section of `CrdDdb`
+
+```config
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdSrvBackendFlask'
+
+[parameters]
+EnvFrontendUrl = 'https://tajarba.com'
+EnvBackendUrl = 'https://api.tajarba.com'
+DDBMessageTable = 'CrdDdb-DynamoDBTable-1NK2LU7KGZSIP'
+```
+
+Update `aws/cfn/service/template.yaml`
+
+Place this entry under parameters
+
+```yaml
+  DDBMessageTable:
+    Type: String
+    Default: cruddur-messages
+```
+
+The following needs to be added to the `Environment:` section under `TaskDefinition:`
+
+```yaml
+            - Name: DDB_MESSAGE_TABLE
+              Value: !Ref DDBMessageTable       
+```
+
+Execute `./bin/cfn/service-deploy` to update `CrdSrvBackendFlask` with the DDB entry.
+
 ### Create Service Deploy Script
 
 With all the pre-requisites in place the service stack can now be created.
@@ -716,7 +762,7 @@ Homework was completed successfully.
 
 All stacks created
 
-![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/430ea693-9c45-4d9c-8e7b-82799ff06f9f)
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3eb2c4cc-a29a-4c44-8e49-495a51d416b2)
 
 ## Diagram for Week 10
 
