@@ -44,8 +44,6 @@
     - [Create MachineUser Deploy Script](#create-machineuser-deploy-script)
   - [CFN Frontend Stack](#cfn-frontend-stack)
     - [Create Frontend Template](#create-frontend-template)
-  - [CFN CI/CD Stack](#cfn-cicd-stack)
-    - [Create CI/CD Template](#create-cicd-template)
   - [Troubleshooting](#troubleshooting)
     - [Changes need to DB SG once the stack has been created](#changes-need-to-db-sg-once-the-stack-has-been-created)
     - [Domain not resolving](#domain-not-resolving)
@@ -335,7 +333,6 @@ chmod u+x cluster-deploy
 
 As I did with the networking-deploy script I modified the script to not have hardcoded values.
 
-
 ```sh
 cd /workspace/aws-bootcamp-cruddur-2023
 mkdir -p  aws/cfn/networking
@@ -351,7 +348,6 @@ bucket = 'cfn-tajarba-artifacts'
 region = 'eu-west-2'
 stack_name = 'CrdNet'
 ```
-
 
 ## CFN DB Stack
 
@@ -381,7 +377,6 @@ MasterUsername = 'cruddurroot'
 ```
 
 ### Create DB Deploy Script
-
 
 ```sh
 cd /workspace/aws-bootcamp-cruddur-2023
@@ -566,12 +561,6 @@ Running `./bin/cfn/machineuser-deploy` now initiates a changeset for the CFN sta
 
 To be written up as I missed documenting this.
 
-## CFN CI/CD Stack
-
-### Create CI/CD Template
-
-To be written up as I missed documenting this.
-
 ## Troubleshooting
 
 ### Changes need to DB SG once the stack has been created
@@ -689,7 +678,6 @@ to
 This took the deployment time from hours down to 7 minutes
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/0757cdc9-d106-459a-9236-b50a5da73945)
-
 
 ### Spend Issue
 
