@@ -1,5 +1,6 @@
 # Week 10 — CloudFormation Part 1
 
+
 - [Week 10 — CloudFormation Part 1](#week-10--cloudformation-part-1)
   - [Overview](#overview)
     - [Videos for week 10](#videos-for-week-10)
@@ -59,6 +60,7 @@
     - [Route53/Cloudfront Layer Diagram Detail](#route53cloudfront-layer-diagram-detail)
     - [Architectural Diagram Overview](#architectural-diagram-overview)
     - [Architectural Diagram](#architectural-diagram)
+
 
 ---
 
@@ -267,6 +269,7 @@ CLI Output of running `./bin/cfn/networking-deploy`
 
 ##### Change Set ready to be executed
 
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/adc53128-4dd0-44ca-8022-f1b3dbf33353)
 
 ##### Execute Change Set
@@ -303,6 +306,7 @@ CLI Output of running `./bin/cfn/networking-deploy`
 
 ##### Stack Created Successfully
 
+
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3a2d192d-a9f5-42e3-a67c-d24be4a1759e)
 
 ---
@@ -335,6 +339,7 @@ chmod u+x cluster-deploy
 ### Create Service Template
 
 As I did with the networking-deploy script I modified the script to not have hardcoded values.
+
 
 ```sh
 cd /workspace/aws-bootcamp-cruddur-2023
@@ -563,6 +568,7 @@ Accessing  <https://api.tajarba.com/api/health-check> would show that the stack 
 
 This was because in the cluster stack `HTTP Host Header` had been set incorrectly in `aws/cfn/cluster/template.yaml`. This was changed from
 
+
 ```yaml
           HostHeaderConfig: 
             Values: 
@@ -577,7 +583,9 @@ to
               - api.tajarba.com
 ```
 
+
 ### CFN Service Stack Issue
+
 
 The application failed to start which meant the Service stack could not be deployed
 
@@ -588,6 +596,7 @@ The application failed to start which meant the Service stack could not be deplo
 . The TaskFailedElb-Check error was because in the cluster template the healthcheck port needs to be changed from port 80 to 4567
 
 #### Troubleshooting Stack Issue
+
 
 Application failing to start
 
@@ -633,6 +642,8 @@ To automate this I changed the backend health check port from 80 to 4567 in `/wo
     Default: 80
 ```
 
+
+
 to
 
 ```yaml
@@ -647,11 +658,13 @@ This took the deployment time from hours down to 7 minutes
 
 ### Spend Issue
 
+
 I received an alert that my ELB spend will exceed the free tier elements.
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/42ce4741-182b-4a41-aeef-bf8f1338f229)
 
 It turned out that the Cruddur cluster created using the ECS tasks had been running since September. As it was not needed I removed it using a script.
+
 
 '/workspace/aws-bootcamp-cruddur-2023/bin/ecs/cluster-delete.sh'
 
@@ -710,6 +723,7 @@ aws ecs delete-cluster --cluster $CLUSTER_NAME
 
 ## Journal Summary
 
+
 Homework was completed successfully.
 
 ### CFN Stacks Created
@@ -743,3 +757,4 @@ I created the diagram using Lucid. I had to upgrade to the paid plan to continue
 ### Architectural Diagram
 
 ![CFN Network Layer](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/7958cdd2-c1a8-4677-b9f0-7d5aeb59de22)
+

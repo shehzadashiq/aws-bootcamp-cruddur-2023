@@ -46,6 +46,7 @@ Resources:
                 Provider: CodeStarSourceConnection
                 Owner: AWS
                 Version: '1'
+
               OutputArtifacts:
                 - Name: Source
               Configuration:

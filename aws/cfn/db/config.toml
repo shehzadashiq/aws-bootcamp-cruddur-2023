@@ -8,3 +8,4 @@ NetworkingStack = 'CrdNet'
 ClusterStack = 'CrdCluster'
 MasterUsername = 'cruddurroot'
 DeletionProtection = 'false'
+

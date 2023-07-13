@@ -7,3 +7,4 @@ stack_name = 'CrdSrvBackendFlask'
 EnvFrontendUrl = 'https://tajarba.com'
 EnvBackendUrl = 'https://api.tajarba.com'
 DDBMessageTable = 'CrdDdb-DynamoDBTable-1NK2LU7KGZSIP'
+
