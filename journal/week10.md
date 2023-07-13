@@ -36,6 +36,13 @@
     - [Create DB Deploy Script](#create-db-deploy-script)
     - [Seed DB](#seed-db)
     - [Create Service Deploy Script](#create-service-deploy-script)
+  - [CFN MachineUser Stack](#cfn-machineuser-stack)
+    - [Create MachineUser Template](#create-machineuser-template)
+    - [Create MachineUser Deploy Script](#create-machineuser-deploy-script)
+  - [CFN Frontend Stack](#cfn-frontend-stack)
+    - [Create Frontend Template](#create-frontend-template)
+  - [CFN CI/CD Stack](#cfn-cicd-stack)
+    - [Create CI/CD Template](#create-cicd-template)
   - [Troubleshooting](#troubleshooting)
     - [Changes need to DB SG once the stack has been created](#changes-need-to-db-sg-once-the-stack-has-been-created)
     - [Domain not resolving](#domain-not-resolving)
@@ -45,6 +52,7 @@
       - [Troubleshooting Stack Issue](#troubleshooting-stack-issue)
     - [Spend Issue](#spend-issue)
   - [Journal Summary](#journal-summary)
+    - [CFN Stacks Created](#cfn-stacks-created)
   - [Diagram for Week 10](#diagram-for-week-10)
     - [CFN Networking Layer Diagram](#cfn-networking-layer-diagram)
     - [CI/CD Layer Diagram Detail](#cicd-layer-diagram-detail)
@@ -443,6 +451,82 @@ aws cloudformation deploy \
 
 Running `./bin/cfn/service-deploy` now initiates a changeset for the CFN stack.
 
+## CFN MachineUser Stack
+
+### Create MachineUser Template
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/machine-user
+cd aws/cfn/machine-user
+touch template.yaml config.toml
+```
+
+Update `aws/cfn/machine-user/template.yaml` with the following code.
+
+```yaml
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  CruddurMachineUser:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName: "cruddur_machine_user"
+  DynamoDBFullAccessPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "DynamoDBFullAccessPolicy"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:PutItem
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+              - dynamodb:BatchWriteItem
+            Resource: "*"
+      Users:
+        - !Ref CruddurMachineUser
+```
+
+Update config.toml with the following changing `bucket` and `region` as appropriate
+
+```config
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdMachineUser'
+```
+
+### Create MachineUser Deploy Script
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  bin/cfn
+cd bin/cfn
+touch machineuser-deploy
+chmod u+x machineuser-deploy
+```
+
+Update the script with the following [code](../bin/cfn/machineuser-deploy)
+
+Running `./bin/cfn/machineuser-deploy` now initiates a changeset for the CFN stack.
+
+## CFN Frontend Stack
+
+### Create Frontend Template
+
+To be written up as I missed documenting this.
+
+## CFN CI/CD Stack
+
+### Create CI/CD Template
+
+To be written up as I missed documenting this.
+
 ## Troubleshooting
 
 ### Changes need to DB SG once the stack has been created
@@ -627,6 +711,12 @@ aws ecs delete-cluster --cluster $CLUSTER_NAME
 ## Journal Summary
 
 Homework was completed successfully.
+
+### CFN Stacks Created
+
+All stacks created
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/430ea693-9c45-4d9c-8e7b-82799ff06f9f)
 
 ## Diagram for Week 10
 

@@ -21,25 +21,10 @@ Due to scope creep, this week will focus on cleaning up the code and ensuring it
 
 ## Week X Sync tool for static website hosting
 
-### Create Bucket
+### Pre-Requisites
 
-1 - Create a public bucket through the GUI
-
-2 - Create a public bucket to host the frontend using the aws cli and via a policy that grants public access.
-
-#### Create Public Bucket via GUI
-
-Create a public bucket to host the frontend using the aws cli and the [following policy](../aws/policies/bucket-policy.json) that grants public access.
-
-`aws s3api create-bucket --bucket tajarba.com --region $AWS_DEFAULT_REGION`
-
-e.g. in my instance it is
-
-```console
-aws s3api create-bucket --bucket tajarba.com --region $AWS_DEFAULT_REGION --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION
-aws s3api put-bucket-ownership-controls --bucket tajarba.com --ownership-controls="Rules=[{ObjectOwnership=BucketOwnerPreferred}]"
-aws s3api put-bucket-policy --bucket tajarba.com --policy file://bucket-policy.json
-```
+- Publicly accessible bucket that was created via `./bin/cfn/frontend`
+- Cloudfront distribution that was created via `./bin/cfn/frontend`
 
 ### Create Build scripts
 
@@ -62,7 +47,7 @@ Add the following, replace `SYNC_S3_BUCKET` and `SYNC_CLOUDFRONT_DISTRIBUTION_ID
 
 ```erb
 SYNC_S3_BUCKET=tajarba.com
-SYNC_CLOUDFRONT_DISTRIBUTION_ID=ELTQ0Y5RKUKSF
+SYNC_CLOUDFRONT_DISTRIBUTION_ID=E2VH3EBBB8C06D
 SYNC_BUILD_DIR=<%= ENV['THEIA_WORKSPACE_ROOT'] %>/frontend-react-js/build
 SYNC_OUTPUT_CHANGESET_PATH=<%=  ENV['THEIA_WORKSPACE_ROOT'] %>/tmp/changeset.json
 SYNC_AUTO_APPROVE=false
@@ -123,7 +108,7 @@ Update `aws/cfn/sync/template.yaml` with the following [code](../aws/cfn/sync/te
 
 ## Initialise Static Hosting
 
-### Run Build script
+### Run Static-Build script
 
 Run build script `./bin/frontend/build` , you should see output similar to the following when successful.
 
@@ -156,6 +141,85 @@ I verified everything had been copied successfully using the `s3 ls` command
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/cd6957a3-934d-47e7-bdbf-104d9978ac6c)
 
+### Initialise Sync
+
+In the root of the repository
+
+- Install the pre-requisite ruby gems `gem install aws_s3_website_sync dotenv`
+- Generate `sync.env` by running updated `./bin/frontend/generate-env`
+- Initiate synchronisation './bin/frontend/sync'
+- Create CFN Sync `CrdSyncRole` stack by running `./bin/cfn/sync`
+
+Sync Executed
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/44c5f5d1-aaf6-4c75-843b-e0dec41a512a)
+
+Invalidation Created
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/f9a94e28-efcc-461c-9ffc-442e0ab1e80b)
+
+Invalidation Details
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/7e43586a-3768-4af4-8f4e-d8659b6d66da)
+
+## Create GitHub Action
+
+Create folder in base of repo for action
+
+```sh
+mkdir -p .github/workflows/
+touch .github/workflows/sync.yaml
+```
+
+Update with the following. Replace `role-to-assume` with the role generated in `CrdSyncRole` and `aws-region` with the region your stack was created in.
+
+```yaml
+name: Sync-Prod-Frontend
+
+on:
+  push:
+    branches: [ prod ]
+  pull_request:
+    branches: [ prod ]
+
+jobs:
+  build:
+    name: Statically Build Files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 18.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: cd frontend-react-js
+      - run: npm ci
+      - run: npm run build
+  deploy:
+    name: Sync Static Build to S3 Bucket
+    runs-on: ubuntu-latest
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::797130574998:role/CrdSyncRole-Role-VW38RM6ZXJ6W
+          aws-region: eu-west-2
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        with:
+          ruby-version: '3.1'
+      - name: Install dependencies
+        run: bundle install
+      - name: Run tests
+        run: bundle exec rake sync
+```
 
 ## Troubleshooting
 
@@ -177,7 +241,7 @@ The following error was shown
 
 `Could not connect to the endpoint URL: "http://dynamodb-local:8000/"`
 
-I looked further into the error and saw that the value was configured as an environment variable `AWS_ENDPOINT_URL` when we were using DynamoDB in week 5 locally. 
+I looked further into the error and saw that the value was configured as an environment variable `AWS_ENDPOINT_URL` when we were using DynamoDB in week 5 locally.
 
 This was configured thus, `AWS_ENDPOINT_URL="http://dynamodb-local:8000"`
 
