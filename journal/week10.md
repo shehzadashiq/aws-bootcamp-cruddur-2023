@@ -1,6 +1,5 @@
 # Week 10 — CloudFormation Part 1
 
-
 - [Week 10 — CloudFormation Part 1](#week-10--cloudformation-part-1)
   - [Overview](#overview)
     - [Videos for week 10](#videos-for-week-10)
@@ -64,8 +63,6 @@
     - [Architectural Diagram Overview](#architectural-diagram-overview)
     - [Architectural Diagram](#architectural-diagram)
 
----
-
 ## Overview
 
 ### Videos for week 10
@@ -99,7 +96,6 @@
 - [CFN Static Website Hosting Frontend](https://www.youtube.com/watch?v=Qc96g_blibA)
 - [CFN Diagramming Static Frontend](https://www.youtube.com/watch?v=IEBHegBqne0)
 
-
 ### References
 
 [Andrew's Notes](https://github.com/omenking/aws-bootcamp-cruddur-2023/tree/week-10-again/aws/cfn)
@@ -109,8 +105,6 @@
 ### AWS Documentation
 
 [AWS::EC2::VPC](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html)
-
----
 
 ## Pre-Requisites
 
@@ -628,7 +622,6 @@ to
               - api.tajarba.com
 ```
 
-
 ### CFN Service Stack Issue
 
 The application failed to start which meant the Service stack could not be deployed
@@ -638,7 +631,6 @@ The application failed to start which meant the Service stack could not be deplo
 . The pool-connect error was because in my db-connect URL I had forgotten to update the username from root to cruddurroot
 . The 'KeyError: 'keys' | backend-flask' error was because I had made a mistake in my cognito variables correcting this fixed the issue
 . The TaskFailedElb-Check error was because in the cluster template the healthcheck port needs to be changed from port 80 to 4567
-
 
 #### Troubleshooting Stack Issue
 
@@ -686,8 +678,6 @@ To automate this I changed the backend health check port from 80 to 4567 in `/wo
     Default: 80
 ```
 
-
-
 to
 
 ```yaml
@@ -703,16 +693,13 @@ This took the deployment time from hours down to 7 minutes
 
 ### Spend Issue
 
-
 I received an alert that my ELB spend will exceed the free tier elements.
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/42ce4741-182b-4a41-aeef-bf8f1338f229)
 
-
 It turned out that the Cruddur cluster created using the ECS tasks had been running since September. As it was not needed I removed it using a script.
 
-
-'/workspace/aws-bootcamp-cruddur-2023/bin/ecs/cluster-delete.sh'
+`/workspace/aws-bootcamp-cruddur-2023/bin/ecs/cluster-delete.sh`
 
 The script cycles through both the frontend/backend tasks and then deletes all services before deleting them.
 
@@ -768,7 +755,6 @@ aws ecs delete-cluster --cluster $CLUSTER_NAME
 ```
 
 ## Journal Summary
-
 
 Homework was completed successfully.
 
