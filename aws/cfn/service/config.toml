@@ -2,3 +2,8 @@
 bucket = 'cfn-tajarba-artifacts'
 region = 'eu-west-2'
 stack_name = 'CrdSrvBackendFlask'
+
+[parameters]
+EnvFrontendUrl = 'https://tajarba.com'
+EnvBackendUrl = 'https://api.tajarba.com'
+DDBMessageTable = 'CrdDdb-DynamoDBTable-1NK2LU7KGZSIP'

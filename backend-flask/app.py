@@ -53,9 +53,9 @@ from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVe
 LOGGER = logging.getLogger(__name__)  
 LOGGER.setLevel(logging.DEBUG)
 console_handler = logging.StreamHandler()
-cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
+# cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
 LOGGER.addHandler(console_handler)
-LOGGER.addHandler(cw_handler)
+# LOGGER.addHandler(cw_handler)
 LOGGER.info("Test Log")
 
 # HoneyComb ---------
@@ -111,8 +111,8 @@ rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
 
 # @app.before_first_request
 with app.app_context():
-  def init_rollbar():
-      """init rollbar module"""
+  # def init_rollbar():
+  #     """init rollbar module"""
       rollbar.init(
           # access token
           rollbar_access_token,

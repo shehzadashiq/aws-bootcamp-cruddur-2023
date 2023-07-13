@@ -1,0 +1,9 @@
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdSyncRole'
+
+[parameters]
+GitHubOrg = 'shehzadashiq'
+RepositoryName = 'aws-bootcamp-cruddur-2023'
+OIDCProviderArn = ''
