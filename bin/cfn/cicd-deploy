@@ -1,4 +1,3 @@
-
 #! /usr/bin/env bash
 
 # set -e # stop the execution of the script if it fails

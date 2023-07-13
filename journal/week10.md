@@ -36,14 +36,15 @@
     - [Create DB Template](#create-db-template)
     - [Create DB Deploy Script](#create-db-deploy-script)
     - [Seed DB](#seed-db)
+  - [CFN DDB Stack](#cfn-ddb-stack)
+    - [Create DDB Template](#create-ddb-template)
+    - [Create DDB Deploy Script](#create-ddb-deploy-script)
     - [Create Service Deploy Script](#create-service-deploy-script)
   - [CFN MachineUser Stack](#cfn-machineuser-stack)
     - [Create MachineUser Template](#create-machineuser-template)
     - [Create MachineUser Deploy Script](#create-machineuser-deploy-script)
   - [CFN Frontend Stack](#cfn-frontend-stack)
     - [Create Frontend Template](#create-frontend-template)
-  - [CFN CI/CD Stack](#cfn-cicd-stack)
-    - [Create CI/CD Template](#create-cicd-template)
   - [Troubleshooting](#troubleshooting)
     - [Changes need to DB SG once the stack has been created](#changes-need-to-db-sg-once-the-stack-has-been-created)
     - [Domain not resolving](#domain-not-resolving)
@@ -60,8 +61,6 @@
     - [Route53/Cloudfront Layer Diagram Detail](#route53cloudfront-layer-diagram-detail)
     - [Architectural Diagram Overview](#architectural-diagram-overview)
     - [Architectural Diagram](#architectural-diagram)
-
----
 
 ## Overview
 
@@ -106,8 +105,6 @@
 ### AWS Documentation
 
 [AWS::EC2::VPC](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html)
-
----
 
 ## Pre-Requisites
 
@@ -406,6 +403,49 @@ Once `PROD_CONNECTION_URL` has been set correctly, seed the database with data b
 
 `./bin/db/setup prod`
 
+## CFN DDB Stack
+
+### Create DDB Template
+
+### Create DDB Deploy Script
+
+- Create `.aws-sam` with `./bin/cfn/ddb-build`
+- Package with `./bin/cfn/ddb-package`
+- Create CFN stack with inally `./bin/cfn/ddb-deploy`, in order to create CrdDdb stack.
+
+The DDB table created now needs to be added to the following location `/aws/cfn/service/config.toml` and should look as below. Update the parameters for your domain and DDBMessageTable is obtained from the resources section of `CrdDdb`
+
+```config
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdSrvBackendFlask'
+
+[parameters]
+EnvFrontendUrl = 'https://tajarba.com'
+EnvBackendUrl = 'https://api.tajarba.com'
+DDBMessageTable = 'CrdDdb-DynamoDBTable-1NK2LU7KGZSIP'
+```
+
+Update `aws/cfn/service/template.yaml`
+
+Place this entry under parameters
+
+```yaml
+  DDBMessageTable:
+    Type: String
+    Default: cruddur-messages
+```
+
+The following needs to be added to the `Environment:` section under `TaskDefinition:`
+
+```yaml
+            - Name: DDB_MESSAGE_TABLE
+              Value: !Ref DDBMessageTable       
+```
+
+Execute `./bin/cfn/service-deploy` to update `CrdSrvBackendFlask` with the DDB entry.
+
 ### Create Service Deploy Script
 
 With all the pre-requisites in place the service stack can now be created.
@@ -526,12 +566,6 @@ Running `./bin/cfn/machineuser-deploy` now initiates a changeset for the CFN sta
 
 To be written up as I missed documenting this.
 
-## CFN CI/CD Stack
-
-### Create CI/CD Template
-
-To be written up as I missed documenting this.
-
 ## Troubleshooting
 
 ### Changes need to DB SG once the stack has been created
@@ -581,7 +615,6 @@ to
             Values: 
               - api.tajarba.com
 ```
-
 
 ### CFN Service Stack Issue
 
@@ -640,8 +673,6 @@ To automate this I changed the backend health check port from 80 to 4567 in `/wo
     Default: 80
 ```
 
-
-
 to
 
 ```yaml
@@ -654,19 +685,15 @@ This took the deployment time from hours down to 7 minutes
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/0757cdc9-d106-459a-9236-b50a5da73945)
 
-
 ### Spend Issue
-
 
 I received an alert that my ELB spend will exceed the free tier elements.
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/42ce4741-182b-4a41-aeef-bf8f1338f229)
 
-
 It turned out that the Cruddur cluster created using the ECS tasks had been running since September. As it was not needed I removed it using a script.
 
-
-'/workspace/aws-bootcamp-cruddur-2023/bin/ecs/cluster-delete.sh'
+`/workspace/aws-bootcamp-cruddur-2023/bin/ecs/cluster-delete.sh`
 
 The script cycles through both the frontend/backend tasks and then deletes all services before deleting them.
 
@@ -730,7 +757,7 @@ Homework was completed successfully.
 
 All stacks created
 
-![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/430ea693-9c45-4d9c-8e7b-82799ff06f9f)
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3eb2c4cc-a29a-4c44-8e49-495a51d416b2)
 
 ## Diagram for Week 10
 
