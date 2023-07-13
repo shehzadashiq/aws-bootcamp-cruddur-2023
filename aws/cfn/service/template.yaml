@@ -67,6 +67,9 @@ Parameters:
   SecretsOtelExporterOltpHeaders:
     Type: String
     Default: 'arn:aws:ssm:eu-west-2:797130574998:parameter/cruddur/backend-flask/OTEL_EXPORTER_OTLP_HEADERS'
+  DDBMessageTable:
+    Type: String
+    Default: cruddur-messages
 
 Resources:
   # ServiceSG:
@@ -181,6 +184,8 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: !Ref ServiceName
           Environment:
+            - Name: DDB_MESSAGE_TABLE
+              Value: !Ref DDBMessageTable          
             - Name: 'OTEL_SERVICE_NAME'
               Value: !Ref EnvOtelServiceName
             - Name: 'OTEL_EXPORTER_OTLP_ENDPOINT'
