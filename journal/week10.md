@@ -1,5 +1,6 @@
 # Week 10 — CloudFormation Part 1
 
+
 - [Week 10 — CloudFormation Part 1](#week-10--cloudformation-part-1)
   - [Overview](#overview)
     - [Videos for week 10](#videos-for-week-10)
@@ -44,8 +45,6 @@
     - [Create MachineUser Deploy Script](#create-machineuser-deploy-script)
   - [CFN Frontend Stack](#cfn-frontend-stack)
     - [Create Frontend Template](#create-frontend-template)
-  - [CFN CI/CD Stack](#cfn-cicd-stack)
-    - [Create CI/CD Template](#create-cicd-template)
   - [Troubleshooting](#troubleshooting)
     - [Changes need to DB SG once the stack has been created](#changes-need-to-db-sg-once-the-stack-has-been-created)
     - [Domain not resolving](#domain-not-resolving)
@@ -95,6 +94,7 @@
 - [CFN Diagramming CICD](https://www.youtube.com/watch?v=bmS-z2J7oTs)
 - [CFN Static Website Hosting Frontend](https://www.youtube.com/watch?v=Qc96g_blibA)
 - [CFN Diagramming Static Frontend](https://www.youtube.com/watch?v=IEBHegBqne0)
+
 
 ### References
 
@@ -566,12 +566,6 @@ Running `./bin/cfn/machineuser-deploy` now initiates a changeset for the CFN sta
 
 To be written up as I missed documenting this.
 
-## CFN CI/CD Stack
-
-### Create CI/CD Template
-
-To be written up as I missed documenting this.
-
 ## Troubleshooting
 
 ### Changes need to DB SG once the stack has been created
@@ -632,6 +626,7 @@ The application failed to start which meant the Service stack could not be deplo
 . The 'KeyError: 'keys' | backend-flask' error was because I had made a mistake in my cognito variables correcting this fixed the issue
 . The TaskFailedElb-Check error was because in the cluster template the healthcheck port needs to be changed from port 80 to 4567
 
+
 #### Troubleshooting Stack Issue
 
 Application failing to start
@@ -689,7 +684,6 @@ to
 This took the deployment time from hours down to 7 minutes
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/0757cdc9-d106-459a-9236-b50a5da73945)
-
 
 ### Spend Issue
 
@@ -755,6 +749,7 @@ aws ecs delete-cluster --cluster $CLUSTER_NAME
 ```
 
 ## Journal Summary
+
 
 Homework was completed successfully.
 

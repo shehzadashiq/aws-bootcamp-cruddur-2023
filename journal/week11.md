@@ -19,6 +19,50 @@ Due to scope creep, this week will focus on cleaning up the code and ensuring it
 - [Week-X Cleanup](https://www.youtube.com/watch?v=E89RBvZ_BaY)
 - [Week X Cleanup Part 2](https://www.youtube.com/watch?v=53_3TmZ1hrs)
 
+## CFN CI/CD Stack
+
+### Create CI/CD Template
+
+Create the folder structure.
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/cicd
+cd aws/cfn/cicd
+touch template.yaml config.toml
+```
+
+The CI/CD stack requires a nested codebuild stack so a directory needs to be created for it too.
+
+```sh
+cd /workspace/aws-bootcamp-cruddur-2023
+mkdir -p  aws/cfn/cicd/nested
+cd aws/cfn/cicd/nested
+touch codebuild.yaml
+```
+
+Update the files with the following code.
+
+- ["aws/cfn/cicd/template.yaml"](../aws/cfn/cicd/template.yaml)
+- ["aws/cfn/cicd/config.toml"](../aws/cfn/cicd/config.toml)
+- ["aws/cfn/cicd/nested/codebuild.yaml"](../aws/cfn/cicd/nested/codebuild.yaml)
+
+`aws/cfn/cicd/config.toml` structure
+
+```toml
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdCicd'
+
+[parameters]
+ServiceStack = 'CrdSrvBackendFlask'
+ClusterStack = 'CrdCluster'
+GitHubBranch = 'prod'
+GithubRepo = 'shehzadashiq/aws-bootcamp-cruddur-2023'
+ArtifactBucketName = "codepipeline-cruddur-tajarba-artifacts" 
+```
+
 ## Week X Sync tool for static website hosting
 
 ### Pre-Requisites
@@ -230,6 +274,37 @@ Failure on GitHub Actions
 ### Issues
 
 - Tasks in GitPod and AWS CLI stopped running because `AWS_ENDPOINT_URL` had been set and was causing issues
+- CI/CD configuration error
+
+### Issues during CI/CD stack deployment
+
+Error on First Run as Pipeline Execution Fails
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/5271a2c0-a2ff-46a6-915e-13a229a4be30)
+
+Connection shows as pending
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/15c1b50a-ab5f-43e8-bd30-6e277c4f9c61)
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/0d30d475-0df3-4f5d-ade6-154b6779fda5)
+
+Choose Connection Application and click connect
+![image]<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/dd3d062e-0390-4a76-a97d-85b8a3719906>
+
+Connection created successfully
+![image]<https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/99575532-7849-4c6c-aba5-2516b240f6b9>
+
+Pipeline still fails saying `[GitHub] No Branch [prod] found for FullRepositoryName [aws-bootcamp-cruddur-2023]`
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/1e47f990-e121-43ee-bf73-cce9245322dd)
+
+When trying to edit the pipeline the following message is displayed `A repository Id must be in the format <account>/<repository-name>`
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/402dd34b-8d7a-4e4a-98f7-b302a61dcb32)
+
+To resolve this change the following setting `GithubRepo` in `aws/cfn/cicd/config.toml` to include the account name e.g
+
+`GithubRepo = 'shehzadashiq/aws-bootcamp-cruddur-2023'`
+
 
 ### AWS CLI Issues
 
