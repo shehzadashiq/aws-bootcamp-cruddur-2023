@@ -60,7 +60,8 @@ ServiceStack = 'CrdSrvBackendFlask'
 ClusterStack = 'CrdCluster'
 GitHubBranch = 'prod'
 GithubRepo = 'shehzadashiq/aws-bootcamp-cruddur-2023'
-ArtifactBucketName = "codepipeline-cruddur-tajarba-artifacts" 
+ArtifactBucketName = "codepipeline-cruddur-tajarba-artifacts"
+BuildSpec = 'backend-flask/buildspec.yml'
 ```
 
 ## Week X Sync tool for static website hosting
@@ -305,6 +306,13 @@ To resolve this change the following setting `GithubRepo` in `aws/cfn/cicd/confi
 
 `GithubRepo = 'shehzadashiq/aws-bootcamp-cruddur-2023'`
 
+Pipeline failing at Build stage with error
+
+`Error calling startBuild: Project cannot be found: arn:aws:codebuild:eu-west-2:797130574998:project/CrdCicd-CodeBuildBakeImageStack-1O32P0X7I5NBCProject (Service: AWSCodeBuild; Status Code: 400; Error Code: ResourceNotFoundException; Request ID: 3f7509fa-14e3-478b-9139-2ff5621ccc6e; Proxy: null)`
+
+Build succeeded after updating with reference to codebuild and buildspec.yml
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/f66ec8cb-7145-461c-b515-8bb32aa5cc00)
 
 ### AWS CLI Issues
 
