@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request
+from flask import request, g
 from flask_cors import CORS, cross_origin
 import os
 import sys, requests
@@ -20,8 +20,7 @@ from services.users_short import *
 from services.update_profile import *
 
 # JWT Token
-from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError
-
+from lib.cognito_jwt_token import jwt_required
 
 # Initialize tracing and an exporter that can send data to Honeycomb
 from opentelemetry import trace
@@ -78,18 +77,6 @@ XRayMiddleware(app, xray_recorder)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
 
-# Cognito JWT Token
-cognito_jwt_token = CognitoJwtToken(
-  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
-  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
-  region=os.getenv("AWS_DEFAULT_REGION")
-)
-
-# # Decode and verify the JWT token
-# decoded_token = jwt.decode(cognito_jwt_token, public_key, algorithms=[
-#                            "RS256"], audience="myapp", issuer=f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}")
-# username = decoded
-
 # HoneyComb ---------
 # Initialize automatic instrumentation with Flask
 FlaskInstrumentor().instrument_app(app)
@@ -145,109 +132,154 @@ def after_request(response):
     return response
 
 @app.route("/api/message_groups", methods=['GET'])
+@jwt_required()
 def data_message_groups():
-  access_token = extract_access_token(request.headers)
-  try:
-    claims = cognito_jwt_token.verify(access_token)
-    app.logger.debug("Reached data_message_groups")
-    # authenticated request
-    app.logger.debug("authenticated in data_message_groups")
+  # access_token = extract_access_token(request.headers)
+  # try:
+  #   claims = cognito_jwt_token.verify(access_token)
+  #   app.logger.debug("Reached data_message_groups")
+  #   # authenticated request
+  #   app.logger.debug("authenticated in data_message_groups")
     
-    app.logger.debug(claims)
-    cognito_user_id = claims['sub']
-    model = MessageGroups.run(cognito_user_id=cognito_user_id)
-    if model['errors'] is not None:
-      return model['errors'], 422
-    else:
-      return model['data'], 200
-  except TokenVerifyError as e:
-    # unauthenicatied request
-    app.logger.debug(e)
-    app.logger.debug("unauthenticated in data_message_groups")
-    return {}, 401    
+  #   app.logger.debug(claims)
+  #   cognito_user_id = claims['sub']
+  #   model = MessageGroups.run(cognito_user_id=cognito_user_id)
+  #   if model['errors'] is not None:
+  #     return model['errors'], 422
+  #   else:
+  #     return model['data'], 200
+  # except TokenVerifyError as e:
+  #   # unauthenicatied request
+  #   app.logger.debug(e)
+  #   app.logger.debug("unauthenticated in data_message_groups")
+  #   return {}, 401
+  model = MessageGroups.run(cognito_user_id=g.cognito_user_id)
+  if model['errors'] is not None:
+    return model['errors'], 422
+  else:
+    return model['data'], 200
 
 @app.route("/api/messages/<string:message_group_uuid>", methods=['GET'])
+@jwt_required()
 def data_messages(message_group_uuid):  
-  access_token = extract_access_token(request.headers)
-  try:
-    claims = cognito_jwt_token.verify(access_token)
-    # authenticated request
-    app.logger.debug("authenticated in data_messages")
-    app.logger.debug(claims)
-    cognito_user_id = claims['sub']
-    model = Messages.run(
-        cognito_user_id=cognito_user_id,
-        message_group_uuid=message_group_uuid
-      )
-    if model['errors'] is not None:
-      return model['errors'], 422
-    else:
-      return model['data'], 200
-  except TokenVerifyError as e:
-    # unauthenticated request
-    app.logger.debug("Unauthenticated in data_messages")
-    app.logger.debug(e)
-    return {}, 401
+  # access_token = extract_access_token(request.headers)
+  # try:
+  #   claims = cognito_jwt_token.verify(access_token)
+  #   # authenticated request
+  #   app.logger.debug("authenticated in data_messages")
+  #   app.logger.debug(claims)
+  #   cognito_user_id = claims['sub']
+  #   model = Messages.run(
+  #       cognito_user_id=cognito_user_id,
+  #       message_group_uuid=message_group_uuid
+  #     )
+  #   if model['errors'] is not None:
+  #     return model['errors'], 422
+  #   else:
+  #     return model['data'], 200
+  # except TokenVerifyError as e:
+  #   # unauthenticated request
+  #   app.logger.debug("Unauthenticated in data_messages")
+  #   app.logger.debug(e)
+  #   return {}, 401
+  model = Messages.run(
+      cognito_user_id=g.cognito_user_id,
+      message_group_uuid=message_group_uuid
+    )
+  if model['errors'] is not None:
+    return model['errors'], 422
+  else:
+    return model['data'], 200
 
 @app.route("/api/messages", methods=['POST','OPTIONS'])
 @cross_origin()
+@jwt_required()
 def data_create_message():
   message_group_uuid   = request.json.get('message_group_uuid',None)
   user_receiver_handle = request.json.get('handle',None)
   message = request.json['message']
 
-  access_token = extract_access_token(request.headers)
-  try:
-    claims = cognito_jwt_token.verify(access_token)
-    # authenicated request
-    app.logger.debug("authenicated")
-    app.logger.debug(claims)
-    cognito_user_id = claims['sub']
-    if message_group_uuid == None:
-      # Create for the first time
-      model = CreateMessage.run(
-        mode="create",
-        message=message,
-        cognito_user_id=cognito_user_id,
-        message_group_uuid = message_group_uuid,
-        user_receiver_handle=user_receiver_handle
-      )
-    else:
-      # Push onto existing Message Group
-      model = CreateMessage.run(
-        mode="update",
-        message=message,
-        message_group_uuid=message_group_uuid,
-        cognito_user_id=cognito_user_id,
-        user_receiver_handle=user_receiver_handle
-      )
-    if model['errors'] is not None:
-      return model['errors'], 422
-    else:
-      return model['data'], 200
-  except TokenVerifyError as e:
-    # unauthenticated request
-    app.logger.debug(e)
-    return {}, 401
+  # access_token = extract_access_token(request.headers)
+  # try:
+  #   claims = cognito_jwt_token.verify(access_token)
+  #   # authenicated request
+  #   app.logger.debug("authenicated")
+  #   app.logger.debug(claims)
+  #   cognito_user_id = claims['sub']
+  #   if message_group_uuid == None:
+  #     # Create for the first time
+  #     model = CreateMessage.run(
+  #       mode="create",
+  #       message=message,
+  #       cognito_user_id=cognito_user_id,
+  #       message_group_uuid = message_group_uuid,
+  #       user_receiver_handle=user_receiver_handle
+  #     )
+  #   else:
+  #     # Push onto existing Message Group
+  #     model = CreateMessage.run(
+  #       mode="update",
+  #       message=message,
+  #       message_group_uuid=message_group_uuid,
+  #       cognito_user_id=cognito_user_id,
+  #       user_receiver_handle=user_receiver_handle
+  #     )
+  #   if model['errors'] is not None:
+  #     return model['errors'], 422
+  #   else:
+  #     return model['data'], 200
+  # except TokenVerifyError as e:
+  #   # unauthenticated request
+  #   app.logger.debug(e)
+  #   return {}, 401
+  if message_group_uuid == None:
+    # Create for the first time
+    model = CreateMessage.run(
+      mode="create",
+      message=message,
+      cognito_user_id=g.cognito_user_id,
+      user_receiver_handle=user_receiver_handle
+    )
+  else:
+    # Push onto existing Message Group
+    model = CreateMessage.run(
+      mode="update",
+      message=message,
+      message_group_uuid=message_group_uuid,
+      cognito_user_id=g.cognito_user_id
+    )
+  if model['errors'] is not None:
+    return model['errors'], 422
+  else:
+    return model['data'], 200
+
+def default_home_feed(e):
+  # unauthenticated request
+  app.logger.debug(e)
+  app.logger.debug("Unauthenticated")
+  data = HomeActivities.run(Logger=LOGGER)
+  return data, 200
 
 @app.route("/api/activities/home", methods=['GET'])
 @xray_recorder.capture('activities_home')
+@jwt_required(on_error=default_home_feed)
 def data_home():
-  access_token = extract_access_token(request.headers)  
+  # access_token = extract_access_token(request.headers)  
 
-  try:
-    claims = cognito_jwt_token.verify(access_token)
-    # authenticated request
-    app.logger.debug("authenticated")
-    app.logger.debug(claims)
-    app.logger.debug(claims['username'])
-    data = HomeActivities.run(Logger=LOGGER,cognito_user_id=claims['username'])
-  except TokenVerifyError as e:
-     # unauthenticated request
-    app.logger.debug(e)
-    app.logger.debug("unauthenticated")
-    # data = HomeActivities.run()
-    data = HomeActivities.run(Logger=LOGGER)
+  # try:
+  #   claims = cognito_jwt_token.verify(access_token)
+  #   # authenticated request
+  #   app.logger.debug("authenticated")
+  #   app.logger.debug(claims)
+  #   app.logger.debug(claims['username'])
+  #   data = HomeActivities.run(Logger=LOGGER,cognito_user_id=claims['username'])
+  # except TokenVerifyError as e:
+  #    # unauthenticated request
+  #   app.logger.debug(e)
+  #   app.logger.debug("unauthenticated")
+  #   # data = HomeActivities.run()
+  #   data = HomeActivities.run(Logger=LOGGER)
+  data = HomeActivities.run(Logger=LOGGER,cognito_user_id=g.cognito_user_id)
   return data, 200
 
 @app.route("/api/activities/notifications", methods=['GET'])
@@ -277,19 +309,28 @@ def data_search():
 
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
+@jwt_required()
 def data_activities():  
 
   # user_handle = 'andrewbrown' 
-  user_handle = request.json['user_handle']
+  # user_handle = request.json['user_handle']
+  # message = request.json['message']
+  # ttl = request.json['ttl']
+  # model = CreateActivity.run(message, user_handle, ttl)
+  
+  # if model['errors'] is not None:
+  #   return model['errors'], 422
+  # else:
+  #   return model['data'], 200
+  # return
+
   message = request.json['message']
   ttl = request.json['ttl']
-  model = CreateActivity.run(message, user_handle, ttl)
-  
+  model = CreateActivity.run(message, g.cognito_user_id, ttl)
   if model['errors'] is not None:
     return model['errors'], 422
   else:
     return model['data'], 200
-  return
 
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 @xray_recorder.capture('activities_show')
@@ -317,26 +358,36 @@ def data_users_short(handle):
 
 @app.route("/api/profile/update", methods=['POST','OPTIONS'])
 @cross_origin()
+@jwt_required()
 def data_update_profile():
   bio          = request.json.get('bio',None)
   display_name = request.json.get('display_name',None)
-  access_token = extract_access_token(request.headers)
-  try:
-    claims = cognito_jwt_token.verify(access_token)
-    cognito_user_id = claims['sub']
-    model = UpdateProfile.run(
-      cognito_user_id=cognito_user_id,
-      bio=bio,
-      display_name=display_name
-    )
-    if model['errors'] is not None:
-      return model['errors'], 422
-    else:
-      return model['data'], 200
-  except TokenVerifyError as e:
-    # unauthenticated request
-    app.logger.debug(e)
-    return {}, 401
+  # access_token = extract_access_token(request.headers)
+  # try:
+  #   claims = cognito_jwt_token.verify(access_token)
+  #   cognito_user_id = claims['sub']
+  #   model = UpdateProfile.run(
+  #     cognito_user_id=cognito_user_id,
+  #     bio=bio,
+  #     display_name=display_name
+  #   )
+  #   if model['errors'] is not None:
+  #     return model['errors'], 422
+  #   else:
+  #     return model['data'], 200
+  # except TokenVerifyError as e:
+  #   # unauthenticated request
+  #   app.logger.debug(e)
+  #   return {}, 401
+  model = UpdateProfile.run(
+    cognito_user_id=g.cognito_user_id,
+    bio=bio,
+    display_name=display_name
+  )
+  if model['errors'] is not None:
+    return model['errors'], 422
+  else:
+    return model['data'], 200
 
   
 if __name__ == "__main__":
