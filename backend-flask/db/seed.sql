@@ -2,6 +2,7 @@
 INSERT INTO public.users (display_name, handle, email,bio,cognito_user_id)
 VALUES
   ('Shehzad Ali', 'shehzad','shehzad@exampro.co','NothingSoFar','MOCK'),
+  ('Alt Shehzad','shehzad@cloudprojectbootcamp.com' , 'altShehzad' ,'MOCK')
   ('Andrew Bayko', 'bayko','bayko@exampro.co','NothingSoFar','MOCK'),
   ('Andrew Brown', 'andrewbrown','andrew@exampro.co','NothingSoFar','MOCK');
 
