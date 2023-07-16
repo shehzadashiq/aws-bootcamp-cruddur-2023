@@ -1,8 +1,8 @@
 -- this file was manually created
 INSERT INTO public.users (display_name, handle, email,bio,cognito_user_id)
 VALUES
-  ('Shehzad Ali', 'shehzad','shehzad@exampro.co','NothingSoFar','MOCK'),
-  ('Alt Shehzad','shehzad@cloudprojectbootcamp.com' , 'altShehzad' ,'MOCK')
+  ('Shehzad Ali', 'shehzad','shehzadashiq@yahoo.com','NothingSoFar','MOCK'),
+  ('Alt Shehzad','shehzad3','shehzadashiq@gmail.com' , 'altShehzad' ,'MOCK'),
   ('Andrew Bayko', 'bayko','bayko@exampro.co','NothingSoFar','MOCK'),
   ('Andrew Brown', 'andrewbrown','andrew@exampro.co','NothingSoFar','MOCK');
 

@@ -20,7 +20,8 @@ from services.users_short import *
 from services.update_profile import *
 
 # JWT Token
-from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError, jwt_required
+# from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError, jwt_required
+from lib.cognito_jwt_token import jwt_required
 
 # Initialize tracing and an exporter that can send data to Honeycomb
 from opentelemetry import trace
@@ -65,11 +66,11 @@ provider.add_span_processor(processor)
 
 app = Flask(__name__)
 
-cognito_jwt_token = CognitoJwtToken(
-  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
-  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
-  region=os.getenv("AWS_DEFAULT_REGION")
-)
+# cognito_jwt_token = CognitoJwtToken(
+#   user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
+#   user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
+#   region=os.getenv("AWS_DEFAULT_REGION")
+# )
 
 # X-Ray Middleware
 xray_url = os.getenv("AWS_XRAY_URL")
@@ -315,24 +316,31 @@ def data_search():
 
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
-# @jwt_required()
+@jwt_required()
 def data_activities():
-  access_token = extract_access_token(request.headers)
-  try:
-    claims = cognito_jwt_token.verify(access_token)
-    cognito_user_id = claims['sub']
+  # access_token = extract_access_token(request.headers)
+  # try:
+  #   claims = cognito_jwt_token.verify(access_token)
+  #   cognito_user_id = claims['sub']
 
-    message = request.json['message']
-    ttl = request.json['ttl']
-    model = CreateActivity.run(message, cognito_user_id, ttl)
-    if model['errors'] is not None:
-      return model['errors'], 422
-    else:
-      return model['data'], 200
-  except TokenVerifyError as e:
-    # unauthenicatied request
-    app.logger.debug(e)
-    return {}, 401
+  #   message = request.json['message']
+  #   ttl = request.json['ttl']
+  #   model = CreateActivity.run(message, cognito_user_id, ttl)
+  #   if model['errors'] is not None:
+  #     return model['errors'], 422
+  #   else:
+  #     return model['data'], 200
+  # except TokenVerifyError as e:
+  #   # unauthenicatied request
+  #   app.logger.debug(e)
+  #   return {}, 401
+  message = request.json['message']
+  ttl = request.json['ttl']
+  model = CreateActivity.run(message, g.cognito_user_id, ttl)
+  if model['errors'] is not None:
+    return model['errors'], 422
+  else:
+    return model['data'], 200
 
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 @xray_recorder.capture('activities_show')

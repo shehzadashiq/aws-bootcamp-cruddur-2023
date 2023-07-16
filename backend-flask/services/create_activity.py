@@ -2,61 +2,40 @@ from datetime import datetime, timedelta, timezone
 
 from lib.db import db
 
-class CreateActivity:
-  def run(message, cognito_user_id, ttl):
+class CreateReply:
+  def run(message, cognito_user_id, activity_uuid):
     model = {
       'errors': None,
       'data': None
     }
-
-    # print("user_handle in createActivity", user_handle)
-
-    now = datetime.now(timezone.utc).astimezone()
-
-    if (ttl == '30-days'):
-      ttl_offset = timedelta(days=30) 
-    elif (ttl == '7-days'):
-      ttl_offset = timedelta(days=7) 
-    elif (ttl == '3-days'):
-      ttl_offset = timedelta(days=3) 
-    elif (ttl == '1-day'):
-      ttl_offset = timedelta(days=1) 
-    elif (ttl == '12-hours'):
-      ttl_offset = timedelta(hours=12) 
-    elif (ttl == '3-hours'):
-      ttl_offset = timedelta(hours=3) 
-    elif (ttl == '1-hour'):
-      ttl_offset = timedelta(hours=1) 
-    else:
-      model['errors'] = ['ttl_blank']
-
     if cognito_user_id == None or len(cognito_user_id) < 1:
       model['errors'] = ['cognito_user_id_blank']
 
+    if activity_uuid == None or len(activity_uuid) < 1:
+      model['errors'] = ['activity_uuid_blank']
     if message == None or len(message) < 1:
       model['errors'] = ['message_blank'] 
-    elif len(message) > 280:
-      model['errors'] = ['message_exceed_max_chars'] 
-
+    elif len(message) > 1024:
+      model['errors'] = ['message_exceed_max_chars_1024']
     if model['errors']:
+      # return what we provided
       model['data'] = {
-        'handle':  user_handle,
-        'message': message
-      }   
+        'message': message,
+        'reply_to_activity_uuid': activity_uuid
+      }
     else:
-      expires_at = (now + ttl_offset)
-      uuid = CreateActivity.create_activity(cognito_user_id,message,expires_at)
+      uuid = CreateReply.create_reply(cognito_user_id,activity_uuid,message)
 
-      object_json = CreateActivity.query_object_activity(uuid)
-      model['data'] = object_json      
+      object_json = CreateReply.query_object_activity(uuid)
+      model['data'] = object_json
     return model
 
-  def create_activity(cognito_user_id, message, expires_at):
-    sql = db.template('activities','create')
+  def create_reply(cognito_user_id, activity_uuid, message):
+    sql = db.template('activities','reply')
     uuid = db.query_commit(sql,{
       'cognito_user_id': cognito_user_id,
+      'reply_to_activity_uuid': activity_uuid,
       'message': message,
-      'expires_at': expires_at
     })
     return uuid
   def query_object_activity(uuid):
