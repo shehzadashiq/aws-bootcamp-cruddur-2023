@@ -6,7 +6,6 @@ from jose.utils import base64url_decode
 from functools import wraps, partial
 from flask import request, g
 import os
-from functools import wraps, partial
 from flask import current_app as app
 
 class FlaskAWSCognitoError(Exception):
