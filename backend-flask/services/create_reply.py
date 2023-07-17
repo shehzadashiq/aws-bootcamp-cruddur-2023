@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime, timedelta, timezone
 from lib.db import db
 
@@ -23,7 +22,6 @@ class CreateReply:
     if model['errors']:
       # return what we provided
       model['data'] = {
-        'cognito_user_id':  cognito_user_id,
         'message': message,
         'reply_to_activity_uuid': activity_uuid
       }
