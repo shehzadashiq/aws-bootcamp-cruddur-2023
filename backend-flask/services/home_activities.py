@@ -7,16 +7,21 @@ from lib.db import db
 tracer = trace.get_tracer("home.activities")
 
 class HomeActivities:
-    # def run():
-    # def run(Logger):
-    def run(Logger, cognito_user_id=None):
-        Logger.info('Hello Cloudwatch! from  /api/activities/home')
-        # with tracer.start_as_current_span("home-activities-mock-data"):
-        #     span = trace.get_current_span()
-        #     now = datetime.now(timezone.utc).astimezone()
-        #     span.set_attribute("app.now", now.isoformat())
-
+    def run(cognito_user_id=None):
         sql = db.template('activities','home')
         results = db.query_array_json(sql)
 
         return results
+
+
+    # def run(Logger, cognito_user_id=None):
+    #     Logger.info('Hello Cloudwatch! from  /api/activities/home')
+    #     # with tracer.start_as_current_span("home-activities-mock-data"):
+    #     #     span = trace.get_current_span()
+    #     #     now = datetime.now(timezone.utc).astimezone()
+    #     #     span.set_attribute("app.now", now.isoformat())
+
+    #     sql = db.template('activities','home')
+    #     results = db.query_array_json(sql)
+
+    #     return results

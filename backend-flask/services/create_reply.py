@@ -28,7 +28,7 @@ class CreateReply:
         'reply_to_activity_uuid': activity_uuid
       }
     else:
-      uuid = CreateReply.create_reply(cognito_user_id,message,expires_at)
+      uuid = CreateReply.create_reply(cognito_user_id,activity_uuid,message)
 
       object_json = CreateReply.query_object_activity(uuid)
       model['data'] = object_json    
