@@ -1,19 +1,23 @@
 import {getAccessToken} from 'lib/CheckAuth';
 
-async function request(method,url,payload_data,setErrors,success){
-  if (setErrors !== null){
-    setErrors('')
+async function request(method,url,payload_data,options){
+  if (options.hasOwnProperty('setErrors')){
+    options.setErrors('')
   }
   let res
   try {
-    await getAccessToken()
-    const access_token = localStorage.getItem("access_token")
+
     const attrs = {
       method: method,
       headers: {
-        'Authorization': `Bearer ${access_token}`,
         'Content-Type': 'application/json'
       }
+    }
+
+    if (options.hasOwnProperty('auth') && options.auth === true){
+      await getAccessToken()
+      const access_token = localStorage.getItem("access_token")
+      attrs.headers['Authorization'] = `Bearer ${access_token}`
     }
 
     if (method !== 'GET') {
@@ -23,10 +27,10 @@ async function request(method,url,payload_data,setErrors,success){
     res = await fetch(url,attrs)
     let data = await res.json();
     if (res.status === 200) {
-      success(data)
+      options.success(data)
     } else {
       if (options.setErrors !== null){
-        setErrors(data)
+        options.setErrors(data)
       }
       console.log(res,data)
     }
@@ -45,18 +49,18 @@ async function request(method,url,payload_data,setErrors,success){
   }
 }
 
-export function post(url,payload_data,setErrors,success){
-  request('POST',url,payload_data,setErrors,success)
+export function post(url,payload_data,options){
+  request('POST',url,payload_data,options)
 }
 
-export function put(url,payload_data,setErrors,success){
-  request('PUT',url,payload_data,setErrors,success)
+export function put(url,payload_data,options){
+  request('PUT',url,payload_data,options)
 }
 
-export function get(url,setErrors,success){
-  request('GET',url,null,setErrors,success)
+export function get(url,options){
+  request('GET',url,null,options)
 }
 
-export function destroy(url,payload_data,setErrors,success){
-  request('DELETE',url,payload_data,setErrors,success)
+export function destroy(url,payload_data,options){
+  request('DELETE',url,payload_data,options)
 }
