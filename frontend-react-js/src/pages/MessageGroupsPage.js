@@ -3,7 +3,8 @@ import React from "react";
 
 import DesktopNavigation  from '../components/DesktopNavigation';
 import MessageGroupFeed from '../components/MessageGroupFeed';
-import {checkAuth, getAccessToken} from '../lib/CheckAuth';
+import {checkAuth} from '../lib/CheckAuth';
+import {get} from 'lib/Requests';
 
 export default function MessageGroupsPage() {
   const [messageGroups, setMessageGroups] = React.useState([]);
@@ -12,10 +13,12 @@ export default function MessageGroupsPage() {
   const dataFetchedRef = React.useRef(false);
 
   const loadData = async () => {
-    console.log("Reached MessageGroupsPage->loadData()")
     const url = `${process.env.REACT_APP_BACKEND_URL}/api/message_groups`
-    get(url,null,function(data){
-      setMessageGroups(data)
+    get(url,{
+      auth: true,
+      success: function(data){
+        setMessageGroups(data)
+      }
     })
   }
 

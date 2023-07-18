@@ -21,6 +21,11 @@ def load(app):
     model = UserActivities.run(handle)
     return model_json(model)
 
+  @app.route("/api/activities/@<string:handle>/status/<string:activity_uuid>", methods=['GET'])
+  def data_show_activity(handle, activity_uuid):
+      data = ShowActivity.run(activity_uuid)
+      return data, 200    
+
   @app.route("/api/users/@<string:handle>/short", methods=['GET'])
   def data_users_short(handle):
     data = UsersShort.run(handle)
