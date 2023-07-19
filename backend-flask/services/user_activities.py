@@ -3,7 +3,6 @@ from lib.db import db
 
 class UserActivities:
   def run(user_handle):
-    # try:
     model = {
       'errors': None,
       'data': None
@@ -18,15 +17,3 @@ class UserActivities:
       model['data'] = results
 
     return model
-      # subsegment = xray_recorder.begin_subsegment('mock-data')
-      # xray ---
-      # dict = {
-      #   "now": now.isoformat(),
-      #   "results-size": len(model['data'])
-      # }
-      # subsegment.put_metadata('key', dict, 'namespace')
-      # xray_recorder.end_subsegment()
-    # finally:  
-    #  # Close the segment
-      # xray_recorder.end_subsegment()
-      # print("Reached Finally statement. I should not have reached here.")
