@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 from lib.db import db
 
@@ -37,7 +38,7 @@ class CreateActivity:
 
     if model['errors']:
       model['data'] = {
-        'handle':  user_handle,
+        'handle':  cognito_user_id,
         'message': message
       }   
     else:
