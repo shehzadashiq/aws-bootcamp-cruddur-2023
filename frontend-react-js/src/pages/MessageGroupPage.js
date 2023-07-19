@@ -36,8 +36,11 @@ export default function MessageGroupPage() {
   const loadMessageGroupData = async () => {
     console.log("Reached loadMessageGroupData()")
     const url = `${process.env.REACT_APP_BACKEND_URL}/api/messages/${params.message_group_uuid}`
-    get(url,null,function(data){
-      setMessages(data)
+    get(url,{
+      auth: true,
+      success: function(data){
+        setMessageGroups(data)
+      }
     })
   }
 

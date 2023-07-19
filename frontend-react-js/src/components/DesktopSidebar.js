@@ -3,6 +3,8 @@ import Search from '../components/Search';
 import TrendingSection from '../components/TrendingsSection'
 import SuggestedUsersSection from '../components/SuggestedUsersSection'
 import JoinSection from '../components/JoinSection'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 export default function DesktopSidebar(props) {
   const trendings = [
@@ -13,12 +15,19 @@ export default function DesktopSidebar(props) {
   ]
 
   const users = [
-    {"display_name": "Andrew Brown", "handle": "andrewbrown"},
+    {"display_name": "Alt Shehzad", "handle": "altshehzad"},
     {"display_name": "Shehzad Ali", "handle": "shehzad"}
   ]
 
   let trending;
+  if (props.user) {
+    trending = <TrendingSection trendings={trendings} />
+  }
+
   let suggested;
+  if (props.user) {
+    suggested = <SuggestedUsersSection users={users} />
+  }
   let join;
   if (props.user) {
     trending = <TrendingSection trendings={trendings} />
