@@ -28,7 +28,7 @@ export default function MessageGroupPage() {
         setOtherUser(data)
       }
     })
-  } 
+  }
 
   const loadMessageGroupsData = async () => {
     const url = `${process.env.REACT_APP_BACKEND_URL}/api/message_groups`

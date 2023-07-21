@@ -61,7 +61,7 @@ export default function ActivityForm(props) {
         <div className={classes.join(' ')}>{1024-count}</div>
         <button type='submit'>Message</button>
       </div>
-      <FormErrors errors={errors} />      
+      <FormErrors errors={errors} />
     </form>
   );
 }

@@ -17,7 +17,6 @@ from lib.helpers import model_json
 
 def load(app):
   @app.route("/api/activities/@<string:handle>", methods=['GET'])
-  #@xray_recorder.capture('activities_users')
   def data_users_activities(handle):
     model = UserActivities.run(handle)
     return model_json(model)

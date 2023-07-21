@@ -43,7 +43,7 @@ export default function HomeFeedPage() {
       <DesktopNavigation user={user} active={'home'} setPopped={setPopped} />
       <div className='content'>
         <ActivityForm
-          user_handle={user}  
+          // user_handle={user}  
           popped={popped}
           setPopped={setPopped} 
           setActivities={setActivities} 
@@ -52,8 +52,8 @@ export default function HomeFeedPage() {
           activity={replyActivity} 
           popped={poppedReply} 
           setPopped={setPoppedReply} 
-          setActivities={setActivities} 
-          activities={activities} 
+          // setActivities={setActivities} 
+          // activities={activities} 
         />
         <div className='activity_feed'>
           <div className='activity_feed_heading'>
