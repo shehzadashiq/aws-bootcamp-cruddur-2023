@@ -14,7 +14,7 @@ source "$BIN_DIR/ecr/login"
 
 # Configure Gitpod connectivity
 source "$THEIA_WORKSPACE_ROOT/bin/rds/update-sg-rule"
-# source "$THEIA_WORKSPACE_ROOT/bin/ddb/update-sg-rule"
+source "$THEIA_WORKSPACE_ROOT/bin/ddb/update-sg-rule"
 
 # Generate environment variables
 ruby "$BIN_DIR/backend/generate-env"
