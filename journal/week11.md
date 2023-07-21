@@ -276,6 +276,9 @@ Failure on GitHub Actions
 
 - Tasks in GitPod and AWS CLI stopped running because `AWS_ENDPOINT_URL` had been set and was causing issues
 - CI/CD configuration error
+- Reply function not working due to code overwrite error, specifically I had when copy/pasting code and not realising this. I ended up having to spend time trying to figure out what the issue was by debugging
+- Rollbar stopped working despite working earlier with no errors thrown.
+- Earlier on in the bootcamp I changed my seed script to include the BIO column so I do not need to run the migrations script
 
 ### Issues during CI/CD stack deployment
 
@@ -314,6 +317,15 @@ Build succeeded after updating with reference to codebuild and buildspec.yml
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/f66ec8cb-7145-461c-b515-8bb32aa5cc00)
 
+## Update Lambda
+
+A new security group was created for the Post Confirmation Lambda.
+
+In `CrdDbRDSSG` created a rule to allow connectivity as it was previously connected to the default VPC.
+
+### Add Rule to `CrdDbRDSSG` SG to allow connection from Lambda
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/355867f4-be73-489e-8c45-319bd6816448)
 
 ### AWS CLI Issues
 
