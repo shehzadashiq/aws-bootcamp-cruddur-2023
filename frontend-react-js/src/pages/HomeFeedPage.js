@@ -5,7 +5,9 @@ import DesktopSidebar     from 'components/DesktopSidebar';
 import ActivityFeed from 'components/ActivityFeed';
 import ActivityForm from 'components/ActivityForm';
 import ReplyForm from 'components/ReplyForm';
-import {checkAuth, getAccessToken} from 'lib/CheckAuth';
+
+import {get} from 'lib/Requests';
+import {checkAuth} from 'lib/CheckAuth';
 
 export default function HomeFeedPage() {
   const [activities, setActivities] = React.useState([]);
@@ -16,26 +18,14 @@ export default function HomeFeedPage() {
   const dataFetchedRef = React.useRef(false);
 
   const loadData = async () => {
-    try {
-      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/home`
-      await getAccessToken()
-      const access_token = localStorage.getItem("access_token")
-      const res = await fetch(backend_url, {
-        headers: {
-          Authorization: `Bearer ${access_token}`
-        },
-        method: "GET"
-      });
-      let resJson = await res.json();
-      if (res.status === 200) {
-        setActivities(resJson)
-      } else {
-        console.log(res)
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/home`
+    get(url,{
+      auth: true,
+      success: function(data){
+        setActivities(data)
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    })
+  }
 
 
   // check when the page loads if we are authenticated
@@ -53,7 +43,7 @@ export default function HomeFeedPage() {
       <DesktopNavigation user={user} active={'home'} setPopped={setPopped} />
       <div className='content'>
         <ActivityForm
-          user_handle={user}  
+          // user_handle={user}  
           popped={popped}
           setPopped={setPopped} 
           setActivities={setActivities} 
@@ -62,8 +52,8 @@ export default function HomeFeedPage() {
           activity={replyActivity} 
           popped={poppedReply} 
           setPopped={setPoppedReply} 
-          setActivities={setActivities} 
-          activities={activities} 
+          // setActivities={setActivities} 
+          // activities={activities} 
         />
         <div className='activity_feed'>
           <div className='activity_feed_heading'>

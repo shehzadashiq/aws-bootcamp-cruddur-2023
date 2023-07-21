@@ -1,8 +1,10 @@
 import {ReactComponent as ShareIcon} from './svg/share.svg';
 
-export default function ActivityActionRepost(props) { 
+export default function ActivityActionShare(props) { 
   const onclick = (event) => {
+    event.preventDefault()
     console.log('trigger share')
+    return false
   }
 
   return (

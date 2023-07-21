@@ -128,6 +128,9 @@ class Db:
       with conn.cursor() as cur:
         cur.execute(sql,params)
         json = cur.fetchone()
-        return json[0]    
+        if json is not None:
+          return json[0]
+        else:
+          return None  
 
 db = Db()

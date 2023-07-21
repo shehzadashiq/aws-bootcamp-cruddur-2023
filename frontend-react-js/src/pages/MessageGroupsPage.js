@@ -3,7 +3,8 @@ import React from "react";
 
 import DesktopNavigation  from '../components/DesktopNavigation';
 import MessageGroupFeed from '../components/MessageGroupFeed';
-import {checkAuth, getAccessToken} from '../lib/CheckAuth';
+import {checkAuth} from '../lib/CheckAuth';
+import {get} from 'lib/Requests';
 
 export default function MessageGroupsPage() {
   const [messageGroups, setMessageGroups] = React.useState([]);
@@ -12,32 +13,14 @@ export default function MessageGroupsPage() {
   const dataFetchedRef = React.useRef(false);
 
   const loadData = async () => {
-    console.log("Reached MessageGroupsPage->loadData()")
-    try {
-      console.log("Reached MessageGroupsPage->loadData() try statement")
-      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/message_groups`
-      await getAccessToken()
-      const access_token = localStorage.getItem("access_token")
-      const res = await fetch(backend_url, {
-        headers: {
-          Authorization: `Bearer ${access_token}`
-        },
-        method: "GET"
-      });
-      let resJson = await res.json();
-      if (res.status === 200) {
-        setMessageGroups(resJson)
-        console.log("Received 200 in loadData")
-        console.log("resJson")
-        console.log(resJson)        
-      } else {
-        console.log("Received Error in loadData")
-        console.log(res)
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/message_groups`
+    get(url,{
+      auth: true,
+      success: function(data){
+        setMessageGroups(data)
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };  
+    })
+  }
 
   React.useEffect(()=>{
     //prevents double call

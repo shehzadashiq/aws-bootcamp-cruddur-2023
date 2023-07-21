@@ -3,9 +3,6 @@
   align-items: flex-start;
   overflow: hidden;
   padding: 16px;
-}
-
-.message_item .avatar {
   cursor: pointer;
   text-decoration: none;
 }
