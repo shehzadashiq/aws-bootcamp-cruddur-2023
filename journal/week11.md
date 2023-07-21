@@ -314,6 +314,7 @@ Build succeeded after updating with reference to codebuild and buildspec.yml
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/f66ec8cb-7145-461c-b515-8bb32aa5cc00)
 
+
 ### AWS CLI Issues
 
 In GitPod, docker compose started to fail with the following message
