@@ -17,9 +17,9 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "https://3000-shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
+        "Access-Control-Allow-Origin": "https://tajarba.com/",
         # "Access-Control-Allow-Origin": workspace_url,
-        "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
+        "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT"
       },
       statusCode: 200
     }
@@ -46,9 +46,9 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "https://3000-shehzadashi-awsbootcamp-sf7toclaf7t.ws-eu96b.gitpod.io",
+        "Access-Control-Allow-Origin": "https://tajarba.com/",
         # "Access-Control-Allow-Origin": workspace_url,
-        "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
+        "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT"
       },
       statusCode: 200, 
       body: body 
