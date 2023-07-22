@@ -8,10 +8,10 @@ import FormErrors from 'components/FormErrors';
 export default function ProfileForm(props) {
   const [bio, setBio] = React.useState('');
   const [displayName, setDisplayName] = React.useState('');
-  const [errors, setErrors] = React.useState('')
+  const [errors, setErrors] = React.useState('');
 
   React.useEffect(()=>{
-    console.log('useEffects',props)
+    console.log('useEffects',props);
     setBio(props.profile.bio || "");
     setDisplayName(props.profile.display_name);
   }, [props.profile]);

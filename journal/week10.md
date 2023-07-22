@@ -41,6 +41,7 @@
     - [Create Service Deploy Script](#create-service-deploy-script)
   - [CFN MachineUser Stack](#cfn-machineuser-stack)
     - [Create MachineUser Template](#create-machineuser-template)
+    - [Script to allow access from GitPod](#script-to-allow-access-from-gitpod)
     - [Create MachineUser Deploy Script](#create-machineuser-deploy-script)
   - [CFN Frontend Stack](#cfn-frontend-stack)
     - [Create Frontend Template](#create-frontend-template)
@@ -539,6 +540,39 @@ Update config.toml with the following changing `bucket` and `region` as appropri
 bucket = 'cfn-tajarba-artifacts'
 region = 'eu-west-2'
 stack_name = 'CrdMachineUser'
+```
+
+### Script to allow access from GitPod
+
+Similar to the `update-sg-rule` script used to allow access to the RDS database I created a script that will automatically update the `CrdDbRDSSG` security group with our GitPod IP. I then included this in both my `.gitpod.yml` and `./bin/bootstrap` script.
+
+```sh
+#! /usr/bin/bash
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="ddb-update-sg-rule"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+
+SG_GROUP_NAME="CrdDbRDSSG"
+GITPOD_IP=$(curl ifconfig.me)
+echo $GITPOD_IP
+
+# aws ec2 describe-vpcs --filters "Name=tag:Name,Values=CrdNetVPC"
+VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=CrdNetVPC" --query 'Vpcs[*].VpcId' --output text) 
+echo $VPC_ID
+
+# As the Security group is not in the default VPC we need to filter on both the VPC_ID and Security Group Name
+DB_SG_ID=$(aws ec2 describe-security-groups --filters "Name=vpc-id,Values=$VPC_ID" "Name=group-name,Values=$SG_GROUP_NAME" --query 'SecurityGroups[*].GroupId' --output text)
+echo $DB_SG_ID
+
+# For now this is hard coded but figure a way to automate this
+DB_SG_RULE_ID="sgr-099f9e3d8c8c1327e"
+
+aws ec2 modify-security-group-rules \
+    --group-id $DB_SG_ID \
+ --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GitPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
 ```
 
 ### Create MachineUser Deploy Script
