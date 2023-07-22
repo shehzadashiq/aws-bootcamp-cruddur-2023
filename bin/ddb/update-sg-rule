@@ -11,7 +11,6 @@ GITPOD_IP=$(curl ifconfig.me)
 echo $GITPOD_IP
 
 # aws ec2 describe-vpcs --filters "Name=tag:Name,Values=CrdNetVPC"
-
 VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=CrdNetVPC" --query 'Vpcs[*].VpcId' --output text) 
 echo $VPC_ID
 
