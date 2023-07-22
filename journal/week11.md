@@ -1,5 +1,26 @@
 # Week 11/X — CloudFormation Part 2 - Cleanup
 
+- [Week 11/X — CloudFormation Part 2 - Cleanup](#week-11x--cloudformation-part-2---cleanup)
+  - [Overview](#overview)
+  - [Videos for week X](#videos-for-week-x)
+  - [CFN CI/CD Stack](#cfn-cicd-stack)
+    - [Create CI/CD Template](#create-cicd-template)
+  - [Week X Sync tool for static website hosting](#week-x-sync-tool-for-static-website-hosting)
+    - [Pre-Requisites](#pre-requisites)
+    - [Create Build scripts](#create-build-scripts)
+    - [Create Sync Template](#create-sync-template)
+  - [Initialise Static Hosting](#initialise-static-hosting)
+    - [Run Static-Build script](#run-static-build-script)
+    - [Initialise Sync](#initialise-sync)
+  - [Create GitHub Action](#create-github-action)
+  - [Troubleshooting](#troubleshooting)
+    - [Issues](#issues)
+    - [Issues during CI/CD stack deployment](#issues-during-cicd-stack-deployment)
+  - [Update Lambda](#update-lambda)
+    - [Add Rule to `CrdDbRDSSG` SG to allow connection from Lambda](#add-rule-to-crddbrdssg-sg-to-allow-connection-from-lambda)
+    - [AWS CLI Issues](#aws-cli-issues)
+    - [Bootstrap Script](#bootstrap-script)
+
 ## Overview
 
 Due to scope creep, this week will focus on cleaning up the code and ensuring it is in a stable state.
@@ -279,6 +300,7 @@ Failure on GitHub Actions
 - Reply function not working due to code overwrite error, specifically I had when copy/pasting code and not realising this. I ended up having to spend time trying to figure out what the issue was by debugging
 - Rollbar stopped working despite working earlier with no errors thrown.
 - Earlier on in the bootcamp I changed my seed script to include the BIO column so I do not need to run the migrations script
+- Gitpod.yml would not always work. To resolve this I created a bootstrap script which automated the common tasks for me. This also worked in my local environment
 
 ### Issues during CI/CD stack deployment
 
@@ -357,3 +379,37 @@ unset AWS_ENDPOINT_URL
 ```
 
 Once this had been unset I was able to run all aws_cli commands and run docker-compose
+
+### Bootstrap Script
+
+To automate tasks that would not run when the `.gitpod.yml` file did not work I created a [`./bin/bootstrap`](../bin/bootstrap) script. I also created a local version for my local environment [`./bin/bootstrap-local`](../bin/bootstrap-local.sh)
+
+```sh
+#! /usr/bin/bash
+set -e # stop if it fails at any point
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="bootstrap"
+printf "${CYAN}====== ${LABEL}${NO_COLOR}\n"
+
+ABS_PATH=$(readlink -f "$0")
+BIN_DIR=$(dirname $ABS_PATH)
+
+# Connect to ECR
+source "$BIN_DIR/ecr/login"
+
+# Configure Gitpod connectivity
+source "$THEIA_WORKSPACE_ROOT/bin/rds/update-sg-rule"
+source "$THEIA_WORKSPACE_ROOT/bin/ddb/update-sg-rule"
+
+# Generate environment variables
+ruby "$BIN_DIR/backend/generate-env"
+ruby "$BIN_DIR/frontend/generate-env"
+
+# Install CFN section
+source "$BIN_DIR/cfn/initialise.sh"
+
+# Install SAM section
+source "$BIN_DIR/sam/initialise.sh"
+```
