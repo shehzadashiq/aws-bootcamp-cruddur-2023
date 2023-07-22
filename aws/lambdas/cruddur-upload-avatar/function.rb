@@ -17,7 +17,7 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "https://tajarba.com/",
+        "Access-Control-Allow-Origin": "https://tajarba.com",
         # "Access-Control-Allow-Origin": workspace_url,
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT"
       },
@@ -46,7 +46,7 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "https://tajarba.com/",
+        "Access-Control-Allow-Origin": "https://tajarba.com",
         # "Access-Control-Allow-Origin": workspace_url,
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT"
       },
