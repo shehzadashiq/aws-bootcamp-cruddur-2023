@@ -13,6 +13,10 @@
     - [Run Static-Build script](#run-static-build-script)
     - [Initialise Sync](#initialise-sync)
   - [Create GitHub Action](#create-github-action)
+    - [Listing of S3 bucket](#listing-of-s3-bucket)
+    - [Sync Executed](#sync-executed)
+    - [Invalidation Created](#invalidation-created)
+    - [Invalidation Details](#invalidation-details)
     - [Failure on GitHub Actions](#failure-on-github-actions)
   - [CleanUp](#cleanup)
   - [Messaging Alt User](#messaging-alt-user)
@@ -299,6 +303,22 @@ jobs:
       - name: Run tests
         run: bundle exec rake sync
 ```
+
+### Listing of S3 bucket
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/cd6957a3-934d-47e7-bdbf-104d9978ac6c)
+
+### Sync Executed
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/44c5f5d1-aaf6-4c75-843b-e0dec41a512a)
+
+### Invalidation Created
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/f9a94e28-efcc-461c-9ffc-442e0ab1e80b)
+
+### Invalidation Details
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/7e43586a-3768-4af4-8f4e-d8659b6d66da)
 
 ### Failure on GitHub Actions
 
