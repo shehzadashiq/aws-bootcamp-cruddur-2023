@@ -13,6 +13,7 @@
     - [Run Static-Build script](#run-static-build-script)
     - [Initialise Sync](#initialise-sync)
   - [Create GitHub Action](#create-github-action)
+  - [Messaging Alt User](#messaging-alt-user)
   - [Troubleshooting](#troubleshooting)
     - [Issues](#issues)
     - [Issues during CI/CD stack deployment](#issues-during-cicd-stack-deployment)
@@ -291,6 +292,10 @@ Failure on GitHub Actions
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/5a5ce4db-9517-4c48-8f4a-4c146b95fe37)
 
+## Messaging Alt User
+
+I used the following URL to message my altUser in Production: `https://tajarba.com/messages/new/altshehzad`
+
 ## Troubleshooting
 
 ### Issues
@@ -301,6 +306,7 @@ Failure on GitHub Actions
 - Rollbar stopped working despite working earlier with no errors thrown.
 - Earlier on in the bootcamp I changed my seed script to include the BIO column so I do not need to run the migrations script
 - Gitpod.yml would not always work. To resolve this I created a bootstrap script which automated the common tasks for me. This also worked in my local environment
+- To save costs in Week 10, I had tore down the CFN stacks. This meant in WeekX I could no longer remember which stacks needed to exist as I had not yet finished documentation. Troubleshooting this consumed a lot of time.
 
 ### Issues during CI/CD stack deployment
 
