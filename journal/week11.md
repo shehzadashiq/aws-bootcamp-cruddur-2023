@@ -31,12 +31,17 @@
     - [AWS CLI Issues](#aws-cli-issues)
     - [Bootstrap Script](#bootstrap-script)
     - [Warnings being shown when running static build](#warnings-being-shown-when-running-static-build)
+  - [All CFN Stacks Created](#all-cfn-stacks-created)
   - [Proof of working in Production](#proof-of-working-in-production)
     - [Messaging to AltUser working in Prod](#messaging-to-altuser-working-in-prod)
     - [Cruds work in Prod](#cruds-work-in-prod)
     - [Replies working in Prod](#replies-working-in-prod)
     - [Profile Image successfully uploaded](#profile-image-successfully-uploaded)
     - [Bio Changed](#bio-changed)
+  - [cloud-project-bootcamp-validation-tool](#cloud-project-bootcamp-validation-tool)
+    - [Error running validate command](#error-running-validate-command)
+    - [Error showing source file could not be found](#error-showing-source-file-could-not-be-found)
+    - [Changes to Code](#changes-to-code)
 
 ## Overview
 
@@ -56,6 +61,7 @@ Due to scope creep, this week will focus on cleaning up the code and ensuring it
 - [Week-X Activity Show Page](https://www.youtube.com/watch?v=FBpQtN497QA)
 - [Week-X Cleanup](https://www.youtube.com/watch?v=E89RBvZ_BaY)
 - [Week X Cleanup Part 2](https://www.youtube.com/watch?v=53_3TmZ1hrs)
+- [Final Submissions Instructions](https://www.youtube.com/watch?v=VpD2TfMiZCA)
 
 ## CFN CI/CD Stack
 
@@ -370,6 +376,7 @@ To allow messaging, the following changes need to be made from my experience
 - Gitpod.yml would not always work. To resolve this I created a bootstrap script which automated the common tasks for me. This also worked in my local environment
 - To save costs in Week 10, I had tore down the CFN stacks. This meant in WeekX I could no longer remember which stacks needed to exist as I had not yet finished documentation. Troubleshooting this consumed a lot of time.
 - Uploading in production was causing CORS issues. In addition to adding permissions to the `tajarba.com` domain, this was resolved by adding the `PUT` method in `/api/profile/update` under `backend-flask/routes/users.py`
+- There was an issue generating the Cloudformation for validation when using the <https://github.com/ExamProCo/cloud-project-bootcamp-validation-tool> , I resolved this by troubleshooting the code and successfully generated the required template
 
 ### Issues during CI/CD stack deployment
 
@@ -491,6 +498,12 @@ These were addressed by commenting out the following import line
 
 `import ReactDOM from 'react-dom';`
 
+## All CFN Stacks Created
+
+All stacks were deployed successfully
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3eb2c4cc-a29a-4c44-8e49-495a51d416b2)
+
 ## Proof of working in Production
 
 ### Messaging to AltUser working in Prod
@@ -512,3 +525,33 @@ These were addressed by commenting out the following import line
 ### Bio Changed
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/376f5521-100e-455c-b64c-29cd3d815ae2)
+
+## cloud-project-bootcamp-validation-tool
+
+<https://github.com/ExamProCo/cloud-project-bootcamp-validation-tool>
+
+Command to run to validate: `bundle exec rake permit`
+
+Error generated when running the command.
+
+### Error running validate command
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/4a61ff34-b4bb-49bd-ab87-19a5a0dd6bdb)
+
+Fixed by changing line 52 in `lib/cpbvt/payloads/aws/policy.rb` from
+
+"#{general-params.run_uuid}-cross-account-role-template.yaml"
+
+to
+
+'cross-account-role-template.yaml'
+
+This causes an issue because when trying to merge the files it cannot find the original source file and fails.
+
+### Error showing source file could not be found
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/4b73406c-3aae-4795-978e-0ef7aea239bd)
+
+### Changes to Code
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/89c28175-e114-42c6-988b-3299348d86eb)
