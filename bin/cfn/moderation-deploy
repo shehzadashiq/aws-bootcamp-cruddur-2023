@@ -3,7 +3,7 @@ set -e # stop the execution of the script if it fails
 
 CYAN='\033[1;36m'
 NO_COLOR='\033[0m'
-LABEL="CFN_MACHINEUSER_DEPLOY"
+LABEL="CFN_MODERATIONUSER_DEPLOY"
 printf "${CYAN}====== ${LABEL}${NO_COLOR}\n"
 
 # Get the absolute path of this script
@@ -11,8 +11,8 @@ ABS_PATH=$(readlink -f "$0")
 CFN_BIN_PATH=$(dirname $ABS_PATH)
 BIN_PATH=$(dirname $CFN_BIN_PATH)
 PROJECT_PATH=$(dirname $BIN_PATH)
-CFN_PATH="$PROJECT_PATH/aws/cfn/machine-user/template.yaml"
-CONFIG_PATH="$PROJECT_PATH/aws/cfn/machine-user/config.toml"
+CFN_PATH="$PROJECT_PATH/aws/cfn/moderation-user/template.yaml"
+CONFIG_PATH="$PROJECT_PATH/aws/cfn/moderation-user/config.toml"
 
 cfn-lint $CFN_PATH
 
@@ -27,5 +27,5 @@ aws cloudformation deploy \
   --region $REGION \
   --template-file "$CFN_PATH" \
   --no-execute-changeset \
-  --tags group=cruddur-machine-user \
+  --tags group=cruddur-moderation-user \
   --capabilities CAPABILITY_NAMED_IAM

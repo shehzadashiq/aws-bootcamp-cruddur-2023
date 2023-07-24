@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  CruddurModerationUser:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName: "cruddur_moderation_user"
+  ModerationFullAccessPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "ModerationFullAccessPolicy"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "s3:Get*"
+              - "s3:List*"
+              - "s3-object-lambda:Get*"
+              - "s3-object-lambda:List*"
+              - "rekognition:*"
+            Resource: "*"
+      Users:
+        - !Ref CruddurModerationUser
