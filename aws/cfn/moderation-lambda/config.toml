@@ -1,0 +1,7 @@
+[deploy]
+bucket = 'cfn-tajarba-artifacts'
+region = 'eu-west-2'
+stack_name = 'CrdModerationLambda'
+
+[parameters]
+AvatarBucketName="tajarba-uploaded-avatars"

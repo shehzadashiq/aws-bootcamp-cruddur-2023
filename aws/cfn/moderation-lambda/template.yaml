@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: |
+  - S3 Bucket with images in it
+  - SNS Topic
+
+Parameters:
+  AvatarBucketName:
+    Type: String
+    Description: Name of the existing S3 bucket
+
+Resources:
+  SNSTopic:
+    Type: AWS::SNS::Topic
+
+  BucketEventNotification:
+    Type: AWS::S3::BucketNotification
+    Properties:
+      Bucket: !Ref AvatarBucketName
+      NotificationConfiguration:
+        TopicConfigurations:
+          - Event: 's3:ObjectCreated:Put'
+            Topic: !Ref SNSTopic
+
+Outputs:
+  SNSArn:
+    Value: !Ref SNSTopic
