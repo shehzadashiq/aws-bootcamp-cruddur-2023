@@ -1,0 +1,279 @@
+import boto3
+import sys
+import uuid
+import os
+import botocore.exceptions
+from datetime import datetime, timedelta, timezone
+
+import json
+import os
+
+from boto3 import Session as AWSSession
+from requests_aws4auth import AWS4Auth
+
+from gql import gql
+from gql.client import Client
+from gql.transport.requests import RequestsHTTPTransport
+
+
+class AppSync:
+    # @staticmethod
+    def client():
+        headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        aws = AWSSession(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+                        region_name=os.getenv('AWS_DEFAULT_REGION'))
+        credentials = aws.get_credentials().get_frozen_credentials()
+        auth = AWS4Auth(
+            credentials.access_key,
+            credentials.secret_key,
+            aws.region_name,
+            'appsync',
+            session_token=credentials.token,
+        )
+        transport = RequestsHTTPTransport(url=os.getenv('APPSYNC_ENDPOINT'),
+                                        headers=headers,
+                                        auth=auth)
+        client = Client(transport=transport,
+                        fetch_schema_from_transport=True)
+        return client
+
+    def test_mutation(self):
+        client = make_client()
+        params = {'id': 1235, 'state': 'DONE!'}
+        # resp = client.execute(gql(update_appsync_obj),
+
+
+        get_appsync_obj="""query listCrdDdbDynamoDBTable1NK2LU7KGZSIPS {
+            listCrdDdbDynamoDBTable1NK2LU7KGZSIPS {
+                items {
+                message_group_uuid
+                pk
+                sk
+                }
+            }
+            }"""
+        
+        resp = client.execute(gql(get_appsync_obj),
+                            variable_values=json.dumps({'input': params}))
+        return resp
+
+    @staticmethod
+    def list_message_groups(client,my_user_uuid):
+        year = str(datetime.now().year)
+        #table_name = os.getenv("DDB_MESSAGE_TABLE")
+        table_name="CrdDdbDynamoDBTable1NK2LU7KGZSIP"
+        query_params = {
+        'TableName': table_name,
+        'KeyConditionExpression': 'pk = :pk AND begins_with(sk,:year)',
+        'ScanIndexForward': False,
+        'Limit': 20,
+        'ExpressionAttributeValues': {
+            ':year': {'S': year },
+            ':pk': {'S': f"GRP#{my_user_uuid}"}
+        }
+        }
+        print('query-params:',query_params)
+        print(query_params)
+        # query the table
+        response = client.query(**query_params)
+        items = response['Items']
+        
+
+        results = []
+        for item in items:
+            last_sent_at = item['sk']['S']
+            results.append({
+                'uuid': item['message_group_uuid']['S'],
+                'display_name': item['user_display_name']['S'],
+                'handle': item['user_handle']['S'],
+                'message': item['message']['S'],
+                'created_at': last_sent_at
+            })
+        return results
+    
+    def list_messages(client,message_group_uuid):
+        year = str(datetime.now().year)
+        # table_name = os.getenv("DDB_MESSAGE_TABLE")
+        table_name="CrdDdbDynamoDBTable1NK2LU7KGZSIP"
+        query_params = {
+        'TableName': table_name,
+        'KeyConditionExpression': 'pk = :pk AND begins_with(sk,:year)',
+        'ScanIndexForward': False,
+        'Limit': 20,
+        'ExpressionAttributeValues': {
+            ':year': {'S': year },
+            ':pk': {'S': f"MSG#{message_group_uuid}"}
+        }
+        }
+
+        response = client.query(**query_params)
+        items = response['Items']
+        items.reverse()
+        results = []
+        for item in items:
+            created_at = item['sk']['S']
+            results.append({
+                'uuid': item['message_uuid']['S'],
+                'display_name': item['user_display_name']['S'],
+                'handle': item['user_handle']['S'],
+                'message': item['message']['S'],
+                'created_at': created_at
+            })
+        return results
+    def create_message(client,message_group_uuid, message, my_user_uuid, my_user_display_name, my_user_handle):
+        created_at = datetime.now().isoformat()
+        message_uuid = str(uuid.uuid4())
+
+        record = {
+        'pk':   {'S': f"MSG#{message_group_uuid}"},
+        'sk':   {'S': created_at },
+        'message': {'S': message},
+        'message_uuid': {'S': message_uuid},
+        'user_uuid': {'S': my_user_uuid},
+        'user_display_name': {'S': my_user_display_name},
+        'user_handle': {'S': my_user_handle}
+        }
+        # insert the record into the table
+        # table_name = os.getenv("DDB_MESSAGE_TABLE")
+        table_name="CrdDdbDynamoDBTable1NK2LU7KGZSIP"
+        response = client.put_item(
+        TableName=table_name,
+        Item=record
+        )
+        # print the response
+        print(response)
+        return {
+        'message_group_uuid': message_group_uuid,
+        'uuid': my_user_uuid,
+        'display_name': my_user_display_name,
+        'handle':  my_user_handle,
+        'message': message,
+        'created_at': created_at
+        }
+    def create_message_group(client, message,my_user_uuid, my_user_display_name, my_user_handle, other_user_uuid, other_user_display_name, other_user_handle):
+        table_name = os.getenv("DDB_MESSAGE_TABLE")
+
+        message_group_uuid = str(uuid.uuid4())
+        message_uuid = str(uuid.uuid4())
+        now = datetime.now(timezone.utc).astimezone().isoformat()
+        last_message_at = now
+        created_at = now
+
+        my_message_group = {
+        'pk': {'S': f"GRP#{my_user_uuid}"},
+        'sk': {'S': last_message_at},
+        'message_group_uuid': {'S': message_group_uuid},
+        'message': {'S': message},
+        'user_uuid': {'S': other_user_uuid},
+        'user_display_name': {'S': other_user_display_name},
+        'user_handle':  {'S': other_user_handle}
+        }
+
+        other_message_group = {
+        'pk': {'S': f"GRP#{other_user_uuid}"},
+        'sk': {'S': last_message_at},
+        'message_group_uuid': {'S': message_group_uuid},
+        'message': {'S': message},
+        'user_uuid': {'S': my_user_uuid},
+        'user_display_name': {'S': my_user_display_name},
+        'user_handle':  {'S': my_user_handle}
+        }
+
+        message = {
+        'pk':   {'S': f"MSG#{message_group_uuid}"},
+        'sk':   {'S': created_at },
+        'message': {'S': message},
+        'message_uuid': {'S': message_uuid},
+        'user_uuid': {'S': my_user_uuid},
+        'user_display_name': {'S': my_user_display_name},
+        'user_handle': {'S': my_user_handle}
+        }
+
+        items = {
+        table_name: [
+            {'PutRequest': {'Item': my_message_group}},
+            {'PutRequest': {'Item': other_message_group}},
+            {'PutRequest': {'Item': message}}
+        ]
+        }
+
+        try:
+            # Begin the transaction
+            response = client.batch_write_item(RequestItems=items)
+            return {
+                'message_group_uuid': message_group_uuid
+            }
+        except botocore.exceptions.ClientError as e:
+            print(e)
+
+####-----------------------------------------
+
+get_appsync_obj="""query listCrdDdbDynamoDBTable1NK2LU7KGZSIPS {
+  listCrdDdbDynamoDBTable1NK2LU7KGZSIPS {
+    items {
+      message_group_uuid
+      pk
+      sk
+    }
+  }
+}"""
+
+def make_client():
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+
+    aws = AWSSession(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+                     region_name=os.getenv('AWS_DEFAULT_REGION'))
+    credentials = aws.get_credentials().get_frozen_credentials()
+
+    auth = AWS4Auth(
+        credentials.access_key,
+        credentials.secret_key,
+        aws.region_name,
+        'appsync',
+        session_token=credentials.token,
+    )
+
+    transport = RequestsHTTPTransport(url=os.getenv('APPSYNC_ENDPOINT'),
+                                      headers=headers,
+                                      auth=auth)
+    client = Client(transport=transport,
+                    fetch_schema_from_transport=True)
+    return client
+
+# get_appsync_obj and update_appsync_obj are GraphQL queries in string form.
+# You can make one using AppSync's query sandbox and copy the text over.
+
+# from .queries import get_appsync_obj
+# , update_appsync_obj
+
+# def test_get():
+#     # get_appsync_obj is a GraphQL query in string form.
+#     # You can use the query strings from AppSync schema.
+#     client = make_client()
+#     params = {'id': 1235}
+#     resp = client.execute(gql(get_appsync_obj),
+#                           variable_values=json.dumps(params))
+#     return resp
+
+
+def test_mutation():
+    client = make_client()
+    params = {'id': 1235, 'state': 'DONE!'}
+    # resp = client.execute(gql(update_appsync_obj),
+    resp = client.execute(gql(get_appsync_obj),
+                          variable_values=json.dumps({'input': params}))
+    return resp
+
+def query_messages():
+ print("Result: ", test_mutation())
+
+# appsync = AppSync()
+# query_messages()
