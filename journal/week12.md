@@ -39,6 +39,15 @@ I was able to get a list of message groups and messages via the command line how
 
 I would have liked to have had some more time to be able to fully implement the features implemented via DynamoDB so that AppSync could fully replace it. This however requires more research and understanding of key concepts for DynamoDB.
 
+The code was implemented as a library function titled `AppSync` its [code](../backend-flask/lib/appsync.py) is here and has only two functions implemented. To test the functionality the following two lines need to be uncommented.
+
+```py
+# AppSync.list_message_groups(appsync,"4fa2d4e6-11f3-4b39-9ec8-a421d4faaa0a")
+# AppSync.list_messages(appsync,"dba1f675-4793-4ad8-aa25-29c37b9eada6")
+```
+
+I am sure if I had more time to troubleshoot I would have been able to resolve this issue.
+
 ### References
 
 - (Sample Code I utilised)<https://gist.github.com/angysmark/d6fbec3ad559c442d02dd23e1c14d586#file-appsync_client-py>
