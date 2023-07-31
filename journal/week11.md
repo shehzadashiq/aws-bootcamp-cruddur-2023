@@ -343,6 +343,7 @@ This involved the following
 - Improve error handling
 - Other Quality Of Life Changes
 
+
 ## Messaging Alt User
 
 I used the following URL to message my altUser in Production: `https://tajarba.com/messages/new/altshehzad`
@@ -364,6 +365,7 @@ To allow messaging, the following changes need to be made from my experience
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/a7245aef-adb6-4d2d-ad5e-d63c5160725d)
 
+
 ## Troubleshooting
 
 ### Issues
@@ -377,6 +379,7 @@ To allow messaging, the following changes need to be made from my experience
 - To save costs in Week 10, I had tore down the CFN stacks. This meant in WeekX I could no longer remember which stacks needed to exist as I had not yet finished documentation. Troubleshooting this consumed a lot of time.
 - Uploading in production was causing CORS issues. In addition to adding permissions to the `tajarba.com` domain, this was resolved by adding the `PUT` method in `/api/profile/update` under `backend-flask/routes/users.py`
 - There was an issue generating the Cloudformation for validation when using the <https://github.com/ExamProCo/cloud-project-bootcamp-validation-tool> , I resolved this by troubleshooting the code and successfully generated the required template
+
 
 ### Issues during CI/CD stack deployment
 
