@@ -29,3 +29,4 @@ The `/journal` directory contains
 - [X] [Week 9](journal/week9.md)
 - [X] [Week 10](journal/week10.md)
 - [X] [Week 11/X](journal/week11.md)
+- [X] [Week 12](journal/week12.md)
