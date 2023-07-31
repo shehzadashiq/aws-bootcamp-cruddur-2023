@@ -13,7 +13,16 @@
     - [Run Static-Build script](#run-static-build-script)
     - [Initialise Sync](#initialise-sync)
   - [Create GitHub Action](#create-github-action)
+    - [Listing of S3 bucket](#listing-of-s3-bucket)
+    - [Sync Executed](#sync-executed)
+    - [Invalidation Created](#invalidation-created)
+    - [Invalidation Details](#invalidation-details)
+    - [Failure on GitHub Actions](#failure-on-github-actions)
+  - [CleanUp](#cleanup)
   - [Messaging Alt User](#messaging-alt-user)
+  - [Allowing Production to upload images](#allowing-production-to-upload-images)
+    - [CORS Amendments required to allow avatars to be uploaded to the S3 bucket](#cors-amendments-required-to-allow-avatars-to-be-uploaded-to-the-s3-bucket)
+    - [PUT Method not allowed in application](#put-method-not-allowed-in-application)
   - [Troubleshooting](#troubleshooting)
     - [Issues](#issues)
     - [Issues during CI/CD stack deployment](#issues-during-cicd-stack-deployment)
@@ -21,6 +30,18 @@
     - [Add Rule to `CrdDbRDSSG` SG to allow connection from Lambda](#add-rule-to-crddbrdssg-sg-to-allow-connection-from-lambda)
     - [AWS CLI Issues](#aws-cli-issues)
     - [Bootstrap Script](#bootstrap-script)
+    - [Warnings being shown when running static build](#warnings-being-shown-when-running-static-build)
+  - [All CFN Stacks Created](#all-cfn-stacks-created)
+  - [Proof of working in Production](#proof-of-working-in-production)
+    - [Messaging to AltUser working in Prod](#messaging-to-altuser-working-in-prod)
+    - [Cruds work in Prod](#cruds-work-in-prod)
+    - [Replies working in Prod](#replies-working-in-prod)
+    - [Profile Image successfully uploaded](#profile-image-successfully-uploaded)
+    - [Bio Changed](#bio-changed)
+  - [cloud-project-bootcamp-validation-tool](#cloud-project-bootcamp-validation-tool)
+    - [Error running validate command](#error-running-validate-command)
+    - [Error showing source file could not be found](#error-showing-source-file-could-not-be-found)
+    - [Changes to Code](#changes-to-code)
 
 ## Overview
 
@@ -40,6 +61,7 @@ Due to scope creep, this week will focus on cleaning up the code and ensuring it
 - [Week-X Activity Show Page](https://www.youtube.com/watch?v=FBpQtN497QA)
 - [Week-X Cleanup](https://www.youtube.com/watch?v=E89RBvZ_BaY)
 - [Week X Cleanup Part 2](https://www.youtube.com/watch?v=53_3TmZ1hrs)
+- [Final Submissions Instructions](https://www.youtube.com/watch?v=VpD2TfMiZCA)
 
 ## CFN CI/CD Stack
 
@@ -288,13 +310,61 @@ jobs:
         run: bundle exec rake sync
 ```
 
-Failure on GitHub Actions
+### Listing of S3 bucket
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/cd6957a3-934d-47e7-bdbf-104d9978ac6c)
+
+### Sync Executed
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/44c5f5d1-aaf6-4c75-843b-e0dec41a512a)
+
+### Invalidation Created
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/f9a94e28-efcc-461c-9ffc-442e0ab1e80b)
+
+### Invalidation Details
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/7e43586a-3768-4af4-8f4e-d8659b6d66da)
+
+### Failure on GitHub Actions
 
 ![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/5a5ce4db-9517-4c48-8f4a-4c146b95fe37)
+
+## CleanUp
+
+This involved the following
+
+- Refactoring of code
+- Reimporting code from other branches that had been missed e.g. TimeDateCode
+- Fixing CloudFormation stacks to correct missing settings
+- Adding a user to ensure least privilege access
+- Refactor to use JWT decorator in the application
+- Implementing replies
+- Improve error handling
+- Other Quality Of Life Changes
+
 
 ## Messaging Alt User
 
 I used the following URL to message my altUser in Production: `https://tajarba.com/messages/new/altshehzad`
+
+## Allowing Production to upload images
+
+To allow messaging, the following changes need to be made from my experience
+
+- Update the CORS Policy for the avatars bucket to change the `AllowedOrigins` to the production domain
+- In the CruddurAvatarUpload Lambda edit `function.rb` to the production domain. Make sure to not have a trailing slash i.e it should be `https://tajarba.com`
+- Add the `PUT` method in `/api/profile/update` under `backend-flask/routes/users.py`
+- Update the CORS Policy for the avatars bucket to change the `AllowedMethods` as `POST,PUT`
+
+### CORS Amendments required to allow avatars to be uploaded to the S3 bucket
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3fba2205-b138-4050-9a29-b2e0d57836d3)
+
+### PUT Method not allowed in application
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/a7245aef-adb6-4d2d-ad5e-d63c5160725d)
+
 
 ## Troubleshooting
 
@@ -307,6 +377,9 @@ I used the following URL to message my altUser in Production: `https://tajarba.c
 - Earlier on in the bootcamp I changed my seed script to include the BIO column so I do not need to run the migrations script
 - Gitpod.yml would not always work. To resolve this I created a bootstrap script which automated the common tasks for me. This also worked in my local environment
 - To save costs in Week 10, I had tore down the CFN stacks. This meant in WeekX I could no longer remember which stacks needed to exist as I had not yet finished documentation. Troubleshooting this consumed a lot of time.
+- Uploading in production was causing CORS issues. In addition to adding permissions to the `tajarba.com` domain, this was resolved by adding the `PUT` method in `/api/profile/update` under `backend-flask/routes/users.py`
+- There was an issue generating the Cloudformation for validation when using the <https://github.com/ExamProCo/cloud-project-bootcamp-validation-tool> , I resolved this by troubleshooting the code and successfully generated the required template
+
 
 ### Issues during CI/CD stack deployment
 
@@ -419,3 +492,69 @@ source "$BIN_DIR/cfn/initialise.sh"
 # Install SAM section
 source "$BIN_DIR/sam/initialise.sh"
 ```
+
+### Warnings being shown when running static build
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/f48f2701-963e-4155-9e7c-e696f9a3931d)
+
+These were addressed by commenting out the following import line
+
+`import ReactDOM from 'react-dom';`
+
+## All CFN Stacks Created
+
+All stacks were deployed successfully
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/3eb2c4cc-a29a-4c44-8e49-495a51d416b2)
+
+## Proof of working in Production
+
+### Messaging to AltUser working in Prod
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/96c55733-1300-442e-9b5a-7aa997c4924b)
+
+### Cruds work in Prod
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/4ccf0c1e-73b8-40c8-b0f9-ebebc0b4d1fd)
+
+### Replies working in Prod
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/4a211bcc-0ca3-4054-80a1-7d519c108076)
+
+### Profile Image successfully uploaded
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/15174507-c716-499f-ac1c-4b9b02a59292)
+
+### Bio Changed
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/376f5521-100e-455c-b64c-29cd3d815ae2)
+
+## cloud-project-bootcamp-validation-tool
+
+<https://github.com/ExamProCo/cloud-project-bootcamp-validation-tool>
+
+Command to run to validate: `bundle exec rake permit`
+
+Error generated when running the command.
+
+### Error running validate command
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/4a61ff34-b4bb-49bd-ab87-19a5a0dd6bdb)
+
+Fixed by changing line 52 in `lib/cpbvt/payloads/aws/policy.rb` from
+
+"#{general-params.run_uuid}-cross-account-role-template.yaml"
+
+to
+
+'cross-account-role-template.yaml'
+
+This causes an issue because when trying to merge the files it cannot find the original source file and fails.
+
+### Error showing source file could not be found
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/4b73406c-3aae-4795-978e-0ef7aea239bd)
+
+### Changes to Code
+
+![image](https://github.com/shehzadashiq/aws-bootcamp-cruddur-2023/assets/5746804/89c28175-e114-42c6-988b-3299348d86eb)
