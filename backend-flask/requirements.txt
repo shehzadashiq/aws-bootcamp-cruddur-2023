@@ -26,3 +26,8 @@ jwt
 boto3
 
 cfn-lint
+
+# Libraries for AppSync
+requests_aws4auth
+gql
+requests-toolbelt
