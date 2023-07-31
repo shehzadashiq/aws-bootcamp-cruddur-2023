@@ -26,17 +26,15 @@ class MessageGroups:
     # First, create an instance of the AppSync class
     # app_sync = AppSync()
 
-    # This is where as a test we can use AppSync to simply return the results from it
-    data=[]
-    # data = Ddb.list_message_groups(ddb, my_user_uuid)
+    # This is where as a test we can use AppSync to simply return the results from it by swapping it out from the DDB instance
+    data = Ddb.list_message_groups(ddb, my_user_uuid)
     # 4fa2d4e6-11f3-4b39-9ec8-a421d4faaa0a
 
     # Having to remove this as an error is generated in the GUI unfortunately
     # data = appsync.test_mutation()
-    print("Invoking list message groups")
-    data = AppSync.list_message_groups(appsync,my_user_uuid)      
+    # print("Invoking AppSync's version of list_message_groups")
+    # data = AppSync.list_message_groups(appsync,my_user_uuid)      
     
-
     print("list_message_groups:", data)
     
     model['data'] = data
